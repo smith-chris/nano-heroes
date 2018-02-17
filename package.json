@@ -1,0 +1,65 @@
+{
+  "name": "react-starter",
+  "version": "0.0.1",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smith-chris/react-starter"
+  },
+  "scripts": {
+    "start": "webpack-dev-server  --config webpack.dev.js",
+    "prod": "webpack --config webpack.prod.js -p",
+    "test": "npm run jest --watch",
+    "lint": "tslint 'src/**/*.{ts,tsx}' --fix",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "src/**/*.test.{ts,tsx}": [
+      "jest"
+    ],
+    "src/**/*.{ts,tsx}": [
+      "lint",
+      "git add"
+    ]
+  },
+  "author": "Krzysztof Kowalski",
+  "license": "ISC",
+  "dependencies": {
+    "pixi.js": "^4.6.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.0.1",
+    "@types/pixi.js": "^4.6.3",
+    "@types/webpack-env": "^1.13.3",
+    "autoprefixer": "^7.2.5",
+    "cache-loader": "^1.2.0",
+    "clean-webpack-plugin": "^0.1.17",
+    "css-loader": "^0.28.8",
+    "file-loader": "^1.1.6",
+    "fork-ts-checker-webpack-plugin": "^0.3.0",
+    "friendly-errors-webpack-plugin": "^1.6.1",
+    "html-webpack-plugin": "^2.30.1",
+    "husky": "^0.14.3",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^22.0.6",
+    "lint-staged": "^4.3.0",
+    "node-sass": "^4.7.2",
+    "postcss-input-style": "^1.0.0",
+    "postcss-loader": "^2.0.10",
+    "sass-loader": "^6.0.6",
+    "sass-variable-loader": "^0.1.2",
+    "sizeof-loader": "^1.1.0",
+    "source-map-loader": "^0.2.3",
+    "style-loader": "^0.19.1",
+    "thread-loader": "^1.1.2",
+    "ts-jest": "^22.0.1",
+    "ts-loader": "^3.2.0",
+    "tslint": "^5.9.1",
+    "typescript": "^2.6.2",
+    "typings-for-css-modules-loader": "^1.7.0",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.10.1",
+    "webpack-merge": "^4.1.0"
+  }
+}
