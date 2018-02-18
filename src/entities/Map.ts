@@ -1,5 +1,6 @@
 class Hex {
   neighbours: Hex[] = []
+  id: string
 }
 
 export type Hexes = {
@@ -50,6 +51,7 @@ class Map {
     let hex = this.hexes[id]
     if (!hex) {
       this.hexes[id] = hex = new Hex()
+      hex.id = id
       hex.neighbours = findNeighbours(position, this.bounds).map(this.get)
     }
     return hex
@@ -91,6 +93,16 @@ export const findNeighbours = (center: Point, bounds = new Bounds()) => {
   return results
 }
 
+type Node = {
+  current: Hex
+  path: Hex[]
+  distance: number
+}
+
+type Graph = {
+  [key: string]: Node
+}
+
 type findPath = (
   a: {
     map: Map
@@ -99,6 +111,34 @@ type findPath = (
   }
 ) => Hex[]
 export const findPath: findPath = ({ map, start, end }) => {
-  let result: Hex[] = []
-  return result
+  let startHex = map.get(start)
+  let endId = pointToId(end)
+  let resultGraph: Graph = {}
+  let startNode: Node = {
+    current: startHex,
+    distance: 0,
+    path: []
+  }
+  resultGraph[startHex.id] = startNode
+  let buildGraph = (graph: Graph, node: Node) => {
+    const { distance, current, path } = node
+    for (let neighbour of current.neighbours) {
+      const { id } = neighbour
+      const neighbourNode = graph[id]
+      if (neighbourNode && neighbourNode.distance < distance + 1) {
+        continue
+      }
+      const newNode = {
+        current: neighbour,
+        distance: distance + 1,
+        path: [...path, current]
+      }
+      graph[id] = newNode
+      if (!neighbourNode) {
+        buildGraph(graph, newNode)
+      }
+    }
+  }
+  buildGraph(resultGraph, startNode)
+  return resultGraph[endId].path
 }
