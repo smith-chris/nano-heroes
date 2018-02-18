@@ -9,18 +9,13 @@
   "scripts": {
     "start": "webpack-dev-server  --config webpack.dev.js",
     "prod": "webpack --config webpack.prod.js -p",
-    "test": "npm run jest --watch",
+    "test": "jest --watch",
     "lint": "tslint 'src/**/*.{ts,tsx}' --fix",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "src/**/*.test.{ts,tsx}": [
-      "jest"
-    ],
-    "src/**/*.{ts,tsx}": [
-      "lint",
-      "git add"
-    ]
+    "src/**/*.test.{ts,tsx}": ["jest"],
+    "src/**/*.{ts,tsx}": ["lint", "git add"]
   },
   "author": "Krzysztof Kowalski",
   "license": "ISC",
