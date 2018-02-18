@@ -26,11 +26,29 @@ const allocateHexes = (width: number, height: number) => {
 
 export const findNeighbours = (center: Point) => {
   let results: Point[] = []
+  let isCenterXEven = center.x % 2 === 0
   for (let x = center.x - 1; x <= center.x + 1; x++) {
     for (let y = center.y - 1; y <= center.y + 1; y++) {
       const isCenter = x === center.x && y === center.y
-      if (!isCenter && x >= 0 && y >= 0) {
-        results.push(new Point(x, y))
+      const isPossible = x >= 0 && y >= 0
+      if (isPossible) {
+        const isLeftOrRight = x !== center.x
+        if (isLeftOrRight) {
+          // Depending on wheter the center hex is in even column
+          // there are some limitations to left and right hexes
+          // (only 2 of three on each side are correct)
+          if (isCenterXEven) {
+            if (y <= center.y) {
+              results.push(new Point(x, y))
+            }
+          } else {
+            if (y >= center.y) {
+              results.push(new Point(x, y))
+            }
+          }
+        } else if (!isCenter) {
+          results.push(new Point(x, y))
+        }
       }
     }
   }
