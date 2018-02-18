@@ -1,37 +1,73 @@
-export type HexMap = {
+class Hex {
+  neighbours: Hex[] = []
+}
+
+export type Hexes = {
   [key: string]: Hex
 }
 
 export class Point {
   constructor(public x: number, public y: number) {}
 }
-const coordinatesToId = (x: number, y: number) => {
-  return `${x}_${y}`
+
+class Bounds {
+  left: number
+  top: number
+  right: number
+  bottom: number
+  constructor(bounds: Bounds = { left: 0, top: 0, right: 9999, bottom: 9999 }) {
+    this.left = bounds.left
+    this.top = bounds.top
+    this.right = bounds.right
+    this.bottom = bounds.bottom
+  }
 }
 
-const idToCoordinates = (id: string) => {
+const pointToId = (position: Point) => {
+  return `${position.x}_${position.y}`
+}
+
+const idToPoint = (id: string) => {
   let [x, y] = id.split('_')
-  return [parseInt(x, 10), parseInt(y, 10)]
+  return new Point(parseInt(x, 10), parseInt(y, 10))
 }
 
-const allocateHexes = (width: number, height: number) => {
-  const hexes: HexMap = {}
-  for (let x = 0; x < width; x++) {
-    for (let y = 0; y < height; y++) {
-      hexes[coordinatesToId(x, y)] = new Hex()
+class Map {
+  private hexes: Hexes
+  private bounds: Bounds
+  constructor(public width: number, public height: number) {
+    this.hexes = {}
+    this.bounds = {
+      left: 0,
+      top: 0,
+      right: width,
+      bottom: height
     }
   }
-  return hexes
+
+  get = (position: Point) => {
+    const id = pointToId(position)
+    let hex = this.hexes[id]
+    if (!hex) {
+      this.hexes[id] = hex = new Hex()
+      hex.neighbours = findNeighbours(position, this.bounds).map(this.get)
+    }
+    return hex
+  }
 }
 
-export const findNeighbours = (center: Point) => {
+export const findNeighbours = (center: Point, bounds = new Bounds()) => {
   let results: Point[] = []
   let isCenterXEven = center.x % 2 === 0
   for (let x = center.x - 1; x <= center.x + 1; x++) {
     for (let y = center.y - 1; y <= center.y + 1; y++) {
       const isCenter = x === center.x && y === center.y
-      const isPossible = x >= 0 && y >= 0
-      if (isPossible) {
+      const isInBounds =
+        x >= bounds.left &&
+        x <= bounds.right &&
+        y >= bounds.top &&
+        y <= bounds.bottom
+      if (isInBounds) {
         const isLeftOrRight = x !== center.x
         if (isLeftOrRight) {
           // Depending on wheter the center hex is in even column
@@ -53,21 +89,6 @@ export const findNeighbours = (center: Point) => {
     }
   }
   return results
-}
-
-export default class Map {
-  private hexes: HexMap
-  constructor(width: number, height: number) {
-    this.hexes = allocateHexes(width, height)
-  }
-
-  get(x: number, y: number) {
-    return this.hexes[coordinatesToId(x, y)]
-  }
-}
-
-class Hex {
-  neighbours: Hex[]
 }
 
 type findPath = (

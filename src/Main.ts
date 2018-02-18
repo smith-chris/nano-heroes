@@ -2,9 +2,9 @@ import { stage, screen, ticker } from 'app/app'
 import { Sprite, Container } from 'pixi.js'
 import char1 from 'assets/char1.png'
 import grassImage from 'assets/grass.png'
-import Map from 'entities/Map'
+import { Point } from 'entities/Map'
 
-const myMap = new Map(4, 4)
+const myPoint = new Point(1, 1)
 // create a new Sprite from an image path
 const character = Sprite.fromImage(char1.src)
 
