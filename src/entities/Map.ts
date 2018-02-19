@@ -1,6 +1,14 @@
 export class Hex {
   neighbours: Hex[] = []
   id: string
+  type: 'grass' | 'stone'
+  occupied: boolean
+  constructor() {
+    this.type = Math.random() > 0.96 ? 'stone' : 'grass'
+    if (this.type === 'stone') {
+      this.occupied = true
+    }
+  }
 }
 
 export type Hexes = {
@@ -125,10 +133,10 @@ export const findPath: findPath = ({ map, start, end }) => {
   let buildGraph = (graph: Graph, node: Node) => {
     const { distance, current, path } = node
     for (let neighbour of current.neighbours) {
-      const { id } = neighbour
+      const { id, occupied } = neighbour
       const existingNode = graph[id]
-      if (distance > fastest) {
-        return
+      if (occupied || distance > fastest) {
+        continue
       }
       if (existingNode && existingNode.distance < distance + 1) {
         continue

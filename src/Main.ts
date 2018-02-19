@@ -2,7 +2,13 @@ import { stage, screen, ticker } from 'app/app'
 import { Sprite, Container } from 'pixi.js'
 import char1 from 'assets/char1.png'
 import grassImage from 'assets/grass.png'
+import stoneImage from 'assets/stone.png'
 import Map, { idToPoint, findPath, pointToId } from 'entities/Map'
+
+const images = {
+  grass: grassImage.src,
+  stone: stoneImage.src
+}
 
 const gameMap = new Map(10, 15)
 // create a new Sprite from an image path
@@ -16,9 +22,11 @@ map.y = 2
 let start, end
 let grassMap = {}
 Object.keys(gameMap.hexes).map(key => {
+  let val = gameMap.hexes[key]
   let position = idToPoint(key)
   let { x, y } = position
-  const grass = Sprite.fromImage(grassImage.src)
+  let src = images[val.type]
+  const grass = Sprite.fromImage(src)
   grassMap[key] = grass
   grass.interactive = true
   grass.on('pointerdown', () => {
