@@ -1,6 +1,7 @@
 export class Hex {
   neighbours: Hex[] = []
   id: string
+  position: Point
   type: 'grass' | 'stone'
   occupied: boolean
   constructor() {
@@ -61,6 +62,7 @@ export default class Map {
     if (!hex) {
       this.hexes[id] = hex = new Hex()
       hex.id = id
+      hex.position = position
       hex.neighbours = findNeighbours(position, this.bounds).map(this.get)
     }
     return hex
@@ -112,6 +114,23 @@ type Graph = {
   [key: string]: Node
 }
 
+const subtract = (a: Point, b: Point) => {
+  return new Point(a.x - b.x, a.y - b.y)
+}
+
+const diff = (a: Point, b: Point) => Math.abs(a.x - b.x + a.y - b.y)
+
+const sortInDirection = (hex: Hex, point: Point) => {
+  const dir = subtract(point, hex.position)
+  return hex.neighbours.sort((a, b) => {
+    let aDir = subtract(point, a.position)
+    let bDir = subtract(point, b.position)
+    let aDiff = diff(dir, aDir)
+    let bDiff = diff(dir, bDir)
+    return aDiff < bDiff ? 1 : -1
+  })
+}
+
 type findPath = (
   a: {
     map: Map
@@ -132,7 +151,8 @@ export const findPath: findPath = ({ map, start, end }) => {
   let fastest = 99999
   let buildGraph = (graph: Graph, node: Node) => {
     const { distance, current, path } = node
-    for (let neighbour of current.neighbours) {
+    let neighbours = sortInDirection(current, end)
+    for (let neighbour of neighbours) {
       const { id, occupied } = neighbour
       const existingNode = graph[id]
       if (occupied || distance > fastest) {
