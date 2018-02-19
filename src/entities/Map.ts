@@ -1,4 +1,4 @@
-class Hex {
+export class Hex {
   neighbours: Hex[] = []
   id: string
 }
@@ -11,7 +11,7 @@ export class Point {
   constructor(public x: number, public y: number) {}
 }
 
-class Bounds {
+export class Bounds {
   left: number
   top: number
   right: number
@@ -24,26 +24,27 @@ class Bounds {
   }
 }
 
-const pointToId = (position: Point) => {
+export const pointToId = (position: Point) => {
   return `${position.x}_${position.y}`
 }
 
-const idToPoint = (id: string) => {
+export const idToPoint = (id: string) => {
   let [x, y] = id.split('_')
   return new Point(parseInt(x, 10), parseInt(y, 10))
 }
 
-class Map {
-  private hexes: Hexes
+export default class Map {
+  hexes: Hexes
   private bounds: Bounds
   constructor(public width: number, public height: number) {
     this.hexes = {}
     this.bounds = {
       left: 0,
       top: 0,
-      right: width,
-      bottom: height
+      right: width - 1,
+      bottom: height - 1
     }
+    this.get(new Point(0, 0))
   }
 
   get = (position: Point) => {
@@ -120,12 +121,16 @@ export const findPath: findPath = ({ map, start, end }) => {
     path: []
   }
   resultGraph[startHex.id] = startNode
+  let fastest = 99999
   let buildGraph = (graph: Graph, node: Node) => {
     const { distance, current, path } = node
     for (let neighbour of current.neighbours) {
       const { id } = neighbour
-      const neighbourNode = graph[id]
-      if (neighbourNode && neighbourNode.distance < distance + 1) {
+      const existingNode = graph[id]
+      if (distance > fastest) {
+        return
+      }
+      if (existingNode && existingNode.distance < distance + 1) {
         continue
       }
       const newNode = {
@@ -134,11 +139,13 @@ export const findPath: findPath = ({ map, start, end }) => {
         path: [...path, current]
       }
       graph[id] = newNode
-      if (!neighbourNode) {
-        buildGraph(graph, newNode)
+      if (id === endId) {
+        fastest = newNode.distance
       }
+      buildGraph(graph, newNode)
     }
   }
   buildGraph(resultGraph, startNode)
-  return resultGraph[endId].path
+  let endNode = resultGraph[endId]
+  return [...endNode.path, endNode.current]
 }
