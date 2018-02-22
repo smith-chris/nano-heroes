@@ -148,7 +148,7 @@ export const findPath: findPath = ({ map, start, end }) => {
     path: []
   }
   resultGraph[startHex.id] = startNode
-  let fastest = 99999
+  let fastest = map.width * map.height
   let buildGraph = (graph: Graph, node: Node) => {
     const { distance, current, path } = node
     let neighbours = sortInDirection(current, end)
