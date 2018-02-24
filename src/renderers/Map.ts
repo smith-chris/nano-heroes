@@ -2,7 +2,7 @@ import { stage, screen, ticker } from 'app/app'
 import { Sprite, Container } from 'pixi.js'
 import char1 from 'assets/char1.png'
 import { Map, idToPoint, findPath, pointToId, Point } from 'transforms/Map'
-import { renderHexes } from 'entities/Hexes'
+import { renderHexes } from 'renderers/Hexes'
 import { pointToCoordinates, hexToCoordinates } from 'utils'
 import { Creature } from 'transforms/Creatures'
 

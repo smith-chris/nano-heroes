@@ -1,5 +1,5 @@
 import { stage } from 'app/app'
-import { renderMap } from 'entities/Map'
+import { renderMap } from 'renderers/Map'
 import { store } from 'store/store'
 import { battleActions } from 'store/battle'
 import { Creature } from 'transforms/Creatures'
