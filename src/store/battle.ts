@@ -3,7 +3,9 @@ import {
   Map,
   putCreatures,
   Point,
-  higlightHexes
+  higlightHexes,
+  getHex,
+  Hex
 } from 'transforms/map'
 import { Creature } from 'transforms/creature'
 
@@ -12,9 +14,14 @@ export type Size = {
   height: number
 }
 
-export type BattleState = Map
+export type BattleState = Map & {
+  selectedHex: Hex
+}
 
-const initialState: BattleState = createMap(5, 5)
+const initialState: BattleState = {
+  ...createMap(5, 5),
+  selectedHex: null
+}
 
 type LoadMap = { type: 'LoadMap'; data: Size }
 type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
@@ -61,7 +68,8 @@ export const battle: Reducer = (state = initialState, action) => {
     case 'SelectCreature':
       return {
         ...state,
-        hexes: higlightHexes(state, action.data)
+        hexes: higlightHexes(state, action.data),
+        selectedHex: getHex(state.hexes, action.data)
       }
     default: {
       const exhaustiveCheck: never = action

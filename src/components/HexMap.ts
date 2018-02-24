@@ -1,9 +1,9 @@
 import { Sprite, Container } from 'pixi.js'
-import { idToPoint, Hexes } from 'transforms/map'
+import { idToPoint, Hexes, pointToId } from 'transforms/map'
 import { pointToCoordinates } from 'utils'
 import grassImage from 'assets/grass.png'
 import stoneImage from 'assets/stone.png'
-import { subscribe } from 'store/store'
+import { subscribe, store } from 'store/store'
 import { SpriteMap } from 'utils/pixi'
 
 const images = {
@@ -29,11 +29,16 @@ export const HexMap = (hexes: Hexes) => {
     newHexes => {
       for (const key in newHexes) {
         const hex = newHexes[key]
+        const sprite = spriteMap[key]
         if (hex.path.length > 0) {
-          spriteMap[key].alpha = 0.5
+          sprite.alpha = 0.5
         } else {
-          spriteMap[key].alpha = 1
+          sprite.alpha = 1
         }
+      }
+      const { selectedHex } = store.getState().battle
+      if (selectedHex) {
+        spriteMap[pointToId(selectedHex.position)].alpha = 0.5
       }
     }
   )
