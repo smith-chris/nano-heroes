@@ -2,18 +2,18 @@ import logger from 'redux-logger'
 import Redux, { createStore, applyMiddleware, combineReducers } from 'redux'
 import isDev from 'utils/isDev'
 
-import { map, BattleState, BattleAction } from './battle'
+import { battle, BattleState } from './battle'
 
 declare global {
   type StoreState = {
-    readonly map: BattleState
+    readonly battle: BattleState
   }
 
   type Dispatch = Redux.Dispatch<StoreState>
 }
 
 const reducers = combineReducers<StoreState>({
-  map
+  battle
 })
 
 export const store: Redux.Store<StoreState> = isDev

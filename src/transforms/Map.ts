@@ -1,19 +1,25 @@
+import { Creature } from './Creature'
+
 export class Hex {
-  neighbours: Hex[] = []
-  id: string
-  position: Point
-  type: 'grass' | 'stone'
-  occupied: boolean
-  constructor() {
-    this.type = Math.random() > 0.96 ? 'stone' : 'grass'
-    if (this.type === 'stone') {
-      this.occupied = true
-    }
-  }
+  occupant: string | Creature
+  constructor(public type: string = 'grass') {}
 }
 
 export type Hexes = {
   [key: string]: Hex
+}
+
+export const putCreatures = (hexes: Hexes, creatures: Creature[]) => {
+  const result = { ...hexes }
+  for (const creature of creatures) {
+    const hex = getHex(result, creature.position)
+    if (hex && !hex.occupant) {
+      hex.occupant = creature
+    } else {
+      throw new Error('No hex at id: ' + pointToId(creature.position))
+    }
+  }
+  return result
 }
 
 export class Point {
@@ -33,8 +39,12 @@ export class Bounds {
   }
 }
 
+export const xyToId = (x: number, y: number) => {
+  return `${x}_${y}`
+}
+
 export const pointToId = (position: Point) => {
-  return `${position.x}_${position.y}`
+  return xyToId(position.x, position.y)
 }
 
 export const idToPoint = (id: string) => {
@@ -47,17 +57,18 @@ export type Map = {
   bounds: Bounds
 }
 
-export const getHex = (map: Map, position: Point) => {
-  const { hexes, bounds } = map
-  const id = pointToId(position)
-  let hex = hexes[id]
-  if (!hex) {
-    hexes[id] = hex = new Hex()
-    hex.id = id
-    hex.position = position
-    hex.neighbours = findNeighbours(position, bounds).map(e => getHex(map, e))
+export const getHex = (hexes: Hexes, position: Point) =>
+  hexes[pointToId(position)]
+
+const fillMap = (map: Map) => {
+  const { top, right, bottom, left } = map.bounds
+  const hexes: Hexes = {}
+  for (let x = left; x <= right; x++) {
+    for (let y = top; y <= bottom; y++) {
+      hexes[xyToId(x, y)] = new Hex()
+    }
   }
-  return hex
+  return { ...map, hexes }
 }
 
 export const createMap = (width: number, height: number): Map => {
@@ -70,8 +81,7 @@ export const createMap = (width: number, height: number): Map => {
       bottom: height - 1
     }
   }
-  getHex(map, new Point(0, 0))
-  return map
+  return fillMap(map)
 }
 
 export const findNeighbours = (center: Point, bounds = new Bounds()) => {
@@ -144,7 +154,7 @@ type findPath = (
   }
 ) => Hex[]
 export const findPath: findPath = ({ map, start, end }) => {
-  let startHex = getHex(map, start)
+  let startHex = getHex(map.hexes, start)
   let endId = pointToId(end)
   let resultGraph: Graph = {}
   let startNode: Node = {
@@ -152,7 +162,7 @@ export const findPath: findPath = ({ map, start, end }) => {
     distance: 0,
     path: []
   }
-  resultGraph[startHex.id] = startNode
+  resultGraph[pointToId(start)] = startNode
   let fastest = map.bounds.right * map.bounds.bottom
   let buildGraph = (graph: Graph, node: Node) => {
     const { distance, current, path } = node

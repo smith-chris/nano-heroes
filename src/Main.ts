@@ -2,7 +2,7 @@ import { stage } from 'app/app'
 import { renderMap } from 'renderers/Map'
 import { store } from 'store/store'
 import { battleActions } from 'store/battle'
-import { Creature } from 'transforms/Creatures'
+import { Creature } from 'transforms/Creature'
 import { Point } from 'transforms/Map'
 
 store.dispatch(battleActions.loadMap({ width: 10, height: 15 }))
@@ -18,5 +18,4 @@ store.dispatch(
 )
 
 const map = renderMap(store.getState())
-
 stage.addChild(map)
