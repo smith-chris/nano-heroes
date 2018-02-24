@@ -7,7 +7,7 @@ import {
   xyToId,
   putObstacles,
   Obstacle
-} from './Map'
+} from './map'
 
 describe('Map', () => {
   describe('findNeighbours()', () => {

@@ -1,4 +1,4 @@
-import { Point } from 'transforms/Map'
+import { Point } from 'transforms/map'
 
 export const pointToCoordinates = (point: Point) => {
   let { x, y } = point

@@ -1,4 +1,4 @@
-import { Creature } from './Creature'
+import { Creature } from './creature'
 
 export class Point {
   constructor(public x: number, public y: number) {}

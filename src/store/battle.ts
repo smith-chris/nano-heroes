@@ -4,8 +4,8 @@ import {
   putCreatures,
   Point,
   higlightHexes
-} from 'transforms/Map'
-import { Creature } from 'transforms/Creature'
+} from 'transforms/map'
+import { Creature } from 'transforms/creature'
 
 export type Size = {
   width: number

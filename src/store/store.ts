@@ -2,7 +2,7 @@ import logger from 'redux-logger'
 import Redux, { createStore, applyMiddleware, combineReducers } from 'redux'
 import isDev from 'utils/isDev'
 import { battle, BattleState } from './battle'
-import genericSubscribe from './subscribe'
+import genericSubscribe from './genericSubscribe'
 
 declare global {
   type StoreState = {
