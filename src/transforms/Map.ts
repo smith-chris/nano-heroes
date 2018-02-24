@@ -1,5 +1,9 @@
 import { Creature } from './Creature'
 
+export class Point {
+  constructor(public x: number, public y: number) {}
+}
+
 export class Hex {
   occupant: string | Creature
   constructor(public type: string = 'grass') {}
@@ -7,6 +11,23 @@ export class Hex {
 
 export type Hexes = {
   [key: string]: Hex
+}
+
+export class Obstacle {
+  constructor(public position: Point, public type: string = 'grass') {}
+}
+
+export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
+  const result = { ...hexes }
+  for (const obstacle of obstacles) {
+    const hex = getHex(result, obstacle.position)
+    if (hex && !hex.occupant) {
+      hex.occupant = obstacle
+    } else {
+      throw new Error('No hex at id: ' + pointToId(obstacle.position))
+    }
+  }
+  return result
 }
 
 export const putCreatures = (hexes: Hexes, creatures: Creature[]) => {
@@ -20,10 +41,6 @@ export const putCreatures = (hexes: Hexes, creatures: Creature[]) => {
     }
   }
   return result
-}
-
-export class Point {
-  constructor(public x: number, public y: number) {}
 }
 
 export class Bounds {
@@ -119,14 +136,23 @@ export const findNeighbours = (center: Point, bounds = new Bounds()) => {
   return results
 }
 
+export class PosHex {
+  constructor(public hex: Hex, public position: Point) {}
+}
+
 type Node = {
-  current: Hex
-  path: Hex[]
+  last: PosHex
+  path: PosHex[]
   distance: number
 }
 
-type Graph = {
+export type Nodes = {
   [key: string]: Node
+}
+
+type Graph = {
+  map: Map
+  nodes: Nodes
 }
 
 const subtract = (a: Point, b: Point) => {
@@ -135,60 +161,59 @@ const subtract = (a: Point, b: Point) => {
 
 const diff = (a: Point, b: Point) => Math.abs(a.x - b.x + a.y - b.y)
 
-const sortInDirection = (hex: Hex, point: Point) => {
-  const dir = subtract(point, hex.position)
-  return hex.neighbours.sort((a, b) => {
-    let aDir = subtract(point, a.position)
-    let bDir = subtract(point, b.position)
-    let aDiff = diff(dir, aDir)
-    let bDiff = diff(dir, bDir)
-    return aDiff < bDiff ? 1 : -1
-  })
-}
-
-type findPath = (
-  a: {
-    map: Map
-    start: Point
-    end: Point
+export const possiblePaths = (map: Map, start: Point, limit: number) => {
+  const resultGraph: Graph = {
+    map,
+    nodes: {}
   }
-) => Hex[]
-export const findPath: findPath = ({ map, start, end }) => {
-  let startHex = getHex(map.hexes, start)
-  let endId = pointToId(end)
-  let resultGraph: Graph = {}
-  let startNode: Node = {
-    current: startHex,
+  const startId = pointToId(start)
+  const startNode: Node = {
+    last: new PosHex(getHex(map.hexes, start), start),
     distance: 0,
     path: []
   }
-  resultGraph[pointToId(start)] = startNode
-  let fastest = map.bounds.right * map.bounds.bottom
-  let buildGraph = (graph: Graph, node: Node) => {
-    const { distance, current, path } = node
-    let neighbours = sortInDirection(current, end)
-    for (let neighbour of neighbours) {
-      const { id, occupied } = neighbour
-      const existingNode = graph[id]
-      if (occupied || distance > fastest) {
+  resultGraph.nodes[startId] = startNode
+  const buildGraph = (graph: Graph, node: Node) => {
+    const { bounds, hexes } = graph.map
+    const { distance, last, path } = node
+    const neighbours = findNeighbours(last.position, bounds)
+    const currentDistance = distance + 1
+    if (currentDistance > limit) {
+      return
+    }
+    for (const position of neighbours) {
+      const id = pointToId(position)
+      const existingNode = graph.nodes[id]
+      if (existingNode && existingNode.distance <= currentDistance) {
         continue
       }
-      if (existingNode && existingNode.distance < distance + 1) {
+      const hex = getHex(hexes, position)
+      if (hex.occupant) {
         continue
       }
       const newNode = {
-        current: neighbour,
-        distance: distance + 1,
-        path: [...path, current]
+        last: new PosHex(hex, position),
+        distance: currentDistance,
+        path: [...path, last]
       }
-      graph[id] = newNode
-      if (id === endId) {
-        fastest = newNode.distance
-      }
+      graph.nodes[id] = newNode
       buildGraph(graph, newNode)
     }
   }
   buildGraph(resultGraph, startNode)
-  let endNode = resultGraph[endId]
-  return [...endNode.path, endNode.current]
+  delete resultGraph.nodes[startId]
+  return resultGraph.nodes
+}
+
+type SimplePaths = {
+  [key: string]: number
+}
+// Purely for testing
+export const simplifyNodes = (nodes: Nodes) => {
+  const result: SimplePaths = {}
+  for (const key in nodes) {
+    const node = nodes[key]
+    result[key] = node.distance
+  }
+  return result
 }
