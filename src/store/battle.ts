@@ -12,15 +12,9 @@ export type Size = {
   height: number
 }
 
-export type BattleState = Map & {
-  attackers: Creature[]
-  defenders: Creature[]
-}
-const initialState: BattleState = {
-  ...createMap(5, 5),
-  attackers: [],
-  defenders: []
-}
+export type BattleState = Map
+
+const initialState: BattleState = createMap(5, 5)
 
 type LoadMap = { type: 'LoadMap'; data: Size }
 type AddAttackers = { type: 'AddAttackers'; data: Creature[] }

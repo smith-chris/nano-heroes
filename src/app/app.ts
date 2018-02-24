@@ -1,9 +1,11 @@
 import { Application, Sprite } from 'pixi.js'
 import styles from './app.sass'
 
-const screenSize = 128
+const screenSize = 66
 
-const App = new Application(screenSize, screenSize, {backgroundColor: 0x000000})
+const App = new Application(screenSize, screenSize, {
+  backgroundColor: 0x000000
+})
 const appElement = document.querySelector('#app')
 const canvasHolderElement = appElement.querySelector('div')
 const canvasElement = App.view

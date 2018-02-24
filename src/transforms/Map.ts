@@ -6,10 +6,11 @@ export class Point {
 
 export class Hex {
   occupant: string | Creature
-  position: Point
   path: Hex[]
   distance: number
-  constructor(public type: string = 'grass') {}
+  constructor(public position: Point, public type: string = 'grass') {
+    this.path = []
+  }
 }
 
 export type Hexes = {
@@ -85,7 +86,7 @@ const fillMap = (map: Map) => {
   const hexes: Hexes = {}
   for (let x = left; x <= right; x++) {
     for (let y = top; y <= bottom; y++) {
-      hexes[xyToId(x, y)] = new Hex()
+      hexes[xyToId(x, y)] = new Hex(new Point(x, y))
     }
   }
   return { ...map, hexes }
@@ -139,13 +140,9 @@ export const findNeighbours = (center: Point, bounds = new Bounds()) => {
   return results
 }
 
-export class PosHex {
-  constructor(public hex: Hex, public position: Point) {}
-}
-
 type Node = {
-  last: PosHex
-  path: PosHex[]
+  last: Hex
+  path: Hex[]
   distance: number
 }
 
@@ -164,14 +161,14 @@ const subtract = (a: Point, b: Point) => {
 
 const diff = (a: Point, b: Point) => Math.abs(a.x - b.x + a.y - b.y)
 
-export const possiblePaths = (map: Map, start: Point, limit: number = 4) => {
+export const possiblePaths = (map: Map, start: Point, limit: number = 2) => {
   const resultGraph: Graph = {
     map,
     nodes: {}
   }
   const startId = pointToId(start)
   const startNode: Node = {
-    last: new PosHex(getHex(map.hexes, start), start),
+    last: getHex(map.hexes, start),
     distance: 0,
     path: []
   }
@@ -195,7 +192,7 @@ export const possiblePaths = (map: Map, start: Point, limit: number = 4) => {
         continue
       }
       const newNode = {
-        last: new PosHex(hex, position),
+        last: hex,
         distance: currentDistance,
         path: [...path, last]
       }
@@ -230,8 +227,8 @@ export const higlightHexes = (map: Map, start: Point) => {
     if (node) {
       hexes[key] = { ...hex, path: node.path }
     } else {
-      hexes[key] = { ...hex, path: null }
+      hexes[key] = { ...hex, path: [] }
     }
   }
-  return { ...map, hexes }
+  return hexes
 }

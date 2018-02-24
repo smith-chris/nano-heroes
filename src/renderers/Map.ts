@@ -37,8 +37,8 @@ const renderCreatures = (hexes: Hexes) => {
 export const renderMap = () => {
   const { battle } = store.getState()
   const result = new Container()
-  result.x = 2 + 8
-  result.y = 2 + 4
+  result.x = 1 + 8
+  result.y = 3 + 4
 
   const hexes = renderHexes(battle.hexes)
   result.addChild(hexes)
