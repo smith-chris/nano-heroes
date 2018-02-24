@@ -1,4 +1,10 @@
-import { createMap, Map, putCreatures } from 'transforms/Map'
+import {
+  createMap,
+  Map,
+  putCreatures,
+  Point,
+  higlightHexes
+} from 'transforms/Map'
 import { Creature } from 'transforms/Creature'
 
 export type Size = {
@@ -16,9 +22,10 @@ const initialState: BattleState = {
   defenders: []
 }
 
+type LoadMap = { type: 'LoadMap'; data: Size }
 type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
 type AddDefenders = { type: 'AddDefenders'; data: Creature[] }
-type LoadMap = { type: 'LoadMap'; data: Size }
+type SelectCreature = { type: 'SelectCreature'; data: Point }
 
 export const battleActions = {
   loadMap: (data: LoadMap['data']): LoadMap => ({ type: 'LoadMap', data }),
@@ -29,10 +36,18 @@ export const battleActions = {
   addDefenders: (data: AddDefenders['data']): AddDefenders => ({
     type: 'AddDefenders',
     data
+  }),
+  selectCreature: (data: SelectCreature['data']): SelectCreature => ({
+    type: 'SelectCreature',
+    data
   })
 }
 
-export type BattleAction = LoadMap | AddAttackers | AddDefenders
+export type BattleAction =
+  | LoadMap
+  | AddAttackers
+  | AddDefenders
+  | SelectCreature
 
 type Reducer = (state: BattleState, action: BattleAction) => BattleState
 export const battle: Reducer = (state = initialState, action) => {
@@ -48,6 +63,11 @@ export const battle: Reducer = (state = initialState, action) => {
       return {
         ...state,
         hexes: putCreatures(state.hexes, action.data)
+      }
+    case 'SelectCreature':
+      return {
+        ...state,
+        hexes: higlightHexes(state, action.data)
       }
     default: {
       const exhaustiveCheck: never = action

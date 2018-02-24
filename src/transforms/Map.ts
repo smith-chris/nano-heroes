@@ -6,6 +6,9 @@ export class Point {
 
 export class Hex {
   occupant: string | Creature
+  position: Point
+  path: Hex[]
+  distance: number
   constructor(public type: string = 'grass') {}
 }
 
@@ -161,7 +164,7 @@ const subtract = (a: Point, b: Point) => {
 
 const diff = (a: Point, b: Point) => Math.abs(a.x - b.x + a.y - b.y)
 
-export const possiblePaths = (map: Map, start: Point, limit: number) => {
+export const possiblePaths = (map: Map, start: Point, limit: number = 4) => {
   const resultGraph: Graph = {
     map,
     nodes: {}
@@ -216,4 +219,19 @@ export const simplifyNodes = (nodes: Nodes) => {
     result[key] = node.distance
   }
   return result
+}
+
+export const higlightHexes = (map: Map, start: Point) => {
+  const nodes = possiblePaths(map, start)
+  const hexes: Hexes = {}
+  for (const key in map.hexes) {
+    const hex = map.hexes[key]
+    const node = nodes[key]
+    if (node) {
+      hexes[key] = { ...hex, path: node.path }
+    } else {
+      hexes[key] = { ...hex, path: null }
+    }
+  }
+  return { ...map, hexes }
 }

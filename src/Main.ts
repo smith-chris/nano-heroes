@@ -17,5 +17,5 @@ store.dispatch(
   )
 )
 
-const map = renderMap(store.getState())
+const map = renderMap()
 stage.addChild(map)

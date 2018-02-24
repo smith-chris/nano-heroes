@@ -4,6 +4,12 @@ import { Hexes } from 'transforms/Map'
 import { renderHexes } from 'renderers/Hexes'
 import { pointToCoordinates } from 'utils'
 import { Creature } from 'transforms/Creature'
+import { store } from 'store/store'
+import { battleActions } from 'store/battle'
+
+const handleCreatureClick = (creature: Creature) => {
+  store.dispatch(battleActions.selectCreature(creature.position))
+}
 
 const renderCreatures = (hexes: Hexes) => {
   let result = new Container()
@@ -11,6 +17,7 @@ const renderCreatures = (hexes: Hexes) => {
     const { occupant } = hexes[key]
     if (occupant instanceof Creature) {
       const creatureSprite = Sprite.fromImage(char1.src)
+      result.addChild(creatureSprite)
       creatureSprite.anchor.x = 0.5
       creatureSprite.anchor.y = 1
       Object.assign(
@@ -18,7 +25,8 @@ const renderCreatures = (hexes: Hexes) => {
         pointToCoordinates(occupant.position)
       )
       creatureSprite.position.y += 1
-      result.addChild(creatureSprite)
+      creatureSprite.interactive = true
+      creatureSprite.on('pointerdown', handleCreatureClick.bind(null, occupant))
     } else if (occupant) {
       console.warn('This is not instance of Creature', occupant)
     }
@@ -26,8 +34,8 @@ const renderCreatures = (hexes: Hexes) => {
   return result
 }
 
-export const renderMap = (store: StoreState) => {
-  const { battle } = store
+export const renderMap = () => {
+  const { battle } = store.getState()
   const result = new Container()
   result.x = 2 + 8
   result.y = 2 + 4
