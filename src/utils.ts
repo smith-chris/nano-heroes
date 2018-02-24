@@ -1,4 +1,4 @@
-import Map, { idToPoint, findPath, pointToId, Hexes, Point } from 'entities/Map'
+import { idToPoint, findPath, pointToId, Hexes, Point } from 'transforms/Map'
 
 export const pointToCoordinates = (point: Point) => {
   let { x, y } = point
