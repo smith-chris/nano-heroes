@@ -1,12 +1,12 @@
 import { stage, screen, ticker } from 'app/app'
 import { Sprite, Container } from 'pixi.js'
 import char1 from 'assets/char1.png'
-import { Map } from 'transforms/Map'
 import { renderMap } from 'entities/Map'
+import { Store } from './Store'
 
-const gameMap = new Map(10, 15)
+const store = new Store()
 
-const map = renderMap(gameMap)
+const map = renderMap(store)
 
 stage.addChild(map)
 

@@ -1,4 +1,4 @@
-import { idToPoint, findPath, pointToId, Hexes, Point } from 'transforms/Map'
+import { idToPoint, findPath, pointToId, Hex, Point } from 'transforms/Map'
 
 export const pointToCoordinates = (point: Point) => {
   let { x, y } = point
@@ -8,4 +8,8 @@ export const pointToCoordinates = (point: Point) => {
     result.y += 4
   }
   return result
+}
+
+export const hexToCoordinates = (hex: Hex) => {
+  return pointToCoordinates(idToPoint(hex.id))
 }
