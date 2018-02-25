@@ -61,6 +61,19 @@ export const moveCreature = (map: Map, position: Point) => {
   }
 }
 
+export const everyCreature = (
+  hexes: Hexes,
+  f: (c: Creature, h: Hex) => void
+) => {
+  for (let key in hexes) {
+    const hex = hexes[key]
+    const { occupant } = hex
+    if (occupant instanceof Creature) {
+      f(occupant, hex)
+    }
+  }
+}
+
 export class Bounds {
   left: number
   top: number
