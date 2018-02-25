@@ -1,6 +1,6 @@
 import { Sprite, Container } from 'pixi.js'
 import char1 from 'assets/char1.png'
-import { Hexes, everyCreature, Creatures, Id } from 'transforms/map'
+import { Hexes, each, Creatures, Id } from 'transforms/map'
 import { pointToCoordinates } from 'utils'
 import { Creature } from 'transforms/creature'
 import { store, subscribe } from 'store/store'
@@ -19,7 +19,7 @@ const updateSprite = (sprite: Sprite, creature: Creature) => {
 export const CreatureMap = (creatures: Creatures) => {
   let result = new Container()
   const spriteMap: SpriteMap = {}
-  everyCreature(creatures, creature => {
+  each(creatures, creature => {
     const sprite = Sprite.fromImage(char1.src)
     result.addChild(sprite)
     spriteMap[creature.id] = sprite
@@ -32,7 +32,7 @@ export const CreatureMap = (creatures: Creatures) => {
   subscribe(
     s => s.battle.creatures,
     newCreatures => {
-      everyCreature(newCreatures, creature => {
+      each(newCreatures, creature => {
         // TODO: Animate creatures
         const sprite = spriteMap[creature.id]
         updateSprite(sprite, creature)

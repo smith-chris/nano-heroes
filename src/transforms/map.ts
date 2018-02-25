@@ -15,13 +15,13 @@ export class Hex {
   }
 }
 
-export type Creatures = {
-  [key: string]: Creature
+type HashMap<T> = {
+  [key: string]: T
 }
 
-export type Hexes = {
-  [key: string]: Hex
-}
+export type Creatures = HashMap<Creature>
+
+export type Hexes = HashMap<Hex>
 
 export class Obstacle {
   constructor(public position: Point, public type: string = 'grass') {}
@@ -86,13 +86,10 @@ export const clearPaths = (hexes: Hexes) => {
   return result
 }
 
-export const everyCreature = (
-  creatures: Creatures,
-  f: (c: Creature) => void
-) => {
-  for (let key in creatures) {
-    const creature = creatures[key]
-    f(creature)
+export const each = <T>(object: HashMap<T>, f: (c: T) => void) => {
+  for (let key in object) {
+    const val = object[key]
+    f(val)
   }
 }
 
