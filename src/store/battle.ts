@@ -4,8 +4,6 @@ import {
   putCreatures,
   Point,
   higlightHexes,
-  getHex,
-  Hex,
   moveCreature
 } from 'transforms/map'
 import { Creature } from 'transforms/creature'
