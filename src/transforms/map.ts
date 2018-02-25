@@ -5,7 +5,7 @@ export class Point {
 }
 
 export class Hex {
-  occupant: string | Creature
+  occupant: Obstacle | Creature
   path: Hex[]
   distance: number
   constructor(public position: Point, public type: string = 'grass') {

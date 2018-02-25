@@ -9,3 +9,14 @@ export const pointToCoordinates = (point: Point) => {
   }
   return result
 }
+
+const randomString = (length: number) =>
+  Math.random()
+    .toString(36)
+    .substr(2, length)
+
+export const idGenerator = (prefix: string = '') => {
+  let count = 0
+  let suffix = randomString(3)
+  return () => `${prefix}_${++count}_${suffix}`
+}
