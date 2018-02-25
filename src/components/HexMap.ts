@@ -5,8 +5,12 @@ import grassImage from 'assets/grass.png'
 import stoneImage from 'assets/stone.png'
 import { subscribe, store } from 'store/store'
 import { SpriteMap } from 'utils/pixi'
+import { battleActions } from 'store/battle'
 
-const images = {
+type Images = {
+  [key: string]: string
+}
+const images: Images = {
   grass: grassImage.src,
   stone: stoneImage.src
 }
@@ -24,21 +28,28 @@ export const HexMap = (hexes: Hexes) => {
     result.addChild(hexSprite)
     spriteMap[key] = hexSprite
   })
-  subscribe<Hexes>(
+  subscribe(
     s => s.battle.hexes,
     newHexes => {
+      const { selected } = store.getState().battle
       for (const key in newHexes) {
         const hex = newHexes[key]
         const sprite = spriteMap[key]
+        sprite.off('pointerdown')
         if (hex.path.length > 0) {
           sprite.alpha = 0.5
+          sprite.interactive = true
+          sprite.on('pointerdown', () => {
+            // TODO: Move selected here
+            store.dispatch(battleActions.moveSelected(hex.position))
+          })
         } else {
+          sprite.interactive = false
           sprite.alpha = 1
         }
       }
-      const { selectedHex } = store.getState().battle
-      if (selectedHex) {
-        spriteMap[pointToId(selectedHex.position)].alpha = 0.5
+      if (selected) {
+        spriteMap[pointToId(selected.position)].alpha = 0.5
       }
     }
   )

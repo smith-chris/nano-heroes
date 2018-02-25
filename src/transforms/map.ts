@@ -47,6 +47,20 @@ export const putCreatures = (hexes: Hexes, creatures: Creature[]) => {
   return result
 }
 
+export const moveCreature = (map: Map, position: Point) => {
+  const creatureId = pointToId(map.selected.position)
+  const destinationId = pointToId(position)
+  if (!map.hexes[destinationId].occupant) {
+    const hexes: Hexes = { ...map.hexes }
+    const selected = { ...map.selected, position }
+    hexes[creatureId] = { ...hexes[creatureId], occupant: null }
+    hexes[destinationId] = { ...hexes[destinationId], occupant: selected }
+    return { ...map, hexes, selected }
+  } else {
+    return map
+  }
+}
+
 export class Bounds {
   left: number
   top: number
@@ -76,6 +90,7 @@ export const idToPoint = (id: string) => {
 export type Map = {
   hexes: Hexes
   bounds: Bounds
+  selected?: Creature
 }
 
 export const getHex = (hexes: Hexes, position: Point) =>
@@ -92,15 +107,16 @@ const fillMap = (map: Map) => {
   return { ...map, hexes }
 }
 
-export const createMap = (width: number, height: number): Map => {
-  const map = {
+export const createMap = (width: number, height: number) => {
+  const map: Map = {
     hexes: {},
     bounds: {
       left: 0,
       top: 0,
       right: width - 1,
       bottom: height - 1
-    }
+    },
+    selected: null
   }
   return fillMap(map)
 }

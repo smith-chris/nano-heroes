@@ -2,7 +2,7 @@ import { Store } from './store'
 
 type StateSlice<T> = T
 type SliceState<T> = (state: StoreState) => StateSlice<T>
-type Subscriber<T> = (oldState: StateSlice<T>, newState: StateSlice<T>) => void
+type Subscriber<T> = (newState: StateSlice<T>, oldState: StateSlice<T>) => void
 
 export default (store: Store) => <T>(
   sliceState: SliceState<T>,

@@ -6,18 +6,21 @@ import { pointToCoordinates } from 'utils'
 import { Creature } from 'transforms/creature'
 import { store, subscribe } from 'store/store'
 import { battleActions } from 'store/battle'
+import { SpriteMap } from 'utils/pixi'
 
 const handleCreatureClick = (creature: Creature) => {
-  store.dispatch(battleActions.selectCreature(creature.position))
+  store.dispatch(battleActions.selectCreature(creature))
 }
 
 const Creatures = (hexes: Hexes) => {
   let result = new Container()
+  const spriteMap: SpriteMap = {}
   for (let key in hexes) {
     const { occupant } = hexes[key]
     if (occupant instanceof Creature) {
       const creatureSprite = Sprite.fromImage(char1.src)
       result.addChild(creatureSprite)
+      spriteMap[key] = creatureSprite
       creatureSprite.anchor.x = 0.5
       creatureSprite.anchor.y = 1
       Object.assign(
@@ -31,6 +34,12 @@ const Creatures = (hexes: Hexes) => {
       console.warn('This is not instance of Creature', occupant)
     }
   }
+  subscribe(
+    s => s.battle.hexes,
+    newHexes => {
+      // TODO: Animate creatures
+    }
+  )
   return result
 }
 
