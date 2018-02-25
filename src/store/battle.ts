@@ -4,7 +4,7 @@ import {
   putCreatures,
   Point,
   higlightHexes,
-  moveCreature
+  moveSelected
 } from 'transforms/map'
 import { Creature } from 'transforms/creature'
 
@@ -63,16 +63,16 @@ export const battle: Reducer = (state = initialState, action) => {
     case 'AddDefenders':
       return {
         ...state,
-        hexes: putCreatures(state.hexes, action.data)
+        ...putCreatures(state, action.data)
       }
     case 'SelectCreature':
       return {
         ...state,
         hexes: higlightHexes(state, action.data.position),
-        selected: action.data
+        selected: action.data.id
       }
     case 'MoveSelected':
-      return moveCreature(state, action.data)
+      return moveSelected(state, action.data)
     default: {
       const exhaustiveCheck: never = action
       return state

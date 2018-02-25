@@ -1,7 +1,7 @@
 import { Container } from 'pixi.js'
 import { store } from 'store/store'
 import { HexMap } from 'components/HexMap'
-import { Creatures } from 'components/Creatures'
+import { CreatureMap } from 'components/CreatureMap'
 
 export const Game = () => {
   const { battle } = store.getState()
@@ -12,7 +12,7 @@ export const Game = () => {
   const hexes = HexMap(battle.hexes)
   result.addChild(hexes)
 
-  result.addChild(Creatures(battle.hexes))
+  result.addChild(CreatureMap(battle.creatures))
 
   return result
 }

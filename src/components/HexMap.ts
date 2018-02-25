@@ -31,7 +31,7 @@ export const HexMap = (hexes: Hexes) => {
   subscribe(
     s => s.battle.hexes,
     newHexes => {
-      const { selected } = store.getState().battle
+      const { selected, creatures } = store.getState().battle
       for (const key in newHexes) {
         const hex = newHexes[key]
         const sprite = spriteMap[key]
@@ -49,7 +49,7 @@ export const HexMap = (hexes: Hexes) => {
         }
       }
       if (selected) {
-        spriteMap[pointToId(selected.position)].alpha = 0.5
+        spriteMap[pointToId(creatures[selected].position)].alpha = 0.5
       }
     }
   )

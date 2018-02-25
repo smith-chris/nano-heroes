@@ -1,6 +1,6 @@
 import { Sprite, Container } from 'pixi.js'
 import char1 from 'assets/char1.png'
-import { Hexes, everyCreature } from 'transforms/map'
+import { Hexes, everyCreature, Creatures } from 'transforms/map'
 import { pointToCoordinates } from 'utils'
 import { Creature } from 'transforms/creature'
 import { store, subscribe } from 'store/store'
@@ -11,27 +11,27 @@ const handleCreatureClick = (creature: Creature) => {
   store.dispatch(battleActions.selectCreature(creature))
 }
 
-export const Creatures = (hexes: Hexes) => {
+export const CreatureMap = (creatures: Creatures) => {
   let result = new Container()
   const spriteMap: SpriteMap = {}
-  everyCreature(hexes, (occupant, hex) => {
+  everyCreature(creatures, creature => {
     const creatureSprite = Sprite.fromImage(char1.src)
     result.addChild(creatureSprite)
-    spriteMap[occupant.id] = creatureSprite
+    spriteMap[creature.id] = creatureSprite
     creatureSprite.anchor.x = 0.5
     creatureSprite.anchor.y = 1
     Object.assign(
       creatureSprite.position,
-      pointToCoordinates(occupant.position)
+      pointToCoordinates(creature.position)
     )
     creatureSprite.position.y += 1
     creatureSprite.interactive = true
-    creatureSprite.on('pointerdown', handleCreatureClick.bind(null, occupant))
+    creatureSprite.on('pointerdown', handleCreatureClick.bind(null, creature))
   })
   subscribe(
-    s => s.battle.hexes,
-    (newHexes, oldHexes) => {
-      everyCreature(newHexes, (creature, hex) => {
+    s => s.battle.creatures,
+    newCreatures => {
+      everyCreature(newCreatures, creature => {
         // TODO: Animate creatures
         const sprite = spriteMap[creature.id]
       })

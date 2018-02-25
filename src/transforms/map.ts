@@ -1,16 +1,22 @@
 import { Creature } from './creature'
 
+export type Id = string
+
 export class Point {
   constructor(public x: number, public y: number) {}
 }
 
 export class Hex {
-  occupant: Obstacle | Creature
+  occupant: Obstacle | string
   path: Hex[]
   distance: number
   constructor(public position: Point, public type: string = 'grass') {
     this.path = []
   }
+}
+
+export type Creatures = {
+  [key: string]: Creature
 }
 
 export type Hexes = {
@@ -34,43 +40,49 @@ export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   return result
 }
 
-export const putCreatures = (hexes: Hexes, creatures: Creature[]) => {
-  const result = { ...hexes }
-  for (const creature of creatures) {
-    const hex = getHex(result, creature.position)
+export const putCreatures = (map: Map, newCreatures: Creature[]) => {
+  const hexes = { ...map.hexes }
+  const creatures = { ...map.creatures }
+  for (const creature of newCreatures) {
+    const { id } = creature
+    const hexId = pointToId(creature.position)
+    const hex = hexes[hexId]
     if (hex && !hex.occupant) {
-      hex.occupant = creature
+      hexes[hexId] = { ...hex, occupant: id }
+      creatures[id] = creature
     } else {
       throw new Error('No hex at id: ' + pointToId(creature.position))
     }
   }
-  return result
+  return { ...map, hexes, creatures }
 }
 
-export const moveCreature = (map: Map, position: Point) => {
-  const creatureId = pointToId(map.selected.position)
-  const destinationId = pointToId(position)
-  if (!map.hexes[destinationId].occupant) {
+export const moveSelected = (map: Map, position: Point) => {
+  const selected = map.creatures[map.selected]
+  const currentHexId = pointToId(selected.position)
+  const destinationHexId = pointToId(position)
+  if (!map.hexes[destinationHexId].occupant) {
     const hexes: Hexes = { ...map.hexes }
-    const selected = { ...map.selected, position }
-    hexes[creatureId] = { ...hexes[creatureId], occupant: null }
-    hexes[destinationId] = { ...hexes[destinationId], occupant: selected }
-    return { ...map, hexes, selected }
+    hexes[currentHexId] = { ...hexes[currentHexId], occupant: null }
+    hexes[destinationHexId] = {
+      ...hexes[destinationHexId],
+      occupant: map.selected
+    }
+    const creatures = { ...map.creatures }
+    creatures[map.selected] = { ...selected, position }
+    return { ...map, hexes, creatures }
   } else {
     return map
   }
 }
 
 export const everyCreature = (
-  hexes: Hexes,
-  f: (c: Creature, h: Hex) => void
+  creatures: Creatures,
+  f: (c: Creature) => void
 ) => {
-  for (let key in hexes) {
-    const hex = hexes[key]
-    const { occupant } = hex
-    if (occupant instanceof Creature) {
-      f(occupant, hex)
-    }
+  for (let key in creatures) {
+    const creature = creatures[key]
+    f(creature)
   }
 }
 
@@ -103,7 +115,8 @@ export const idToPoint = (id: string) => {
 export type Map = {
   hexes: Hexes
   bounds: Bounds
-  selected?: Creature
+  creatures: Creatures
+  selected?: Id
 }
 
 export const getHex = (hexes: Hexes, position: Point) =>
@@ -129,7 +142,8 @@ export const createMap = (width: number, height: number) => {
       right: width - 1,
       bottom: height - 1
     },
-    selected: null
+    selected: null,
+    creatures: {}
   }
   return fillMap(map)
 }

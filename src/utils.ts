@@ -1,4 +1,4 @@
-import { Point } from 'transforms/map'
+import { Point, Id } from 'transforms/map'
 
 export const pointToCoordinates = (point: Point) => {
   let { x, y } = point
@@ -18,5 +18,5 @@ const randomString = (length: number) =>
 export const idGenerator = (prefix: string = '') => {
   let count = 0
   let suffix = randomString(3)
-  return () => `${prefix}_${++count}_${suffix}`
+  return (): Id => `${prefix}_${++count}_${suffix}`
 }
