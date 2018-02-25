@@ -4,7 +4,9 @@ import {
   putCreatures,
   Point,
   higlightHexes,
-  moveSelected
+  moveSelected,
+  clearPaths,
+  Id
 } from 'transforms/map'
 import { Creature } from 'transforms/creature'
 
@@ -20,7 +22,7 @@ const initialState: BattleState = createMap(5, 5)
 type LoadMap = { type: 'LoadMap'; data: Size }
 type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
 type AddDefenders = { type: 'AddDefenders'; data: Creature[] }
-type SelectCreature = { type: 'SelectCreature'; data: Creature }
+type SelectCreature = { type: 'SelectCreature'; data: Id }
 type MoveSelected = { type: 'MoveSelected'; data: Point }
 
 export const battleActions = {
@@ -68,11 +70,17 @@ export const battle: Reducer = (state = initialState, action) => {
     case 'SelectCreature':
       return {
         ...state,
-        hexes: higlightHexes(state, action.data.position),
-        selected: action.data.id
+        hexes: higlightHexes(state, state.creatures[action.data].position),
+        selected: action.data
       }
     case 'MoveSelected':
-      return moveSelected(state, action.data)
+      return {
+        ...moveSelected(
+          { ...state, hexes: clearPaths(state.hexes) },
+          action.data
+        ),
+        selected: null
+      }
     default: {
       const exhaustiveCheck: never = action
       return state

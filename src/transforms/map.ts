@@ -63,7 +63,9 @@ export const moveSelected = (map: Map, position: Point) => {
   const destinationHexId = pointToId(position)
   if (!map.hexes[destinationHexId].occupant) {
     const hexes: Hexes = { ...map.hexes }
-    hexes[currentHexId] = { ...hexes[currentHexId], occupant: null }
+    const newHex = { ...hexes[currentHexId] }
+    delete newHex.occupant
+    hexes[currentHexId] = newHex
     hexes[destinationHexId] = {
       ...hexes[destinationHexId],
       occupant: map.selected
@@ -74,6 +76,14 @@ export const moveSelected = (map: Map, position: Point) => {
   } else {
     return map
   }
+}
+
+export const clearPaths = (hexes: Hexes) => {
+  const result: Hexes = {}
+  for (const key in hexes) {
+    result[key] = { ...hexes[key], path: [] }
+  }
+  return result
 }
 
 export const everyCreature = (
