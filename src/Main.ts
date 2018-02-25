@@ -14,4 +14,5 @@ store.dispatch(
 )
 
 const map = Game()
+
 stage.addChild(map)

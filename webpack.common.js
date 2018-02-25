@@ -2,7 +2,7 @@ const path = require('path')
 
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const {WatchIgnorePlugin} = require('webpack')
+const { WatchIgnorePlugin } = require('webpack')
 const isDev = process.argv.indexOf('-p') === -1
 let removeNull = array => array.filter(e => e !== null)
 
@@ -50,7 +50,7 @@ module.exports = {
         test: /\.(ts|js)$/,
         include: path.resolve('./src'),
         use: [
-          {loader: 'cache-loader'},
+          { loader: 'cache-loader' },
           {
             loader: 'thread-loader',
             options: {
