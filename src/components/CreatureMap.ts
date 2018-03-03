@@ -1,6 +1,6 @@
 import { Sprite, Container } from 'pixi.js'
 import char1 from 'assets/char1.png'
-import { Hexes, each, Creatures, Id } from 'transforms/map'
+import { Hexes, each, Creatures, Id, Point } from 'transforms/map'
 import { pointToCoordinates } from 'utils'
 import { Creature } from 'transforms/creature'
 import { store, subscribe } from 'store/store'
@@ -14,6 +14,14 @@ const handleCreatureClick = (creatureId: Id) => {
 const updateSprite = (sprite: Sprite, creature: Creature) => {
   Object.assign(sprite.position, pointToCoordinates(creature.position))
   sprite.position.y += 1
+}
+
+export const moveCreature = (position: Point) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve()
+    }, 1000)
+  })
 }
 
 export const CreatureMap = (creatures: Creatures) => {

@@ -39,8 +39,8 @@ export const battleActions = {
     type: 'SelectCreature',
     data
   }),
-  moveSelected: (data: MoveSelected['data']): MoveSelected => ({
-    type: 'MoveSelected',
+  moveSelected: (data: MoveSelected['data']) => ({
+    type: 'MoveSelectedStart',
     data
   })
 }

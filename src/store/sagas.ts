@@ -1,22 +1,15 @@
 import { delay } from 'redux-saga'
 import { put, takeEvery, all, call } from 'redux-saga/effects'
 import { Point } from 'transforms/map'
+import { moveCreature } from 'components/CreatureMap'
 
-export function* animateCreatures({ data }: { data: Point }) {
-  const intervalId = yield call(
-    setInterval,
-    () => {
-      // TODO: Animate
-    },
-    10
-  )
-  yield call(delay, 100)
-  window.clearInterval(intervalId)
-  yield put({ type: 'MoveSelectedEnd' })
+export function* moveCreatureSaga({ data }: { data: Point }) {
+  yield call(moveCreature, data)
+  yield put({ type: 'MoveSelected', data })
 }
 
 export function* watchMoveSelected() {
-  yield takeEvery('MoveSelected', animateCreatures)
+  yield takeEvery('MoveSelectedStart', moveCreatureSaga)
 }
 
 export default function* rootSaga() {
