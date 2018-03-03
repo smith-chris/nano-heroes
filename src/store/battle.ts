@@ -7,7 +7,8 @@ import {
   moveSelected,
   clearPaths,
   Id,
-  pointToId
+  pointToId,
+  getPath
 } from 'transforms/map'
 import { Creature } from 'transforms/creature'
 
@@ -84,7 +85,7 @@ export const battle: Reducer = (state = initialState, action) => {
         hexes: clearPaths(state.hexes),
         selected: {
           ...state.selected,
-          path: state.hexes[pointToId(action.data)].path
+          path: getPath(state.hexes, action.data)
         }
       }
     case 'MoveSelectedEnd':

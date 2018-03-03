@@ -20,11 +20,15 @@ const updateSprite = (sprite: Sprite, creature: Creature) => {
 
 const spriteMap: SpriteMap = {}
 
-export const moveCreature = (position: Point) => {
-  const { selected, creatures } = store.getState().battle
-  const sprite = spriteMap[selected.id]
-  const from = pointToCoordinates(creatures[selected.id].position)
-  const to = pointToCoordinates(position)
+export const events = {
+  moveCreature: () => Promise.resolve({})
+}
+
+const moveCreature = () => {
+  const { selected: { id, path }, creatures } = store.getState().battle
+  const sprite = spriteMap[id]
+  const from = pointToCoordinates(creatures[id].position)
+  const to = pointToCoordinates(path[path.length - 1].position)
   const width = to.x - from.x
   const height = to.y - from.y
   let progress = 0
@@ -56,6 +60,17 @@ export const CreatureMap = (creatures: Creatures) => {
     sprite.on('pointerdown', handleCreatureClick.bind(null, creature.id))
     updateSprite(sprite, creature)
   })
+  subscribe(
+    s => s.battle.selected.path,
+    path => {
+      if (path && path.length > 0) {
+        const promise = moveCreature()
+        events.moveCreature = () => promise
+      } else {
+        delete events.moveCreature
+      }
+    }
+  )
   subscribe(
     s => s.battle.creatures,
     newCreatures => {

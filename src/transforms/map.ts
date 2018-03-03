@@ -72,7 +72,7 @@ export const moveSelected = (map: Map, position: Point) => {
     }
     const creatures = { ...map.creatures }
     creatures[map.selected.id] = { ...selected, position }
-    return { ...map, hexes, creatures }
+    return { ...map, hexes, creatures, selected: {} }
   } else {
     return map
   }
@@ -84,6 +84,11 @@ export const clearPaths = (hexes: Hexes) => {
     result[key] = { ...hexes[key], path: [] }
   }
   return result
+}
+
+export const getPath = (hexes: Hexes, position: Point) => {
+  const hex = hexes[pointToId(position)]
+  return [...hex.path, hex]
 }
 
 export const each = <T>(object: HashMap<T>, f: (c: T) => void) => {
