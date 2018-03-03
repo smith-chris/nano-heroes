@@ -8,6 +8,10 @@ import Redux, {
 import isDev from 'utils/isDev'
 import { battle, BattleState } from './battle'
 import genericSubscribe from './genericSubscribe'
+import createSagaMiddleware from 'redux-saga'
+import rootSaga from './sagas'
+
+const sagaMiddleware = createSagaMiddleware()
 
 declare global {
   type StoreState = {
@@ -22,8 +26,10 @@ const reducers = combineReducers<StoreState>({
 })
 
 export const store: Redux.Store<StoreState> = isDev
-  ? createStore(reducers, composeWithDevTools())
-  : createStore(reducers)
+  ? createStore(reducers, composeWithDevTools(applyMiddleware(sagaMiddleware)))
+  : createStore(reducers, applyMiddleware(sagaMiddleware))
+
+sagaMiddleware.run(rootSaga)
 
 export type Store = typeof store
 
