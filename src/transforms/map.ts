@@ -58,7 +58,7 @@ export const putCreatures = (map: Map, newCreatures: Creature[]) => {
 }
 
 export const moveSelected = (map: Map, position: Point) => {
-  const selected = map.creatures[map.selected]
+  const selected = map.creatures[map.selected.id]
   const currentHexId = pointToId(selected.position)
   const destinationHexId = pointToId(position)
   if (!map.hexes[destinationHexId].occupant) {
@@ -68,10 +68,10 @@ export const moveSelected = (map: Map, position: Point) => {
     hexes[currentHexId] = newHex
     hexes[destinationHexId] = {
       ...hexes[destinationHexId],
-      occupant: map.selected
+      occupant: map.selected.id
     }
     const creatures = { ...map.creatures }
-    creatures[map.selected] = { ...selected, position }
+    creatures[map.selected.id] = { ...selected, position }
     return { ...map, hexes, creatures }
   } else {
     return map
@@ -123,7 +123,10 @@ export type Map = {
   hexes: Hexes
   bounds: Bounds
   creatures: Creatures
-  selected?: Id
+  selected: {
+    id?: Id
+    path?: Hex[]
+  }
 }
 
 export const getHex = (hexes: Hexes, position: Point) =>
@@ -149,7 +152,7 @@ export const createMap = (width: number, height: number) => {
       right: width - 1,
       bottom: height - 1
     },
-    selected: null,
+    selected: {},
     creatures: {}
   }
   return fillMap(map)

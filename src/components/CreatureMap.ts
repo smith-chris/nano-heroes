@@ -22,8 +22,8 @@ const spriteMap: SpriteMap = {}
 
 export const moveCreature = (position: Point) => {
   const { selected, creatures } = store.getState().battle
-  const sprite = spriteMap[selected]
-  const from = pointToCoordinates(creatures[selected].position)
+  const sprite = spriteMap[selected.id]
+  const from = pointToCoordinates(creatures[selected.id].position)
   const to = pointToCoordinates(position)
   const width = to.x - from.x
   const height = to.y - from.y

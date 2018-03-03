@@ -48,8 +48,8 @@ export const HexMap = (hexes: Hexes) => {
           sprite.alpha = 1
         }
       }
-      if (selected) {
-        spriteMap[pointToId(creatures[selected].position)].alpha = 0.5
+      if (selected.id && !selected.path) {
+        spriteMap[pointToId(creatures[selected.id].position)].alpha = 0.5
       }
     }
   )

@@ -6,7 +6,8 @@ import {
   higlightHexes,
   moveSelected,
   clearPaths,
-  Id
+  Id,
+  pointToId
 } from 'transforms/map'
 import { Creature } from 'transforms/creature'
 
@@ -23,7 +24,8 @@ type LoadMap = { type: 'LoadMap'; data: Size }
 type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
 type AddDefenders = { type: 'AddDefenders'; data: Creature[] }
 type SelectCreature = { type: 'SelectCreature'; data: Id }
-type MoveSelected = { type: 'MoveSelected'; data: Point }
+type MoveSelectedStart = { type: 'MoveSelectedStart'; data: Point }
+type MoveSelectedEnd = { type: 'MoveSelectedEnd'; data: Point }
 
 export const battleActions = {
   loadMap: (data: LoadMap['data']): LoadMap => ({ type: 'LoadMap', data }),
@@ -39,7 +41,7 @@ export const battleActions = {
     type: 'SelectCreature',
     data
   }),
-  moveSelected: (data: MoveSelected['data']) => ({
+  moveSelected: (data: MoveSelectedStart['data']) => ({
     type: 'MoveSelectedStart',
     data
   })
@@ -50,7 +52,8 @@ export type BattleAction =
   | AddAttackers
   | AddDefenders
   | SelectCreature
-  | MoveSelected
+  | MoveSelectedStart
+  | MoveSelectedEnd
 
 type Reducer = (state: BattleState, action: BattleAction) => BattleState
 export const battle: Reducer = (state = initialState, action) => {
@@ -71,15 +74,22 @@ export const battle: Reducer = (state = initialState, action) => {
       return {
         ...state,
         hexes: higlightHexes(state, state.creatures[action.data].position),
-        selected: action.data
+        selected: {
+          id: action.data
+        }
       }
-    case 'MoveSelected':
+    case 'MoveSelectedStart':
       return {
-        ...moveSelected(
-          { ...state, hexes: clearPaths(state.hexes) },
-          action.data
-        ),
-        selected: null
+        ...state,
+        hexes: clearPaths(state.hexes),
+        selected: {
+          ...state.selected,
+          path: state.hexes[pointToId(action.data)].path
+        }
+      }
+    case 'MoveSelectedEnd':
+      return {
+        ...moveSelected(state, action.data)
       }
     default: {
       const exhaustiveCheck: never = action

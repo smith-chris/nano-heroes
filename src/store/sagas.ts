@@ -5,7 +5,7 @@ import { moveCreature } from 'components/CreatureMap'
 
 export function* moveCreatureSaga({ data }: { data: Point }) {
   yield call(moveCreature, data)
-  yield put({ type: 'MoveSelected', data })
+  yield put({ type: 'MoveSelectedEnd', data })
 }
 
 export function* watchMoveSelected() {
