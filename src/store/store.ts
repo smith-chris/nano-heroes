@@ -1,4 +1,3 @@
-import logger from 'redux-logger'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import Redux, {
   createStore,
@@ -23,7 +22,7 @@ const reducers = combineReducers<StoreState>({
 })
 
 export const store: Redux.Store<StoreState> = isDev
-  ? createStore(reducers, composeWithDevTools(applyMiddleware(logger)))
+  ? createStore(reducers, composeWithDevTools())
   : createStore(reducers)
 
 export type Store = typeof store

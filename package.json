@@ -26,8 +26,7 @@
   "license": "ISC",
   "dependencies": {
     "pixi.js": "^4.7.0",
-    "redux": "^3.7.2",
-    "redux-logger": "^3.0.6"
+    "redux": "^3.7.2"
   },
   "devDependencies": {
     "@types/jest": "^22.1.3",
