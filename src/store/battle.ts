@@ -25,7 +25,7 @@ type LoadMap = { type: 'LoadMap'; data: Size }
 type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
 type AddDefenders = { type: 'AddDefenders'; data: Creature[] }
 type SelectCreature = { type: 'SelectCreature'; data: Id }
-type MoveSelectedStart = { type: 'MoveSelectedStart'; data: Point }
+export type MoveSelectedStart = { type: 'MoveSelectedStart'; data: Point }
 type MoveSelectedEnd = { type: 'MoveSelectedEnd'; data: Point }
 
 export const battleActions = {

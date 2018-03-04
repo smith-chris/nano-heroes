@@ -1,20 +1,20 @@
 import { Store } from './store'
 
-type StateSlice<T> = T
-type SliceState<T> = (state: StoreState) => StateSlice<T>
-type Subscriber<T> = (newState: StateSlice<T>, oldState: StateSlice<T>) => void
+type Slice<T> = T
+type SliceState<T> = (state: StoreState) => Slice<T>
+type Subscriber<T> = (newSlice: Slice<T>, oldSlice: Slice<T>) => void
 
 export default (store: Store) => <T>(
   sliceState: SliceState<T>,
   subscriber: Subscriber<T>
 ) => {
-  let currentState = sliceState(store.getState())
+  let currentSlice = sliceState(store.getState())
   store.subscribe(() => {
-    const newState = sliceState(store.getState())
-    if (currentState !== newState) {
-      const oldState = currentState
-      currentState = newState
-      subscriber(newState, oldState)
+    const newSlice = sliceState(store.getState())
+    if (currentSlice !== newSlice) {
+      const oldSlice = currentSlice
+      currentSlice = newSlice
+      subscriber(newSlice, oldSlice)
     }
   })
 }

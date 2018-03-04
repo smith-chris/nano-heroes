@@ -6,6 +6,7 @@ import { Creature } from 'transforms/creature'
 import { store, subscribe } from 'store/store'
 import { battleActions } from 'store/battle'
 import { SpriteMap } from 'utils/pixi'
+import Promise from 'bluebird'
 
 const creatureTicker = new ticker.Ticker()
 
@@ -33,7 +34,7 @@ const moveCreature = () => {
   const height = to.y - from.y
   let progress = 0
   const end = 60
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject, onCancel) => {
     let that = () => {
       if (++progress > end) {
         creatureTicker.remove(that)
@@ -43,6 +44,7 @@ const moveCreature = () => {
       sprite.position.x = Math.round(from.x + width * (progress / end))
       sprite.position.y = Math.round(from.y + height * (progress / end))
     }
+    onCancel(() => creatureTicker.remove(that))
     creatureTicker.add(that)
     creatureTicker.start()
   })
@@ -67,14 +69,14 @@ export const CreatureMap = (creatures: Creatures) => {
         const promise = moveCreature()
         events.moveCreature = () => promise
       } else {
-        delete events.moveCreature
+        events.moveCreature().cancel()
       }
     }
   )
   subscribe(
-    s => s.battle.creatures,
-    newCreatures => {
-      each(newCreatures, creature => {
+    s => s.battle,
+    battle => {
+      each(battle.creatures, creature => {
         // TODO: Animate creatures
         const sprite = spriteMap[creature.id]
         updateSprite(sprite, creature)
