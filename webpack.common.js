@@ -47,7 +47,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(ts|js)$/,
+        test: /\.(tsx?|js)$/,
         include: path.resolve('./src'),
         use: [
           { loader: 'cache-loader' },

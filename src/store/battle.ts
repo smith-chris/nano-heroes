@@ -2,14 +2,13 @@ import {
   createMap,
   Map,
   putCreatures,
-  Point,
   higlightHexes,
   moveSelected,
   clearPaths,
   Id,
-  pointToId,
   getPath
 } from 'transforms/map'
+import { Point } from 'pixi.js'
 import { Creature } from 'transforms/creature'
 
 export type Size = {
@@ -26,7 +25,7 @@ type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
 type AddDefenders = { type: 'AddDefenders'; data: Creature[] }
 type SelectCreature = { type: 'SelectCreature'; data: Id }
 export type MoveSelectedStart = { type: 'MoveSelectedStart'; data: Point }
-type MoveSelectedEnd = { type: 'MoveSelectedEnd'; data: Point }
+type MoveSelectedEnd = { type: 'MoveSelectedEnd' }
 
 export const battleActions = {
   loadMap: (data: LoadMap['data']): LoadMap => ({ type: 'LoadMap', data }),
@@ -42,9 +41,12 @@ export const battleActions = {
     type: 'SelectCreature',
     data
   }),
-  moveSelected: (data: MoveSelectedStart['data']) => ({
+  moveSelected: (data: MoveSelectedStart['data']): MoveSelectedStart => ({
     type: 'MoveSelectedStart',
     data
+  }),
+  moveSelectedEnd: (): MoveSelectedEnd => ({
+    type: 'MoveSelectedEnd'
   })
 }
 
@@ -58,7 +60,6 @@ export type BattleAction =
 
 type Reducer = (state: BattleState, action: BattleAction) => BattleState
 export const battle: Reducer = (state = initialState, action) => {
-  const { data } = action
   switch (action.type) {
     case 'LoadMap':
       return {
@@ -90,7 +91,7 @@ export const battle: Reducer = (state = initialState, action) => {
       }
     case 'MoveSelectedEnd':
       return {
-        ...moveSelected(state, action.data)
+        ...moveSelected(state)
       }
     default: {
       const exhaustiveCheck: never = action

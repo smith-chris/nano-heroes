@@ -2,7 +2,6 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import Redux, {
   createStore,
   applyMiddleware,
-  compose,
   combineReducers
 } from 'redux'
 import isDev from 'utils/isDev'

@@ -1,6 +1,5 @@
 import {
   findNeighbours,
-  Point,
   createMap,
   possiblePaths,
   simplifyNodes,
@@ -8,6 +7,7 @@ import {
   putObstacles,
   Obstacle
 } from './map'
+import { Point } from 'utils/pixi'
 
 describe('Map', () => {
   describe('findNeighbours()', () => {

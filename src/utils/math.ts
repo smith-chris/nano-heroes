@@ -1,4 +1,5 @@
-import { Point, Id } from 'transforms/map'
+import { Id } from 'transforms/map'
+import { Point } from 'utils/pixi'
 
 export const pointToCoordinates = (point: Point) => {
   let { x, y } = point

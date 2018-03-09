@@ -1,7 +1,4 @@
 import { Text } from 'pixi.js'
-export type SpriteMap = {
-  [key: string]: PIXI.Sprite
-}
 
 const font = {
   size: 55,

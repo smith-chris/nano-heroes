@@ -1,7 +1,6 @@
-import { delay } from 'redux-saga'
 import { put, takeEvery, all, call } from 'redux-saga/effects'
-import { Point } from 'transforms/map'
-import { events } from 'components/CreatureMap'
+import { Point } from 'pixi.js'
+import { events } from 'components/CreatureComponent'
 import { MoveSelectedStart } from './battle'
 
 export function* moveCreatureSaga({ data }: { data: Point }) {
@@ -16,5 +15,7 @@ export function* watchMoveSelected() {
 }
 
 export default function* rootSaga() {
-  yield all([watchMoveSelected()])
+  yield all([
+    /*watchMoveSelected()*/
+  ])
 }

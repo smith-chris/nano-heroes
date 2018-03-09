@@ -1,5 +1,6 @@
-import { Point, Id } from 'transforms/map'
-import { idGenerator } from 'utils'
+import { Id } from 'transforms/map'
+import { Point } from 'utils/pixi'
+import { idGenerator } from 'utils/math'
 
 const getId = idGenerator('creature')
 export class Creature {

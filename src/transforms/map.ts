@@ -1,21 +1,21 @@
 import { Creature } from './creature'
+import { Point } from 'utils/pixi'
+
+export const pointsEqual = (pA: Point, pB: Point) =>
+  pA.x === pB.x && pA.y === pB.y
 
 export type Id = string
 
-export class Point {
-  constructor(public x: number, public y: number) {}
-}
-
 export class Hex {
   occupant: Obstacle | string
-  path: Hex[]
+  path: Point[]
   distance: number
   constructor(public position: Point, public type: string = 'grass') {
     this.path = []
   }
 }
 
-type HashMap<T> = {
+export type HashMap<T> = {
   [key: string]: T
 }
 
@@ -57,8 +57,12 @@ export const putCreatures = (map: Map, newCreatures: Creature[]) => {
   return { ...map, hexes, creatures }
 }
 
-export const moveSelected = (map: Map, position: Point) => {
+export const moveSelected = (map: Map) => {
+  if (!(map.selected.path && map.selected.id)) {
+    return map
+  }
   const selected = map.creatures[map.selected.id]
+  const position = map.selected.path[map.selected.path.length - 1]
   const currentHexId = pointToId(selected.position)
   const destinationHexId = pointToId(position)
   if (!map.hexes[destinationHexId].occupant) {
@@ -88,14 +92,16 @@ export const clearPaths = (hexes: Hexes) => {
 
 export const getPath = (hexes: Hexes, position: Point) => {
   const hex = hexes[pointToId(position)]
-  return [...hex.path, hex]
+  return [...hex.path, hex.position]
 }
 
-export const each = <T>(object: HashMap<T>, f: (c: T) => void) => {
+export const each = <T, R>(object: HashMap<T>, f: (v: T, k: string) => R) => {
+  const results = []
   for (let key in object) {
     const val = object[key]
-    f(val)
+    results.push(f(val, key))
   }
+  return results
 }
 
 export class Bounds {
@@ -130,7 +136,7 @@ export type Map = {
   creatures: Creatures
   selected: {
     id?: Id
-    path?: Hex[]
+    path?: Point[]
   }
 }
 
@@ -283,7 +289,8 @@ export const higlightHexes = (map: Map, start: Point) => {
     const hex = map.hexes[key]
     const node = nodes[key]
     if (node) {
-      hexes[key] = { ...hex, path: node.path }
+      const path = node.path.map(n => n.position)
+      hexes[key] = { ...hex, path }
     } else {
       hexes[key] = { ...hex, path: [] }
     }
