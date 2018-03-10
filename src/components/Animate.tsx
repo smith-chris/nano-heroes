@@ -6,6 +6,7 @@ type Props = {
   render: (position: Point) => ReactNode
   onFinish: () => void
   path: Point[]
+  speed?: number
   key: number | string
 }
 
@@ -17,7 +18,7 @@ export class Animate extends Component<Props, State> {
   ticker: ticker.Ticker
   componentWillMount() {
     this.ticker = new ticker.Ticker()
-    const { path } = this.props
+    const { path, speed = 1 } = this.props
     const fromPoint = path[0]
     const from = pointToCoordinates(fromPoint)
     this.setState({
@@ -50,6 +51,6 @@ export class Animate extends Component<Props, State> {
   render() {
     const { render } = this.props
     const { position } = this.state
-    return <>{render(position)}</>
+    return render(position)
   }
 }

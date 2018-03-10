@@ -1,4 +1,5 @@
 export { Hexes, Obstacle, Map, HashMap, Hex, Bounds, Id } from './types'
+export { calculateStep, pointsEqual } from './point'
 export {
   higlightHexes,
   findNeighbours,
@@ -13,6 +14,5 @@ export {
   putObstacles,
   putCreatures,
   moveSelected,
-  each,
-  pointsEqual
+  each
 } from './map'

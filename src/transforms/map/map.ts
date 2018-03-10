@@ -2,9 +2,6 @@ import { Creature } from 'transforms/creature'
 import { Point } from 'utils/pixi'
 import { Hexes, Obstacle, Map, HashMap, Hex } from './types'
 
-export const pointsEqual = (pA: Point, pB: Point) =>
-  pA.x === pB.x && pA.y === pB.y
-
 export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   const result = { ...hexes }
   for (const obstacle of obstacles) {
