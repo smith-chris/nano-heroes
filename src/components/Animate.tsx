@@ -28,7 +28,7 @@ export class Animate extends Component<Props, State> {
       from,
       to
     })
-    const current = from
+    let current = from
     this.setState({ position: current })
 
     this.ticker.add(() => {
@@ -40,6 +40,7 @@ export class Animate extends Component<Props, State> {
       })
       if (pointsEqual(currentRounded, to)) {
         from = to
+        current = from
         to = path.shift()
         if (!to) {
           this.ticker.stop()

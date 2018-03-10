@@ -1,5 +1,5 @@
 import { Point } from 'utils/pixi'
-import { calculateStep, pointsEqual } from './point'
+import { calculateStep, pointsEqual, roundPoint } from './point'
 
 const random = () => Math.round(Math.random() * 50)
 const randomPoint = () => new Point(random(), random())
@@ -48,6 +48,30 @@ describe('transforms/map/point', () => {
         // We have to account for floating point precision error
         expect(speedDiff).toBeLessThan(0.0000000000001)
       }
+    })
+    const simulateTransition = (from: Point, to: Point) => {
+      const step = calculateStep({ speed: 0.7, from, to })
+      let i = 0
+      while (true) {
+        i++
+        if (i >= 1000) {
+          console.warn('You missed the point!')
+          return false
+        }
+        from.x += step.x
+        from.y += step.y
+        if (pointsEqual(roundPoint(from), to)) {
+          return true
+        }
+      }
+    }
+    it('should not miss the destination point', () => {
+      const from1 = new Point(11, -10)
+      const to1 = new Point(101, -132)
+      expect(simulateTransition(from1, to1)).toEqual(true)
+      const from2 = new Point(0, 32)
+      const to2 = new Point(12, 36)
+      expect(simulateTransition(from2, to2)).toEqual(true)
     })
   })
 })
