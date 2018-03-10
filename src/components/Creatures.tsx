@@ -10,10 +10,6 @@ import char1 from 'assets/char1.png'
 import { Creature } from 'transforms/creature'
 import { Animate } from './Animate'
 
-export const events = {
-  moveCreature: () => Promise.resolve({})
-}
-
 type Props = StateProps & ActionProps
 
 class CreatureComponent extends Component<Props> {
