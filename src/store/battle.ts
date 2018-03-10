@@ -8,7 +8,7 @@ import {
   Id,
   getPath
 } from 'transforms/map'
-import { Point } from 'pixi.js'
+import { Point } from 'utils/pixi'
 import { Creature } from 'transforms/creature'
 
 export type Size = {
