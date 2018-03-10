@@ -65,7 +65,7 @@ type Graph = {
   nodes: Nodes
 }
 
-export const possiblePaths = (map: Map, start: Point, limit: number = 2) => {
+export const possiblePaths = (map: Map, start: Point, limit: number = 3) => {
   const resultGraph: Graph = {
     map,
     nodes: {}

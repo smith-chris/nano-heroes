@@ -29,5 +29,5 @@ setTimeout(() => {
 }, 300)
 
 setTimeout(() => {
-  store.dispatch(battleActions.moveSelected(new Point(2, 4)))
+  store.dispatch(battleActions.moveSelected(new Point(3, 4)))
 }, 1300)

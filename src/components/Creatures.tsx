@@ -9,6 +9,7 @@ import { battleActions } from 'store/battle'
 import char1 from 'assets/char1.png'
 import { Creature } from 'transforms/creature'
 import { Animate } from './Animate'
+import { OrderedContainer } from './OrderedContainer'
 
 type Props = StateProps & ActionProps
 
@@ -44,7 +45,7 @@ class CreatureComponent extends Component<Props> {
     const animateSelected = selected.path && selected.path.length > 0
 
     return (
-      <>
+      <OrderedContainer>
         {each(creatures, (creature, key) => {
           const renderCreature = this.createRenderCreature(key)
           if (creature.id === selected.id && animateSelected) {
@@ -60,7 +61,7 @@ class CreatureComponent extends Component<Props> {
             return renderCreature(this.getPosition(creature))
           }
         })}
-      </>
+      </OrderedContainer>
     )
   }
 }
