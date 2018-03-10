@@ -52,6 +52,7 @@ class CreatureComponent extends Component<Props> {
             return (
               <Animate
                 key={key}
+                speed={0.7}
                 path={selected.path}
                 render={renderCreature}
                 onFinish={this.handleAnimationFinish}

@@ -1,6 +1,7 @@
 import React, { Component, ReactNode } from 'react'
 import { Point, ticker } from 'pixi.js'
 import { pointToCoordinates } from 'utils/math'
+import { calculateStep, roundPoint, pointsEqual } from 'transforms/map'
 
 type Props = {
   render: (position: Point) => ReactNode
@@ -18,30 +19,39 @@ export class Animate extends Component<Props, State> {
   ticker: ticker.Ticker
   componentWillMount() {
     this.ticker = new ticker.Ticker()
-    const { path, speed = 1 } = this.props
-    const fromPoint = path[0]
-    const from = pointToCoordinates(fromPoint)
-    this.setState({
-      position: from
+    const { path: pointsPath, speed = 1 } = this.props
+    const path = pointsPath.map(pointToCoordinates)
+    let from = path.shift()
+    let to = path.shift()
+    let step = calculateStep({
+      speed,
+      from,
+      to
     })
-    const toPoint = path[path.length - 1]
-    const to = pointToCoordinates(toPoint)
-    const width = to.x - from.x
-    const height = to.y - from.y
-    let progress = 0
-    const end = 60
+    const current = from
+    this.setState({ position: current })
+
     this.ticker.add(() => {
-      if (++progress > end) {
-        this.ticker.stop()
-        this.props.onFinish()
-        return
-      }
+      current.x += step.x
+      current.y += step.y
+      const currentRounded = roundPoint(current)
       this.setState({
-        position: new Point(
-          Math.round(from.x + width * (progress / end)),
-          Math.round(from.y + height * (progress / end))
-        )
+        position: currentRounded
       })
+      if (pointsEqual(currentRounded, to)) {
+        from = to
+        to = path.shift()
+        if (!to) {
+          this.ticker.stop()
+          this.props.onFinish()
+          return
+        }
+        step = calculateStep({
+          speed,
+          from,
+          to
+        })
+      }
     })
     this.ticker.start()
   }
