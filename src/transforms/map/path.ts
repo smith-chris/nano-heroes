@@ -1,4 +1,4 @@
-import { Hexes, Obstacle, Map, HashMap, Hex, Bounds } from './types'
+import { Hexes, Obstacle, Battle, HashMap, Hex, Bounds } from './types'
 import { getHex, pointToId } from './map'
 import { Point } from 'utils/pixi'
 
@@ -61,11 +61,11 @@ export type Nodes = {
 }
 
 type Graph = {
-  map: Map
+  map: Battle
   nodes: Nodes
 }
 
-export const possiblePaths = (map: Map, start: Point, limit: number = 3) => {
+export const possiblePaths = (map: Battle, start: Point, limit: number = 3) => {
   const resultGraph: Graph = {
     map,
     nodes: {}
@@ -122,7 +122,7 @@ export const simplifyNodes = (nodes: Nodes) => {
   return result
 }
 
-export const higlightHexes = (map: Map, start: Point) => {
+export const higlightHexes = (map: Battle, start: Point) => {
   const nodes = possiblePaths(map, start)
   const hexes: Hexes = {}
   for (const key in map.hexes) {

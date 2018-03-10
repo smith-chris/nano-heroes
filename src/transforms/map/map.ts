@@ -1,6 +1,6 @@
 import { Creature } from 'transforms/creature'
 import { Point } from 'utils/pixi'
-import { Hexes, Obstacle, Map, HashMap, Hex, Creatures, Id } from './types'
+import { Hexes, Obstacle, Battle, HashMap, Hex, Creatures, Id } from './types'
 import { higlightHexes } from './path'
 
 export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
@@ -63,7 +63,7 @@ export const putCreatures = (
   return [newHexes, newCreatures]
 }
 
-export const getCreatures = (map: Map) => {
+export const getCreatures = (map: Battle) => {
   switch (map.turnOf) {
     case 'Attacker':
       return map.attackers
@@ -75,7 +75,7 @@ export const getCreatures = (map: Map) => {
   }
 }
 
-export const setCreatures = (map: Map, creatures: Creatures) => {
+export const setCreatures = (map: Battle, creatures: Creatures) => {
   switch (map.turnOf) {
     case 'Attacker':
       return { ...map, attackers: creatures }
@@ -87,7 +87,7 @@ export const setCreatures = (map: Map, creatures: Creatures) => {
   }
 }
 
-export const selectCreature = (map: Map, id: Id) => {
+export const selectCreature = (map: Battle, id: Id) => {
   const targetCreature = getCreatures(map)[id]
   if (targetCreature) {
     const hexes = higlightHexes(map, targetCreature.position)
@@ -102,7 +102,7 @@ export const selectCreature = (map: Map, id: Id) => {
   }
 }
 
-export const moveSelected = (map: Map) => {
+export const moveSelected = (map: Battle) => {
   if (!(map.selected.path && map.selected.id)) {
     return map
   }
@@ -165,7 +165,7 @@ export const idToPoint = (id: string) => {
 export const getHex = (hexes: Hexes, position: Point) =>
   hexes[pointToId(position)]
 
-const fillMap = (map: Map) => {
+const fillMap = (map: Battle) => {
   const { top, right, bottom, left } = map.bounds
   const hexes: Hexes = {}
   for (let x = left; x <= right; x++) {
@@ -177,7 +177,7 @@ const fillMap = (map: Map) => {
 }
 
 export const createMap = (width: number, height: number) => {
-  const map: Map = {
+  const map: Battle = {
     hexes: {},
     bounds: {
       left: 0,

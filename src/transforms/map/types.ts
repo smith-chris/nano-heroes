@@ -37,7 +37,7 @@ export class Bounds {
   }
 }
 
-export type Map = {
+export type Battle = {
   hexes: Hexes
   bounds: Bounds
   attackers: Creatures

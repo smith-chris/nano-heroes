@@ -1,6 +1,6 @@
 import {
   createMap,
-  Map,
+  Battle,
   putCreatures,
   higlightHexes,
   moveSelected,
@@ -17,7 +17,7 @@ export type Size = {
   height: number
 }
 
-export type BattleState = Map
+export type BattleState = Battle
 
 const initialState: BattleState = createMap(5, 5)
 
