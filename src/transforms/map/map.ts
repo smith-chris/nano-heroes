@@ -1,6 +1,7 @@
 import { Creature } from 'transforms/creature'
 import { Point } from 'utils/pixi'
-import { Hexes, Obstacle, Map, HashMap, Hex } from './types'
+import { Hexes, Obstacle, Map, HashMap, Hex, Creatures, Id } from './types'
+import { higlightHexes } from './path'
 
 export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   const result = { ...hexes }
@@ -15,28 +16,98 @@ export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   return result
 }
 
-export const putCreatures = (map: Map, newCreatures: Creature[]) => {
-  const hexes = { ...map.hexes }
-  const creatures = { ...map.creatures }
-  for (const creature of newCreatures) {
+export const putAttackers = (
+  attackers: Creatures,
+  hexes: Hexes,
+  creaturesToPut: Creature[]
+) => {
+  const [newHexes, newAttackers] = putCreatures(
+    attackers,
+    hexes,
+    creaturesToPut
+  )
+  return { hexes: newHexes, attackers: newAttackers }
+}
+
+export const putDefenders = (
+  defenders: Creatures,
+  hexes: Hexes,
+  creaturesToPut: Creature[]
+) => {
+  const [newHexes, newDefenders] = putCreatures(
+    defenders,
+    hexes,
+    creaturesToPut
+  )
+  return { hexes: newHexes, defenders: newDefenders }
+}
+
+export const putCreatures = (
+  creatures: Creatures,
+  hexes: Hexes,
+  creaturesToPut: Creature[]
+): [Hexes, Creatures] => {
+  const newHexes = { ...hexes }
+  const newCreatures = { ...creatures }
+  for (const creature of creaturesToPut) {
     const { id } = creature
     const hexId = pointToId(creature.position)
     const hex = hexes[hexId]
     if (hex && !hex.occupant) {
       hexes[hexId] = { ...hex, occupant: id }
-      creatures[id] = creature
+      newCreatures[id] = creature
     } else {
       throw new Error('No hex at id: ' + pointToId(creature.position))
     }
   }
-  return { ...map, hexes, creatures }
+  return [newHexes, newCreatures]
+}
+
+export const getCreatures = (map: Map) => {
+  switch (map.turnOf) {
+    case 'Attacker':
+      return map.attackers
+    case 'Defender':
+      return map.defenders
+    default:
+      const exhaustiveCheck: never = map.turnOf
+      return {}
+  }
+}
+
+export const setCreatures = (map: Map, creatures: Creatures) => {
+  switch (map.turnOf) {
+    case 'Attacker':
+      return { ...map, attackers: creatures }
+    case 'Defender':
+      return { ...map, defenders: creatures }
+    default:
+      const exhaustiveCheck: never = map.turnOf
+      return map
+  }
+}
+
+export const selectCreature = (map: Map, id: Id) => {
+  const targetCreature = getCreatures(map)[id]
+  if (targetCreature) {
+    const hexes = higlightHexes(map, targetCreature.position)
+    return {
+      hexes,
+      selected: {
+        id
+      }
+    }
+  } else {
+    return {}
+  }
 }
 
 export const moveSelected = (map: Map) => {
   if (!(map.selected.path && map.selected.id)) {
     return map
   }
-  const selected = map.creatures[map.selected.id]
+  const creatures = getCreatures(map)
+  const selected = creatures[map.selected.id]
   const position = map.selected.path[map.selected.path.length - 1]
   const currentHexId = pointToId(selected.position)
   const destinationHexId = pointToId(position)
@@ -49,19 +120,31 @@ export const moveSelected = (map: Map) => {
       ...hexes[destinationHexId],
       occupant: map.selected.id
     }
-    const creatures = { ...map.creatures }
-    creatures[map.selected.id] = { ...selected, position }
-    return { ...map, hexes, creatures, selected: {} }
+    const newCreatures = { ...creatures }
+    newCreatures[map.selected.id] = { ...selected, position }
+    return setCreatures({ ...map, hexes, selected: {} }, newCreatures)
   } else {
     return map
   }
 }
 
-export const each = <T, R>(object: HashMap<T>, f: (v: T, k: string) => R) => {
-  const results = []
-  for (let key in object) {
-    const val = object[key]
-    results.push(f(val, key))
+export const each = <T, R>(
+  input: HashMap<T> | HashMap<T>[],
+  f: (v: T, k: string) => R
+) => {
+  const results: R[] = []
+  const iterate = (object: HashMap<T>) => {
+    for (let key in object) {
+      const val = object[key]
+      results.push(f(val, key))
+    }
+  }
+  if (Array.isArray(input)) {
+    for (let object of input) {
+      iterate(object)
+    }
+  } else {
+    iterate(input)
   }
   return results
 }
@@ -103,7 +186,9 @@ export const createMap = (width: number, height: number) => {
       bottom: height - 1
     },
     selected: {},
-    creatures: {}
+    attackers: {},
+    turnOf: 'Attacker',
+    defenders: {}
   }
   return fillMap(map)
 }

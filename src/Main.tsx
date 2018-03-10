@@ -23,8 +23,8 @@ store.dispatch(
 )
 
 setTimeout(() => {
-  const { creatures } = store.getState().battle
-  const creature = creatures[Object.keys(creatures)[1]]
+  const { attackers } = store.getState().battle
+  const creature = attackers[Object.keys(attackers)[1]]
   store.dispatch(battleActions.selectCreature(creature.id))
 }, 300)
 

@@ -41,12 +41,12 @@ class CreatureComponent extends Component<Props> {
   }
 
   render() {
-    const { battle: { selected, creatures } } = this.props
+    const { battle: { selected, attackers, defenders } } = this.props
     const animateSelected = selected.path && selected.path.length > 0
 
     return (
       <OrderedContainer>
-        {each(creatures, (creature, key) => {
+        {each([attackers, defenders], (creature, key) => {
           const renderCreature = this.createRenderCreature(key)
           if (creature.id === selected.id && animateSelected) {
             return (

@@ -40,7 +40,9 @@ export class Bounds {
 export type Map = {
   hexes: Hexes
   bounds: Bounds
-  creatures: Creatures
+  attackers: Creatures
+  defenders: Creatures
+  turnOf: 'Attacker' | 'Defender'
   selected: {
     id?: Id
     path?: Point[]
