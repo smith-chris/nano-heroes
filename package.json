@@ -29,6 +29,7 @@
     "@types/react": "^16.0.40",
     "@types/react-redux": "^5.0.15",
     "pixi.js": "^4.7.0",
+    "random-js": "^1.0.8",
     "react": "^16.2.0",
     "react-pixi-fiber": "^0.4.0",
     "react-redux": "^5.0.7",
