@@ -1,6 +1,15 @@
 import { Creature } from 'transforms/creature'
 import { Point } from 'utils/pixi'
-import { Hexes, Obstacle, Battle, HashMap, Hex, Creatures, Id } from './types'
+import {
+  Hexes,
+  Obstacle,
+  Battle,
+  HashMap,
+  Hex,
+  Creatures,
+  Id,
+  Player
+} from './types'
 import { higlightHexes } from './path'
 
 export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
@@ -17,29 +26,29 @@ export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
 }
 
 export const putAttackers = (
-  attackers: Creatures,
+  attacker: Player,
   hexes: Hexes,
   creaturesToPut: Creature[]
 ) => {
-  const [newHexes, newAttackers] = putCreatures(
-    attackers,
+  const [newHexes, creatures] = putCreatures(
+    attacker.creatures,
     hexes,
     creaturesToPut
   )
-  return { hexes: newHexes, attackers: newAttackers }
+  return { hexes: newHexes, attacker: { ...attacker, creatures } }
 }
 
 export const putDefenders = (
-  defenders: Creatures,
+  defender: Player,
   hexes: Hexes,
   creaturesToPut: Creature[]
 ) => {
-  const [newHexes, newDefenders] = putCreatures(
-    defenders,
+  const [newHexes, creatures] = putCreatures(
+    defender.creatures,
     hexes,
     creaturesToPut
   )
-  return { hexes: newHexes, defenders: newDefenders }
+  return { hexes: newHexes, defender: { ...defender, creatures } }
 }
 
 export const putCreatures = (
@@ -66,9 +75,9 @@ export const putCreatures = (
 export const getCreatures = (map: Battle) => {
   switch (map.player.current) {
     case 'Attacker':
-      return map.attackers
+      return map.attacker.creatures
     case 'Defender':
-      return map.defenders
+      return map.defender.creatures
     default:
       const exhaustiveCheck: never = map.player.current
       return {}
@@ -78,9 +87,9 @@ export const getCreatures = (map: Battle) => {
 export const setCreatures = (map: Battle, creatures: Creatures) => {
   switch (map.player.current) {
     case 'Attacker':
-      return { ...map, attackers: creatures }
+      return { ...map, attacker: { ...map.attacker, creatures } }
     case 'Defender':
-      return { ...map, defenders: creatures }
+      return { ...map, defender: { ...map.defender, creatures } }
     default:
       const exhaustiveCheck: never = map.player.current
       return map
@@ -193,12 +202,12 @@ export const createMap = (width: number, height: number) => {
       bottom: height - 1
     },
     selected: {},
-    attackers: {},
+    attacker: new Player(),
+    defender: new Player(),
     player: {
       current: 'Attacker',
       hasMoved: false
-    },
-    defenders: {}
+    }
   }
   return fillMap(map)
 }

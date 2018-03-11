@@ -75,12 +75,12 @@ export const battle: Reducer = (state = initialState, action) => {
     case 'AddAttackers':
       return {
         ...state,
-        ...putAttackers(state.attackers, state.hexes, action.data)
+        ...putAttackers(state.attacker, state.hexes, action.data)
       }
     case 'AddDefenders':
       return {
         ...state,
-        ...putDefenders(state.defenders, state.hexes, action.data)
+        ...putDefenders(state.defender, state.hexes, action.data)
       }
     case 'SelectCreature':
       if (!canMove(state)) {

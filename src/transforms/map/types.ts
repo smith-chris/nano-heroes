@@ -37,11 +37,16 @@ export class Bounds {
   }
 }
 
+export class Player {
+  creatures: Creatures = {}
+  availableCreatures: Id[] = []
+}
+
 export type Battle = {
   hexes: Hexes
   bounds: Bounds
-  attackers: Creatures
-  defenders: Creatures
+  attacker: Player
+  defender: Player
   player: {
     current: 'Attacker' | 'Defender'
     hasMoved: Boolean

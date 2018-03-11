@@ -7,6 +7,7 @@ import { Point, DisplayObject } from 'pixi.js'
 import { render, Text, Container } from 'react-pixi-fiber'
 import { Game } from 'components/Game'
 import { Provider } from 'react-redux'
+import { getCreatures } from 'transforms/map/map'
 
 render(
   <Provider store={store}>
@@ -23,8 +24,8 @@ store.dispatch(
 )
 
 setTimeout(() => {
-  const { attackers } = store.getState().battle
-  const creature = attackers[Object.keys(attackers)[1]]
+  const creatures = getCreatures(store.getState().battle)
+  const creature = creatures[Object.keys(creatures)[1]]
   store.dispatch(battleActions.selectCreature(creature.id))
 }, 300)
 
