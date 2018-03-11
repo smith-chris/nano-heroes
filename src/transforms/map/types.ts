@@ -42,7 +42,10 @@ export type Battle = {
   bounds: Bounds
   attackers: Creatures
   defenders: Creatures
-  turnOf: 'Attacker' | 'Defender'
+  player: {
+    current: 'Attacker' | 'Defender'
+    hasMoved: Boolean
+  }
   selected: {
     id?: Id
     path?: Point[]

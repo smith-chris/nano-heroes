@@ -64,28 +64,30 @@ export const putCreatures = (
 }
 
 export const getCreatures = (map: Battle) => {
-  switch (map.turnOf) {
+  switch (map.player.current) {
     case 'Attacker':
       return map.attackers
     case 'Defender':
       return map.defenders
     default:
-      const exhaustiveCheck: never = map.turnOf
+      const exhaustiveCheck: never = map.player.current
       return {}
   }
 }
 
 export const setCreatures = (map: Battle, creatures: Creatures) => {
-  switch (map.turnOf) {
+  switch (map.player.current) {
     case 'Attacker':
       return { ...map, attackers: creatures }
     case 'Defender':
       return { ...map, defenders: creatures }
     default:
-      const exhaustiveCheck: never = map.turnOf
+      const exhaustiveCheck: never = map.player.current
       return map
   }
 }
+
+export const canMove = (map: Battle) => !map.player.hasMoved
 
 export const selectCreature = (map: Battle, id: Id) => {
   const targetCreature = getCreatures(map)[id]
@@ -103,9 +105,6 @@ export const selectCreature = (map: Battle, id: Id) => {
 }
 
 export const moveSelected = (map: Battle) => {
-  if (!(map.selected.path && map.selected.id)) {
-    return map
-  }
   const creatures = getCreatures(map)
   const selected = creatures[map.selected.id]
   const position = map.selected.path[map.selected.path.length - 1]
@@ -122,7 +121,15 @@ export const moveSelected = (map: Battle) => {
     }
     const newCreatures = { ...creatures }
     newCreatures[map.selected.id] = { ...selected, position }
-    return setCreatures({ ...map, hexes, selected: {} }, newCreatures)
+    return setCreatures(
+      {
+        ...map,
+        hexes,
+        selected: {},
+        player: { ...map.player, hasMoved: true }
+      },
+      newCreatures
+    )
   } else {
     return map
   }
@@ -187,7 +194,10 @@ export const createMap = (width: number, height: number) => {
     },
     selected: {},
     attackers: {},
-    turnOf: 'Attacker',
+    player: {
+      current: 'Attacker',
+      hasMoved: false
+    },
     defenders: {}
   }
   return fillMap(map)

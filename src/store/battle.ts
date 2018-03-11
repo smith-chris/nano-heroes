@@ -10,7 +10,12 @@ import {
 } from 'transforms/map'
 import { Point } from 'utils/pixi'
 import { Creature } from 'transforms/creature'
-import { putAttackers, putDefenders, selectCreature } from 'transforms/map/map'
+import {
+  putAttackers,
+  putDefenders,
+  selectCreature,
+  canMove
+} from 'transforms/map/map'
 
 export type Size = {
   width: number
@@ -78,11 +83,17 @@ export const battle: Reducer = (state = initialState, action) => {
         ...putDefenders(state.defenders, state.hexes, action.data)
       }
     case 'SelectCreature':
+      if (!canMove(state)) {
+        return state
+      }
       return {
         ...state,
         ...selectCreature(state, action.data)
       }
     case 'MoveSelectedStart':
+      if (!canMove(state)) {
+        return state
+      }
       return {
         ...state,
         hexes: clearPaths(state.hexes),
@@ -92,6 +103,9 @@ export const battle: Reducer = (state = initialState, action) => {
         }
       }
     case 'MoveSelectedEnd':
+      if (!canMove(state)) {
+        return state
+      }
       return {
         ...moveSelected(state)
       }
