@@ -1,6 +1,6 @@
-import CreatureStack from './CreatureStack'
+import { CreatureStack, hit } from './CreatureStack'
 import RandomGenerator from 'utils/RandomGenerator'
-import hitResults from './vcmiHitResults.json'
+import { hitResults } from './vcmiHitResults'
 
 let models = {
   infernalTroglodyte: {
@@ -30,7 +30,7 @@ let random = new RandomGenerator()
 describe('CreatureStack', () => {
   describe('hit()', () => {
     it('should give similar results to original VCMI implementation', () => {
-      let getMedian = array => {
+      let getMedian = (array: number[]) => {
         if (!array.length) {
           return 0
         }
@@ -42,15 +42,15 @@ describe('CreatureStack', () => {
           : numbers[middle]
       }
 
-      let getAvg = array => {
+      let getAvg = (array: number[]) => {
         return (
-          array.reduce(function(p, c) {
+          array.reduce((p, c) => {
             return p + c
           }) / array.length
         )
       }
 
-      let getResultsInfo = array => {
+      let getResultsInfo = (array: number[]) => {
         let result = {
           min: Math.min(...array),
           max: Math.max(...array),
@@ -60,17 +60,25 @@ describe('CreatureStack', () => {
         return result
       }
 
-      let compareInfo = (info1, info2) => {
+      type Result = {
+        min: number
+        max: number
+        median: number
+        average: number
+      }
+
+      let compareInfo = (info1: Result, info2: Result) => {
         let result = {
           minDiff: info2.min - info1.min,
           maxDiff: info1.max - info2.max,
           medDiff: Math.abs(info1.median - info2.median),
-          avrDiff: Math.abs(info1.average - info2.average)
+          avrDiff: Math.abs(info1.average - info2.average),
+          totalDiff: 0
         }
         let totalDiff = 0
-        for (let key in result) {
+        Object.keys(result).forEach((key: keyof typeof result) => {
           totalDiff += Math.abs(result[key])
-        }
+        })
         result.totalDiff = totalDiff
         return result
       }
@@ -83,17 +91,15 @@ describe('CreatureStack', () => {
         for (let i = 0; i < test.results.length; i++) {
           let attacker = new CreatureStack({
             model: models.infernalTroglodyte,
-            amount: test.attacker,
-            random
+            amount: test.attacker
           })
 
           let defender = new CreatureStack({
             model: { ...models.pixie, defence: 3 },
-            amount: test.defender,
-            random
+            amount: test.defender
           })
 
-          let damage = attacker.hit(defender)
+          let damage = hit({ attacker, defender, random })
           newResults.push(damage)
         }
 
@@ -109,6 +115,11 @@ describe('CreatureStack', () => {
       }
       let averageDiff = sumDiff / hitResults.length
       let averageMinusDiff = minusDiff / hitResults.length
+      let diffSum = Math.abs(averageDiff) + Math.abs(averageMinusDiff)
+      console.warn(diffSum)
+      if (diffSum > 5) {
+        throw new Error()
+      }
       expect(Math.abs(averageMinusDiff)).toBeLessThan(2)
       expect(Math.abs(averageDiff)).toBeLessThan(4)
     })
