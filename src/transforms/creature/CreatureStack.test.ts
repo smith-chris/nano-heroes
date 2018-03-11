@@ -89,14 +89,14 @@ describe('CreatureStack', () => {
         let originalInfo = getResultsInfo(test.results)
         let newResults = []
         for (let i = 0; i < test.results.length; i++) {
-          let attacker = new CreatureStack({
-            model: models.infernalTroglodyte,
-            amount: test.attacker
-          })
+          let attacker = new CreatureStack(
+            test.attacker,
+            models.infernalTroglodyte
+          )
 
-          let defender = new CreatureStack({
-            model: { ...models.pixie, defence: 3 },
-            amount: test.defender
+          let defender = new CreatureStack(test.defender, {
+            ...models.pixie,
+            defence: 3
           })
 
           let damage = hit({ attacker, defender, random })

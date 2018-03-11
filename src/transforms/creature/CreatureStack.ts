@@ -1,28 +1,30 @@
 import RandomGenerator from 'utils/RandomGenerator'
 import { Health, getCount, damage, init } from './Health'
 
-type Model = {
-  attack: number
-  defence: number
+const Pixie = {
+  attack: 2,
+  defence: 2,
   damage: {
-    min: number
-    max: number
-  }
-  health: number
-  speed: number
+    min: 1,
+    max: 2
+  },
+  health: 3,
+  speed: 7
 }
+
+type Model = typeof Pixie
 
 export class CreatureStack extends Health {
   baseAmount: number
   fullHealth: number
   model: Model
-  constructor({ model, amount }: { model: Model; amount: number }) {
+  constructor(amount: number, model?: Model) {
     super({
       baseAmount: amount,
       fullHealth: model.health
     })
     init(this)
-    this.model = model
+    this.model = model || Pixie
   }
 }
 
