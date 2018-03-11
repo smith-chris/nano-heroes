@@ -7,7 +7,7 @@ import { Point, DisplayObject } from 'pixi.js'
 import { render, Text, Container } from 'react-pixi-fiber'
 import { Game } from 'components/Game'
 import { Provider } from 'react-redux'
-import { getCreatures } from 'transforms/map/map'
+import { getCreatures } from 'transforms/map'
 
 render(
   <Provider store={store}>

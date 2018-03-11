@@ -4,11 +4,10 @@ import { Sprite } from 'react-pixi-fiber'
 import { Texture, Point } from 'pixi.js'
 import grassImage from 'assets/grass.png'
 import stoneImage from 'assets/stone.png'
-import { HashMap, Hex, each, pointsEqual } from 'transforms/map'
+import { HashMap, Hex, each, pointsEqual, getCreatures } from 'transforms/map'
 import { pointToCoordinates } from 'utils/math'
 import { connect } from 'react-redux'
 import { battleActions } from 'store/battle'
-import { getCreatures } from 'transforms/map/map'
 
 const images: HashMap<string> = {
   grass: grassImage.src,

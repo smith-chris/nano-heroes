@@ -6,16 +6,14 @@ import {
   moveSelected,
   clearPaths,
   Id,
-  getPath
-} from 'transforms/map'
-import { Point } from 'utils/pixi'
-import { Creature } from 'transforms/creature'
-import {
+  getPath,
   putAttackers,
   putDefenders,
   selectCreature,
   canMove
-} from 'transforms/map/map'
+} from 'transforms/map'
+import { Point } from 'utils/pixi'
+import { Creature } from 'transforms/creature'
 import { resetPlayer } from 'transforms/map/battle'
 import { chooseRandom, chooseOther } from 'utils/battle'
 

@@ -14,5 +14,10 @@ export {
   putObstacles,
   putCreatures,
   moveSelected,
-  each
+  each,
+  getCreatures,
+  putAttackers,
+  putDefenders,
+  selectCreature,
+  canMove
 } from './map'
