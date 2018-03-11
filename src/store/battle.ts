@@ -16,6 +16,8 @@ import {
   selectCreature,
   canMove
 } from 'transforms/map/map'
+import { resetPlayer } from 'transforms/map/battle'
+import { chooseRandom, chooseOther } from 'utils/battle'
 
 export type Size = {
   width: number
@@ -27,6 +29,9 @@ export type BattleState = Battle
 const initialState: BattleState = createMap(5, 5)
 
 type LoadMap = { type: 'LoadMap'; data: Size }
+type InitialRound = { type: 'InitialRound' }
+type ChangeRound = { type: 'ChangeRound' }
+type ChangeTurn = { type: 'ChangeTurn' }
 type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
 type AddDefenders = { type: 'AddDefenders'; data: Creature[] }
 type SelectCreature = { type: 'SelectCreature'; data: Id }
@@ -35,6 +40,9 @@ type MoveSelectedEnd = { type: 'MoveSelectedEnd' }
 
 export const battleActions = {
   loadMap: (data: LoadMap['data']): LoadMap => ({ type: 'LoadMap', data }),
+  initialRound: (): InitialRound => ({ type: 'InitialRound' }),
+  changeRound: (): ChangeRound => ({ type: 'ChangeRound' }),
+  changeTurn: (): ChangeTurn => ({ type: 'ChangeTurn' }),
   addAttackers: (data: AddAttackers['data']): AddAttackers => ({
     type: 'AddAttackers',
     data
@@ -58,6 +66,9 @@ export const battleActions = {
 
 export type BattleAction =
   | LoadMap
+  | InitialRound
+  | ChangeRound
+  | ChangeTurn
   | AddAttackers
   | AddDefenders
   | SelectCreature
@@ -71,6 +82,30 @@ export const battle: Reducer = (state = initialState, action) => {
       return {
         ...initialState,
         ...createMap(action.data.width, action.data.height)
+      }
+    case 'InitialRound':
+      return {
+        ...state,
+        attacker: resetPlayer(state.attacker),
+        defender: resetPlayer(state.defender),
+        player: {
+          ...state.player,
+          current: 'Attacker'
+        }
+      }
+    case 'ChangeRound':
+      return {
+        ...state,
+        attacker: resetPlayer(state.attacker),
+        defender: resetPlayer(state.defender),
+        player: {
+          ...state.player,
+          current: chooseOther(state.player.current, 'Attacker', 'Defender')
+        }
+      }
+    case 'ChangeTurn':
+      return {
+        ...state
       }
     case 'AddAttackers':
       return {

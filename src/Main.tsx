@@ -22,6 +22,7 @@ store.dispatch(
 store.dispatch(
   battleActions.addDefenders([2, 5].map(y => new Creature(new Point(4, y))))
 )
+store.dispatch(battleActions.initialRound())
 
 setTimeout(() => {
   const creatures = getCreatures(store.getState().battle)
