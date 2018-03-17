@@ -42,13 +42,15 @@ export class Player {
   availableCreatures: Id[] = []
 }
 
+export type PlayerType = 'Attacker' | 'Defender'
+
 export type Battle = {
   hexes: Hexes
   bounds: Bounds
   attacker: Player
   defender: Player
   player: {
-    current: 'Attacker' | 'Defender'
+    current: PlayerType
     hasMoved: Boolean
   }
   selected: {

@@ -26,19 +26,6 @@ class CreatureComponent extends Component<Props> {
     selectCreature(id)
   }
 
-  createRenderCreature = (key: string) => (animation?: Animation) => (
-    position: Point
-  ) => (
-    <AnimatedSprite
-      interactive
-      key={key}
-      pointerdown={this.createHandleClick(key)}
-      anchor={new Point(0.5, 1)}
-      position={sumPoints(position, animation.offset)}
-      animation={animation}
-    />
-  )
-
   handleAnimationFinish = () => {
     this.props.moveSelectedEnd()
   }
@@ -49,24 +36,39 @@ class CreatureComponent extends Component<Props> {
 
     return (
       <OrderedContainer>
-        {each([attacker.creatures, defender.creatures], (creature, key) => {
-          const renderCreature = this.createRenderCreature(key)
-          if (creature.id === selected.id && animateSelected) {
-            return (
-              <Animate
+        {each(
+          [attacker.creatures, defender.creatures],
+          (creature, key, index) => {
+            const renderCreature = (animation?: Animation) => (
+              position: Point
+            ) => (
+              <AnimatedSprite
+                interactive
                 key={key}
-                speed={0.5}
-                path={selected.path}
-                render={renderCreature(KnightAnimation.walk)}
-                onFinish={this.handleAnimationFinish}
+                pointerdown={this.createHandleClick(key)}
+                anchor={new Point(0.5, 1)}
+                position={sumPoints(position, animation.offset)}
+                animation={animation}
+                scale={index === 1 ? new Point(-1, 1) : new Point(1, 1)}
               />
             )
-          } else {
-            return renderCreature(KnightAnimation.idle)(
-              this.getPosition(creature)
-            )
+            if (creature.id === selected.id && animateSelected) {
+              return (
+                <Animate
+                  key={key}
+                  speed={0.5}
+                  path={selected.path}
+                  render={renderCreature(KnightAnimation.walk)}
+                  onFinish={this.handleAnimationFinish}
+                />
+              )
+            } else {
+              return renderCreature(KnightAnimation.idle)(
+                this.getPosition(creature)
+              )
+            }
           }
-        })}
+        )}
       </OrderedContainer>
     )
   }

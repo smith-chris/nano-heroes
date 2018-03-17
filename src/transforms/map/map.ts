@@ -146,19 +146,19 @@ export const moveSelected = (map: Battle) => {
 
 export const each = <T, R>(
   input: HashMap<T> | HashMap<T>[],
-  f: (v: T, k: string) => R
+  f: (v: T, k: string, index: number) => R
 ) => {
   const results: R[] = []
-  const iterate = (object: HashMap<T>) => {
+  const iterate = (object: HashMap<T>, index?: number) => {
     for (let key in object) {
       const val = object[key]
-      results.push(f(val, key))
+      results.push(f(val, key, index))
     }
   }
   if (Array.isArray(input)) {
-    for (let object of input) {
-      iterate(object)
-    }
+    input.forEach((object, index) => {
+      iterate(object, index)
+    })
   } else {
     iterate(input)
   }
