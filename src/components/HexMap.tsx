@@ -41,7 +41,7 @@ class MapComponent extends Component<Props> {
             <Sprite
               interactive
               pointerdown={this.createHandleClick(hex)}
-              alpha={isSelected ? 0.3 : 0.5}
+              alpha={isSelected ? 0.5 : 1}
               key={key}
               anchor={0.5}
               position={pointToCoordinates(hex.position)}

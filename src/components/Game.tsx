@@ -4,7 +4,7 @@ import HexMap from 'components/HexMap'
 import CreatureComponent from 'components/Creatures'
 
 export const Game = () => (
-  <Container x={9} y={7}>
+  <Container x={16} y={35}>
     <HexMap />
     <CreatureComponent />
   </Container>

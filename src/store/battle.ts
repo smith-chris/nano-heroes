@@ -125,6 +125,12 @@ export const battle: Reducer = (state = initialState, action) => {
       }
     case 'MoveSelectedStart':
       if (!canMove(state)) {
+        console.warn(`You can't move at this state:`, state)
+        return state
+      }
+      const path = getPath(state.hexes, action.data)
+      if (path.length <= 1) {
+        console.warn('Selected unaccessible hex to move to: ', action.data)
         return state
       }
       return {

@@ -8,6 +8,7 @@ import { render, Text, Container } from 'react-pixi-fiber'
 import { Game } from 'components/Game'
 import { Provider } from 'react-redux'
 import { getCreatures } from 'transforms/map'
+import { sumPoints } from 'transforms/map/point'
 
 render(
   <Provider store={store}>
@@ -15,21 +16,23 @@ render(
   </Provider>,
   stage
 )
-store.dispatch(battleActions.loadMap({ width: 5, height: 7 }))
+store.dispatch(battleActions.loadMap({ width: 9, height: 10 }))
 store.dispatch(
-  battleActions.addAttackers([2, 5].map(y => new Creature(new Point(0, y))))
+  battleActions.addAttackers([2, 8].map(y => new Creature(new Point(0, y))))
 )
 store.dispatch(
-  battleActions.addDefenders([2, 5].map(y => new Creature(new Point(4, y))))
+  battleActions.addDefenders([2, 8].map(y => new Creature(new Point(8, y))))
 )
 store.dispatch(battleActions.initialRound())
 
+const creatures = getCreatures(store.getState().battle)
+const creature = creatures[Object.keys(creatures)[1]]
 setTimeout(() => {
-  const creatures = getCreatures(store.getState().battle)
-  const creature = creatures[Object.keys(creatures)[1]]
   store.dispatch(battleActions.selectCreature(creature.id))
 }, 300)
 
 setTimeout(() => {
-  store.dispatch(battleActions.moveSelected(new Point(3, 4)))
+  store.dispatch(
+    battleActions.moveSelected(sumPoints(creature.position, new Point(3, -1)))
+  )
 }, 1300)
