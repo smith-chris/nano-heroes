@@ -10,14 +10,15 @@ import char1 from 'assets/char1.png'
 import { Creature } from 'transforms/creature'
 import { Animate } from './Animate'
 import { OrderedContainer } from './OrderedContainer'
+import { AnimatedSprite } from './AnimatedSprite'
+import { KnightAnimation, Animation } from 'assets/animation'
+import { sumPoints } from 'transforms/map/point'
 
 type Props = StateProps & ActionProps
 
 class CreatureComponent extends Component<Props> {
   getPosition(creature: Creature) {
-    const position = pointToCoordinates(creature.position)
-    position.y += 1
-    return position
+    return pointToCoordinates(creature.position)
   }
 
   createHandleClick = (id: Id) => () => {
@@ -25,14 +26,16 @@ class CreatureComponent extends Component<Props> {
     selectCreature(id)
   }
 
-  createRenderCreature = (key: string) => (position: Point) => (
-    <Sprite
+  createRenderCreature = (key: string) => (animation?: Animation) => (
+    position: Point
+  ) => (
+    <AnimatedSprite
       interactive
       key={key}
       pointerdown={this.createHandleClick(key)}
       anchor={new Point(0.5, 1)}
-      position={position}
-      texture={Texture.fromImage(char1.src)}
+      position={sumPoints(position, animation.offset)}
+      animation={animation}
     />
   )
 
@@ -52,14 +55,16 @@ class CreatureComponent extends Component<Props> {
             return (
               <Animate
                 key={key}
-                speed={0.7}
+                speed={0.5}
                 path={selected.path}
-                render={renderCreature}
+                render={renderCreature(KnightAnimation.walk)}
                 onFinish={this.handleAnimationFinish}
               />
             )
           } else {
-            return renderCreature(this.getPosition(creature))
+            return renderCreature(KnightAnimation.idle)(
+              this.getPosition(creature)
+            )
           }
         })}
       </OrderedContainer>
