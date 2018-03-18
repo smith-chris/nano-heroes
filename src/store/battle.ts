@@ -16,6 +16,7 @@ import { Point } from 'utils/pixi'
 import { Creature } from 'transforms/creature'
 import { resetPlayer } from 'transforms/map/battle'
 import { chooseRandom, chooseOther } from 'utils/battle'
+import { selectNextCreature } from 'transforms/map/map'
 
 export type Size = {
   width: number
@@ -30,6 +31,7 @@ type LoadMap = { type: 'LoadMap'; data: Size }
 type InitialRound = { type: 'InitialRound' }
 type ChangeRound = { type: 'ChangeRound' }
 type ChangeTurn = { type: 'ChangeTurn' }
+type SelectNextCreature = { type: 'SelectNextCreature' }
 type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
 type AddDefenders = { type: 'AddDefenders'; data: Creature[] }
 type SelectCreature = { type: 'SelectCreature'; data: Id }
@@ -41,6 +43,9 @@ export const battleActions = {
   initialRound: (): InitialRound => ({ type: 'InitialRound' }),
   changeRound: (): ChangeRound => ({ type: 'ChangeRound' }),
   changeTurn: (): ChangeTurn => ({ type: 'ChangeTurn' }),
+  selectNextCreature: (): SelectNextCreature => ({
+    type: 'SelectNextCreature'
+  }),
   addAttackers: (data: AddAttackers['data']): AddAttackers => ({
     type: 'AddAttackers',
     data
@@ -67,6 +72,7 @@ export type BattleAction =
   | InitialRound
   | ChangeRound
   | ChangeTurn
+  | SelectNextCreature
   | AddAttackers
   | AddDefenders
   | SelectCreature
@@ -104,6 +110,14 @@ export const battle: Reducer = (state = initialState, action) => {
     case 'ChangeTurn':
       return {
         ...state
+      }
+    case 'SelectNextCreature':
+      if (!canMove(state)) {
+        return state
+      }
+      return {
+        ...state,
+        ...selectNextCreature(state)
       }
     case 'AddAttackers':
       return {

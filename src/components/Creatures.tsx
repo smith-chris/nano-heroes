@@ -14,9 +14,17 @@ import { AnimatedSprite } from './AnimatedSprite'
 import { KnightAnimation, Animation } from 'assets/animation'
 import { sumPoints } from 'transforms/map/point'
 
-type Props = StateProps & ActionProps
+const mapStateToProps = (state: StoreState) => state
+type StateProps = ReturnType<typeof mapStateToProps>
 
-class CreatureComponent extends Component<Props> {
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return bindActionCreators(battleActions, dispatch)
+}
+type DispatchProps = ReturnType<typeof mapDispatchToProps>
+
+type Props = StateProps & DispatchProps
+
+class Creatures extends Component<Props> {
   getPosition(creature: Creature) {
     return pointToCoordinates(creature.position)
   }
@@ -74,12 +82,4 @@ class CreatureComponent extends Component<Props> {
   }
 }
 
-type StateProps = StoreState
-const mapStateToProps = (state: StoreState): StateProps => state
-
-type ActionProps = typeof battleActions
-const mapDispatchToProps = (dispatch: Dispatch): ActionProps => {
-  return bindActionCreators(battleActions, dispatch)
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreatureComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(Creatures)

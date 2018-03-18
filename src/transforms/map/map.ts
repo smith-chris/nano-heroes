@@ -11,6 +11,7 @@ import {
   Player
 } from './types'
 import { higlightHexes } from './path'
+import { chooseRandom } from 'utils/battle'
 
 export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   const result = { ...hexes }
@@ -23,6 +24,16 @@ export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
     }
   }
   return result
+}
+
+const removeElement = <T>(data: T[], element: T) => {
+  const index = data.indexOf(element)
+  if (index > -1) {
+    const result = [...data]
+    result.splice(index, 1)
+    return result
+  }
+  return data
 }
 
 export const putAttackers = (
@@ -84,24 +95,61 @@ export const getCreatures = (map: Battle) => {
   }
 }
 
-export const setCreatures = (map: Battle, creatures: Creatures) => {
-  switch (map.player.current) {
+export const setCreatures = (battle: Battle, creatures: Creatures) => {
+  switch (battle.player.current) {
     case 'Attacker':
-      return { ...map, attacker: { ...map.attacker, creatures } }
+      return { ...battle, attacker: { ...battle.attacker, creatures } }
     case 'Defender':
-      return { ...map, defender: { ...map.defender, creatures } }
+      return { ...battle, defender: { ...battle.defender, creatures } }
     default:
-      const exhaustiveCheck: never = map.player.current
-      return map
+      const exhaustiveCheck: never = battle.player.current
+      return battle
   }
 }
 
-export const canMove = (map: Battle) => !map.player.hasMoved
+export const getCurrentPlayer = (battle: Battle) => {
+  switch (battle.player.current) {
+    case 'Attacker':
+      return battle.attacker
+    case 'Defender':
+      return battle.defender
+    default:
+      const exhaustiveCheck: never = battle.player.current
+      return null
+  }
+}
 
-export const selectCreature = (map: Battle, id: Id) => {
-  const targetCreature = getCreatures(map)[id]
+export const setCurrentPlayer = (battle: Battle, player: Player) => {
+  switch (battle.player.current) {
+    case 'Attacker':
+      return { attacker: player }
+    case 'Defender':
+      return { defender: player }
+    default:
+      const exhaustiveCheck: never = battle.player.current
+      return battle
+  }
+}
+
+export const canMove = (battle: Battle) => !battle.player.hasMoved
+
+export const selectNextCreature = (battle: Battle) => {
+  const player = { ...getCurrentPlayer(battle) }
+  const nextCreatureId = chooseRandom(...player.availableCreatures)
+  player.availableCreatures = removeElement(
+    player.availableCreatures,
+    nextCreatureId
+  )
+  return {
+    ...setCurrentPlayer(battle, player),
+    ...selectCreature(battle, nextCreatureId)
+  }
+}
+
+export const selectCreature = (battle: Battle, id: Id) => {
+  const targetCreature = getCreatures(battle)[id]
   if (targetCreature) {
-    const hexes = higlightHexes(map, targetCreature.position)
+    const hexes = higlightHexes(battle, targetCreature.position)
     return {
       hexes,
       selected: {
