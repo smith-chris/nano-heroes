@@ -11,8 +11,8 @@ import { Creature } from 'transforms/creature'
 import { Animate } from './Animate'
 import { OrderedContainer } from './OrderedContainer'
 import { AnimatedSprite } from './AnimatedSprite'
-import { KnightAnimation, Animation } from 'assets/animation'
-import { sumPoints } from 'transforms/map/point'
+import { KnightAnimation, SkeletonAnimation, Animation } from 'assets/animation'
+import { sumPoints, subPoints } from 'transforms/map/point'
 
 const mapStateToProps = (state: StoreState) => state
 type StateProps = ReturnType<typeof mapStateToProps>
@@ -44,15 +44,19 @@ class Creatures extends Component<Props> {
         {each(
           [attacker.creatures, defender.creatures],
           (creature, key, index) => {
+            const isDefender = index === 1
             const renderCreature = (animation?: Animation) => (
               position: Point
             ) => (
               <AnimatedSprite
                 key={key}
                 anchor={new Point(0.5, 1)}
-                position={sumPoints(position, animation.offset)}
+                position={(isDefender ? subPoints : sumPoints)(
+                  position,
+                  animation.offset
+                )}
                 animation={animation}
-                scale={index === 1 ? new Point(-1, 1) : new Point(1, 1)}
+                scale={isDefender ? new Point(-1, 1) : new Point(1, 1)}
               />
             )
             if (creature.id === selected.id && animateSelected) {
@@ -61,14 +65,16 @@ class Creatures extends Component<Props> {
                   key={key}
                   speed={0.5}
                   path={selected.path}
-                  render={renderCreature(KnightAnimation.walk)}
+                  render={renderCreature(
+                    isDefender ? SkeletonAnimation.walk : KnightAnimation.walk
+                  )}
                   onFinish={this.handleAnimationFinish}
                 />
               )
             } else {
-              return renderCreature(KnightAnimation.idle)(
-                this.getPosition(creature)
-              )
+              return renderCreature(
+                isDefender ? SkeletonAnimation.idle : KnightAnimation.idle
+              )(this.getPosition(creature))
             }
           }
         )}

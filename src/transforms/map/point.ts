@@ -7,6 +7,13 @@ export const sumPoints = (pA: Point, pB: Point) => {
   return new Point(pA.x + pB.x, pA.y + pB.y)
 }
 
+export const subPoints = (pA: Point, pB: Point) => {
+  if (!pB) {
+    return pA
+  }
+  return new Point(pA.x - pB.x, pA.y - pB.y)
+}
+
 export const pointsEqual = (pA: Point, pB: Point) =>
   pA.x === pB.x && pA.y === pB.y
 
