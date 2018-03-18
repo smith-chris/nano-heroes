@@ -104,12 +104,16 @@ export const battle: Reducer = (state = initialState, action) => {
         defender: resetPlayer(state.defender),
         player: {
           ...state.player,
-          current: chooseOther(state.player.current, 'Attacker', 'Defender')
+          current: 'Attacker'
         }
       }
     case 'ChangeTurn':
       return {
-        ...state
+        ...state,
+        player: {
+          ...state.player,
+          current: chooseOther(state.player.current, 'Attacker', 'Defender')
+        }
       }
     case 'SelectNextCreature':
       if (!canMove(state)) {

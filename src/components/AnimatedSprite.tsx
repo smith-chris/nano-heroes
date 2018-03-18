@@ -7,7 +7,7 @@ import { Animation } from 'assets/animation'
 
 type Props = SpriteProperties & {
   animation?: Animation
-  pointerdown: () => void
+  pointerdown?: () => void
 }
 
 type State = {

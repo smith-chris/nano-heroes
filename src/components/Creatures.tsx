@@ -29,13 +29,10 @@ class Creatures extends Component<Props> {
     return pointToCoordinates(creature.position)
   }
 
-  createHandleClick = (id: Id) => () => {
-    const { selectCreature } = this.props
-    selectCreature(id)
-  }
-
   handleAnimationFinish = () => {
     this.props.moveSelectedEnd()
+    this.props.changeTurn()
+    this.props.selectNextCreature()
   }
 
   render() {
@@ -51,9 +48,7 @@ class Creatures extends Component<Props> {
               position: Point
             ) => (
               <AnimatedSprite
-                interactive
                 key={key}
-                pointerdown={this.createHandleClick(key)}
                 anchor={new Point(0.5, 1)}
                 position={sumPoints(position, animation.offset)}
                 animation={animation}

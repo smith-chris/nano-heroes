@@ -182,8 +182,7 @@ export const moveSelected = (map: Battle) => {
       {
         ...map,
         hexes,
-        selected: {},
-        player: { ...map.player, hasMoved: true }
+        selected: {}
       },
       newCreatures
     )
