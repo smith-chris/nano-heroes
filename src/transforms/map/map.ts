@@ -150,6 +150,7 @@ export const selectCreature = (battle: Battle, id: Id) => {
   const targetCreature = getCreatures(battle)[id]
   if (targetCreature) {
     const hexes = higlightHexes(battle, targetCreature.position)
+
     return {
       hexes,
       selected: {

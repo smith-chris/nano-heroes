@@ -65,7 +65,7 @@ type Graph = {
   nodes: Nodes
 }
 
-export const possiblePaths = (map: Battle, start: Point, limit: number = 3) => {
+export const possiblePaths = (map: Battle, start: Point, limit: number = 4) => {
   const resultGraph: Graph = {
     map,
     nodes: {}
@@ -122,6 +122,21 @@ export const simplifyNodes = (nodes: Nodes) => {
   return result
 }
 
+export const canHexBeAttacked = (hexes: Hexes, hex: Hex) => {
+  const neighbours = findNeighbours(hex.position)
+  for (const neighbour of neighbours) {
+    const neighbouringHex = getHex(hexes, neighbour)
+    if (
+      neighbouringHex &&
+      neighbouringHex.path &&
+      neighbouringHex.path.length > 0
+    ) {
+      return true
+    }
+  }
+  return false
+}
+
 export const higlightHexes = (map: Battle, start: Point) => {
   const nodes = possiblePaths(map, start)
   const hexes: Hexes = {}
@@ -133,6 +148,14 @@ export const higlightHexes = (map: Battle, start: Point) => {
       hexes[key] = { ...hex, path }
     } else {
       hexes[key] = { ...hex, path: [] }
+    }
+  }
+  for (const key in hexes) {
+    const hex = hexes[key]
+    if (hex.occupant) {
+      hex.canBeAttacked = canHexBeAttacked(hexes, hex)
+    } else {
+      hex.canBeAttacked = false
     }
   }
   return hexes
