@@ -1,10 +1,13 @@
 import { Application } from 'pixi.js'
 import styles from './app.sass'
 
+PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
+
 const screenSize = 128
 const App = new Application(screenSize, screenSize, {
   backgroundColor: 0x124234,
   antialias: false,
+  roundPixels: true,
 })
 const appElement = document.querySelector('#app')
 const canvasHolderElement = appElement && appElement.querySelector('div')

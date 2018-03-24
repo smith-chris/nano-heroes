@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { Point } from 'pixi.js'
+import { Container } from 'react-pixi-fiber'
 import { each } from 'transforms/map'
 import { pointToCoordinates } from 'utils/math'
 import { connect } from 'react-redux'
@@ -11,6 +12,7 @@ import { OrderedContainer } from './OrderedContainer'
 import { AnimatedSprite } from './AnimatedSprite'
 import { KnightAnimation, SkeletonAnimation, Animation } from 'assets/animation'
 import { sumPoints, subPoints } from 'transforms/map/point'
+import { BitmapText } from 'utils/components'
 
 const mapStateToProps = (state: StoreState) => state
 type StateProps = ReturnType<typeof mapStateToProps>
@@ -42,16 +44,18 @@ class Creatures extends Component<Props> {
         {each([attacker.creatures, defender.creatures], (creature, key, index) => {
           const isDefender = index === 1
           const renderCreature = (animation: Animation) => (position: Point) => (
-            <AnimatedSprite
-              key={key}
-              anchor={new Point(0.5, 1)}
-              position={(isDefender ? subPoints : sumPoints)(
-                position,
-                animation.offset,
-              )}
-              animation={animation}
-              scale={isDefender ? new Point(-1, 1) : new Point(1, 1)}
-            />
+            <Container key={key} position={position}>
+              <BitmapText text={creature.fullUnits} />
+              <AnimatedSprite
+                anchor={new Point(0.5, 1)}
+                position={(isDefender ? subPoints : sumPoints)(
+                  new Point(),
+                  animation.offset,
+                )}
+                animation={animation}
+                scale={isDefender ? new Point(-1, 1) : new Point(1, 1)}
+              />
+            </Container>
           )
           if (creature.id === selected.id && animateSelected && selected.path) {
             return (
