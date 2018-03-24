@@ -33,6 +33,7 @@ type SelectNextCreature = { type: 'SelectNextCreature' }
 type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
 type AddDefenders = { type: 'AddDefenders'; data: Creature[] }
 type SelectCreature = { type: 'SelectCreature'; data: Id }
+type SelectAttackTarget = { type: 'SelectAttackTarget'; data: Id }
 export type MoveSelectedStart = { type: 'MoveSelectedStart'; data: Point }
 type MoveSelectedEnd = { type: 'MoveSelectedEnd' }
 

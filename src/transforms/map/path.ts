@@ -156,3 +156,8 @@ export const higlightHexes = (battle: Battle, start: Point) => {
   }
   return hexes
 }
+
+export const getNeighbouringHexes = (battle: Battle, position: Point) =>
+  findNeighbours(position, battle.bounds)
+    .map(point => battle.hexes[pointToId(point)])
+    .filter(hex => Boolean(hex))
