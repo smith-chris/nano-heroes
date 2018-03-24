@@ -1,7 +1,10 @@
 import RandomGenerator from 'utils/RandomGenerator'
 import { Health, getCount, damage, init } from './Health'
+import { Id } from 'transforms/map'
+import { Point } from 'utils/pixi'
+import { idGenerator } from 'utils/math'
 
-const Pixie = {
+const pixieModel = {
   attack: 2,
   defence: 2,
   damage: {
@@ -12,11 +15,14 @@ const Pixie = {
   speed: 7,
 }
 
-type Model = typeof Pixie
+type Model = typeof pixieModel
 
-export class CreatureStack extends Health {
+const getId = idGenerator('creature')
+export class Creature extends Health {
   model: Model
-  constructor(amount: number, model?: Model) {
+  id: Id
+  position: Point
+  constructor(position: Point, amount: number = 10, model: Model = pixieModel) {
     if (!(model && model.health)) {
       console.warn(`Model.health is not definded: ${JSON.stringify(model)}`)
       return
@@ -26,29 +32,31 @@ export class CreatureStack extends Health {
       fullHealth: model.health,
     })
     init(this)
-    this.model = model || Pixie
+    this.model = model || pixieModel
+    this.position = position
+    this.id = getId()
   }
 }
 
-const getMinDamage = (creature: CreatureStack) => {
+const getMinDamage = (creature: Creature) => {
   return creature.model.damage.min || 1
 }
 
-const getMaxDamage = (creature: CreatureStack) => {
+const getMaxDamage = (creature: Creature) => {
   return creature.model.damage.max || 1
 }
 
-const damageRange = (creature: CreatureStack) => {
+const damageRange = (creature: Creature) => {
   let min = getMinDamage(creature) * getCount(creature)
   let max = getMaxDamage(creature) * getCount(creature)
   return { min, max }
 }
 
-const getDefence = (creature: CreatureStack) => {
+const getDefence = (creature: Creature) => {
   return creature.model.defence
 }
 
-const getAttack = (creature: CreatureStack) => {
+const getAttack = (creature: Creature) => {
   return creature.model.attack
 }
 
@@ -57,8 +65,8 @@ export const hit = ({
   defender,
   random,
 }: {
-  attacker: CreatureStack
-  defender: CreatureStack
+  attacker: Creature
+  defender: Creature
   random: RandomGenerator
 }) => {
   let damageAmount = getDamage(attacker, random)
@@ -80,7 +88,7 @@ export const hit = ({
   return damageAmount
 }
 
-const getDamage = (creature: CreatureStack, random: RandomGenerator) => {
+const getDamage = (creature: Creature, random: RandomGenerator) => {
   let { min, max } = damageRange(creature)
 
   if (min !== max) {

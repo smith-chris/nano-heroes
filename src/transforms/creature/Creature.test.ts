@@ -1,6 +1,7 @@
-import { CreatureStack, hit } from './CreatureStack'
+import { Creature, hit } from './Creature'
 import RandomGenerator from 'utils/RandomGenerator'
 import { hitResults } from './vcmiHitResults'
+import { Point } from 'utils/pixi'
 
 let models = {
   infernalTroglodyte: {
@@ -87,9 +88,13 @@ describe('CreatureStack', () => {
         let originalInfo = getResultsInfo(test.results)
         let newResults = []
         for (let i = 0; i < test.results.length; i++) {
-          let attacker = new CreatureStack(test.attacker, models.infernalTroglodyte)
+          let attacker = new Creature(
+            new Point(),
+            test.attacker,
+            models.infernalTroglodyte,
+          )
 
-          let defender = new CreatureStack(test.defender, {
+          let defender = new Creature(new Point(), test.defender, {
             ...models.pixie,
             defence: 3,
           })
