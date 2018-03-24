@@ -4,7 +4,7 @@ import {
   Hexes,
   Obstacle,
   Battle,
-  HashMap,
+  ObjectOf,
   Hex,
   Creatures,
   Id,
@@ -206,11 +206,11 @@ export const moveSelected = (map: Battle) => {
 }
 
 export const each = <T, R>(
-  input: HashMap<T> | HashMap<T>[],
+  input: ObjectOf<T> | ObjectOf<T>[],
   f: (v: T, k: string, index: number) => R,
 ) => {
   const results: R[] = []
-  const iterate = (object: HashMap<T>, index: number) => {
+  const iterate = (object: ObjectOf<T>, index: number) => {
     for (let key in object) {
       const val = object[key]
       results.push(f(val, key, index))

@@ -12,13 +12,13 @@ export class Hex {
   }
 }
 
-export type HashMap<T> = {
+export type ObjectOf<T> = {
   [key: string]: T
 }
 
-export type Creatures = HashMap<Creature>
+export type Creatures = ObjectOf<Creature>
 
-export type Hexes = HashMap<Hex>
+export type Hexes = ObjectOf<Hex>
 
 export class Obstacle {
   constructor(public position: Point, public type: string = 'grass') {}

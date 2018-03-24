@@ -5,7 +5,7 @@ import { Point } from 'utils/pixi'
 export const clearPaths = (hexes: Hexes) => {
   const result: Hexes = {}
   for (const key in hexes) {
-    result[key] = { ...hexes[key], path: [] }
+    result[key] = { ...hexes[key], path: [], canBeAttacked: false }
   }
   return result
 }

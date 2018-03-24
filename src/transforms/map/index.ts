@@ -1,4 +1,4 @@
-export { Hexes, Obstacle, Battle, HashMap, Hex, Bounds, Id } from './types'
+export { Hexes, Obstacle, Battle, ObjectOf, Hex, Bounds, Id } from './types'
 export { calculateStep, pointsEqual, roundPoint } from './point'
 export {
   higlightHexes,
