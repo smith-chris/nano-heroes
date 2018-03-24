@@ -26,12 +26,17 @@ class Game extends Component<Props> {
       addDefenders,
       initialRound,
       selectNextCreature,
+      battle,
+      moveSelected,
     } = this.props
     loadMap({ width: 9, height: 10 })
     addAttackers([2, 5, 8].map(y => new Creature(new Point(0, y))))
     addDefenders([2, 5, 8].map(y => new Creature(new Point(8, y))))
     initialRound()
     selectNextCreature()
+    setTimeout(() => {
+      moveSelected(new Point(4, 5))
+    }, 500)
   }
   render() {
     return (
