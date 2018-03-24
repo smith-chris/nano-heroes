@@ -161,3 +161,8 @@ export const getNeighbouringHexes = (battle: Battle, position: Point) =>
   findNeighbours(position, battle.bounds)
     .map(point => battle.hexes[pointToId(point)])
     .filter(hex => Boolean(hex))
+
+export const getAttackPositions = (battle: Battle, position: Point) =>
+  getNeighbouringHexes(battle, position)
+    .filter(elem => elem.path && elem.path.length > 1)
+    .map(elem => pointToId(elem.position))

@@ -2,50 +2,39 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { Sprite } from 'react-pixi-fiber'
 import { Point } from 'pixi.js'
-import { Hex, each, pointsEqual, getCreatures, Id } from 'transforms/map'
+import {
+  Hex,
+  each,
+  pointsEqual,
+  getCreatures,
+  Id,
+  getAttackPositions,
+} from 'transforms/map'
 import { pointToCoordinates } from 'utils/math'
 import { connect } from 'react-redux'
 import { battleActions } from 'store/battle'
 import { terrain } from 'assets/textures'
-import { getNeighbouringHexes } from 'transforms/map/path'
 import { pointToId } from 'transforms/map/map'
+import { uiActions } from 'store/ui'
 
 type Props = StateProps & ActionProps
 
-type State = {
-  selectAttackTargetHexes: Id[]
-}
-
-class MapComponent extends Component<Props, State> {
-  state = {
-    selectAttackTargetHexes: [],
-  }
-
+class MapComponent extends Component<Props> {
   createHandleClick = (hex: Hex) => () => {
-    const { moveSelected, battle } = this.props
+    const { moveSelected, battle, highlightAttackTarget } = this.props
     if (!hex.canBeAttacked) {
-      this.setState({
-        selectAttackTargetHexes: [],
-      })
+      highlightAttackTarget([])
     }
     if (hex.canBeAttacked) {
-      this.setState({
-        selectAttackTargetHexes: getNeighbouringHexes(battle, hex.position)
-          .filter(elem => elem.path && elem.path.length > 1)
-          .map(elem => pointToId(elem.position)),
-      })
+      highlightAttackTarget(getAttackPositions(battle, hex.position))
     } else if (hex.path && hex.path.length > 0) {
       moveSelected(hex.position)
-      this.setState({
-        selectAttackTargetHexes: [],
-      })
     }
   }
 
   render() {
-    const { battle } = this.props
+    const { battle, ui: { attackPositions } } = this.props
     const { hexes, selected } = battle
-    const { selectAttackTargetHexes } = this.state
     let selectedPosition = new Point(-1)
     if (selected.id && !selected.path) {
       selectedPosition = getCreatures(battle)[selected.id].position
@@ -56,7 +45,7 @@ class MapComponent extends Component<Props, State> {
         {each(hexes, (hex, key) => {
           const isSelected = hex.path.length > 0
           const texture =
-            hex.canBeAttacked || selectAttackTargetHexes.indexOf(key) >= 0
+            hex.canBeAttacked || attackPositions.indexOf(key) >= 0
               ? terrain.grassRed
               : pointsEqual(hex.position, selectedPosition)
                 ? terrain.grassDark
@@ -81,9 +70,9 @@ class MapComponent extends Component<Props, State> {
 type StateProps = StoreState
 const mapStateToProps = (state: StoreState): StateProps => state
 
-type ActionProps = typeof battleActions
+type ActionProps = typeof battleActions & typeof uiActions
 const mapDispatchToProps = (dispatch: Dispatch): ActionProps => {
-  return bindActionCreators(battleActions, dispatch)
+  return bindActionCreators({ ...battleActions, ...uiActions }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapComponent)

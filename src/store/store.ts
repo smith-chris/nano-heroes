@@ -2,15 +2,13 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import Redux, { createStore, applyMiddleware, combineReducers } from 'redux'
 import isDev from 'utils/isDev'
 import { battle, BattleState } from './battle'
+import { ui, UIState } from './ui'
 import genericSubscribe from './genericSubscribe'
-import createSagaMiddleware from 'redux-saga'
-import rootSaga from './sagas'
-
-const sagaMiddleware = createSagaMiddleware()
 
 declare global {
   type StoreState = {
     readonly battle: BattleState
+    readonly ui: UIState
   }
 
   type Dispatch = Redux.Dispatch<StoreState>
@@ -18,13 +16,12 @@ declare global {
 
 const reducers = combineReducers<StoreState>({
   battle,
+  ui,
 })
 
 export const store: Redux.Store<StoreState> = isDev
-  ? createStore(reducers, composeWithDevTools(applyMiddleware(sagaMiddleware)))
-  : createStore(reducers, applyMiddleware(sagaMiddleware))
-
-sagaMiddleware.run(rootSaga)
+  ? createStore(reducers, composeWithDevTools())
+  : createStore(reducers)
 
 export type Store = typeof store
 

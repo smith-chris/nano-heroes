@@ -7,6 +7,7 @@ export {
   simplifyNodes,
   clearPaths,
   getPath,
+  getAttackPositions,
 } from './path'
 export {
   createMap,
