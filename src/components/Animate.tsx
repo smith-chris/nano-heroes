@@ -29,9 +29,15 @@ export class Animate extends Component<Props, State> {
       to,
     })
     let current = from
-    this.setState({ position: current })
+    if (current) {
+      this.setState({ position: current })
+    }
 
     this.ticker.add(() => {
+      if (!current) {
+        console.warn('Current is undefined, returning...')
+        return
+      }
       current.x += step.x
       current.y += step.y
       const currentRounded = roundPoint(current)

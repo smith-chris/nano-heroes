@@ -82,7 +82,7 @@ export const damage = (health: Health, amount: number) => {
 export const heal = (health: Health, amount: number, level: Level, power: Power) => {
   let oldCount = getCount(health)
 
-  let maxHeal
+  let maxHeal = 0
   switch (level) {
     case HEAL:
       maxHeal = health.fullHealth - health.firstHPleft

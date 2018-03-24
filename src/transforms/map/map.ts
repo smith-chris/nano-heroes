@@ -12,6 +12,7 @@ import {
 } from './types'
 import { higlightHexes } from './path'
 import { chooseRandom } from 'utils/battle'
+import assertNever from 'utils/other'
 
 export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   const result = { ...hexes }
@@ -114,8 +115,7 @@ export const getCurrentPlayer = (battle: Battle) => {
     case 'Defender':
       return battle.defender
     default:
-      const exhaustiveCheck: never = battle.player.current
-      return null
+      return assertNever(battle.player.current)
   }
 }
 
@@ -163,6 +163,10 @@ export const selectCreature = (battle: Battle, id: Id) => {
 }
 
 export const moveSelected = (map: Battle) => {
+  if (!(map.selected.id && map.selected.path)) {
+    console.warn(`Required values not found on: ${JSON.stringify(map.selected)}`)
+    return map
+  }
   const creatures = getCreatures(map)
   const selected = creatures[map.selected.id]
   const position = map.selected.path[map.selected.path.length - 1]
@@ -197,7 +201,7 @@ export const each = <T, R>(
   f: (v: T, k: string, index: number) => R,
 ) => {
   const results: R[] = []
-  const iterate = (object: HashMap<T>, index?: number) => {
+  const iterate = (object: HashMap<T>, index: number) => {
     for (let key in object) {
       const val = object[key]
       results.push(f(val, key, index))
@@ -208,7 +212,7 @@ export const each = <T, R>(
       iterate(object, index)
     })
   } else {
-    iterate(input)
+    iterate(input, 0)
   }
   return results
 }

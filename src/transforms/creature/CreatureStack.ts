@@ -19,6 +19,10 @@ export class CreatureStack extends Health {
   fullHealth: number
   model: Model
   constructor(amount: number, model?: Model) {
+    if (!(model && model.health)) {
+      console.warn(`Model.health is not definded: ${JSON.stringify(model)}`)
+      return
+    }
     super({
       baseAmount: amount,
       fullHealth: model.health,
