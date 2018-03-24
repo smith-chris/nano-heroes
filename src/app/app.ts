@@ -1,4 +1,4 @@
-import { Application, Sprite } from 'pixi.js'
+import { Application } from 'pixi.js'
 import styles from './app.sass'
 
 const screenSize = 128

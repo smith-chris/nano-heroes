@@ -1,4 +1,4 @@
-import { Battle, Player } from './types'
+import { Player } from './types'
 
 export const resetPlayer = (player: Player): Player => {
   return {

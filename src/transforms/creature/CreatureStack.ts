@@ -15,8 +15,6 @@ const Pixie = {
 type Model = typeof Pixie
 
 export class CreatureStack extends Health {
-  baseAmount: number
-  fullHealth: number
   model: Model
   constructor(amount: number, model?: Model) {
     if (!(model && model.health)) {

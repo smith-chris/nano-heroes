@@ -1,8 +1,6 @@
-import React, { Component, ReactNode } from 'react'
-import { Texture, Point, ticker, Rectangle, BaseTexture } from 'pixi.js'
+import React, { Component } from 'react'
+import { Texture, ticker, Rectangle } from 'pixi.js'
 import { Sprite, SpriteProperties } from 'react-pixi-fiber'
-import { pointToCoordinates } from 'utils/math'
-import { calculateStep, roundPoint, pointsEqual } from 'transforms/map'
 import { Animation } from 'assets/animation'
 
 type Props = SpriteProperties & {

@@ -7,7 +7,6 @@ export class Hex {
   occupant: string
   canBeAttacked: boolean = false
   path: Point[]
-  distance: number
   constructor(public position: Point, public type: string = 'grass') {
     this.path = []
   }

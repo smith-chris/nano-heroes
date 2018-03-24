@@ -1,8 +1,6 @@
 import {
   createMap,
   Battle,
-  putCreatures,
-  higlightHexes,
   moveSelected,
   clearPaths,
   Id,
@@ -15,7 +13,7 @@ import {
 import { Point } from 'utils/pixi'
 import { Creature } from 'transforms/creature'
 import { resetPlayer } from 'transforms/map/battle'
-import { chooseRandom, chooseOther } from 'utils/battle'
+import { chooseOther } from 'utils/battle'
 import { selectNextCreature } from 'transforms/map/map'
 
 export type Size = {
@@ -79,8 +77,10 @@ export type BattleAction =
   | MoveSelectedStart
   | MoveSelectedEnd
 
-type Reducer = (state: BattleState, action: BattleAction) => BattleState
-export const battle: Reducer = (state = initialState, action) => {
+export const battle = (
+  state: BattleState = initialState,
+  action: BattleAction,
+): BattleState => {
   switch (action.type) {
     case 'LoadMap':
       return {

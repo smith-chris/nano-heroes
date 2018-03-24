@@ -1,4 +1,4 @@
-import { Hexes, Obstacle, Battle, HashMap, Hex, Bounds } from './types'
+import { Hexes, Battle, Hex, Bounds } from './types'
 import { getHex, pointToId, isEnemyCreature } from './map'
 import { Point } from 'utils/pixi'
 

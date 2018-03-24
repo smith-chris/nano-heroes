@@ -1,4 +1,4 @@
-import { Rectangle, BaseTexture } from 'pixi.js'
+import { BaseTexture } from 'pixi.js'
 import { Point } from 'utils/pixi'
 import knightWalk from 'assets/knight/walk.png'
 import knightIdle from 'assets/knight/idle.png'

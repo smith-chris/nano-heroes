@@ -103,7 +103,7 @@ export const setCreatures = (battle: Battle, creatures: Creatures) => {
     case 'Defender':
       return { ...battle, defender: { ...battle.defender, creatures } }
     default:
-      assertNever(battle.player.current)
+      return assertNever(battle.player.current)
   }
 }
 
