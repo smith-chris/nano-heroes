@@ -23,7 +23,7 @@ const behavior = {
   customApplyProps: (instance: Container, oldProps: Props, newProps: Props) => {
     applyProps(instance, newProps)
     instance.children.sort((a, b) => (a.position.y > b.position.y ? 1 : -1))
-  }
+  },
 }
 
 export const OrderedContainer = CustomPIXIComponent<Props>(behavior, TYPE)

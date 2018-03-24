@@ -19,7 +19,7 @@ export class Health {
   resurrected: number
   constructor({
     baseAmount,
-    fullHealth
+    fullHealth,
   }: {
     baseAmount: number
     fullHealth: number
@@ -79,12 +79,7 @@ export const damage = (health: Health, amount: number) => {
   return amount
 }
 
-export const heal = (
-  health: Health,
-  amount: number,
-  level: Level,
-  power: Power
-) => {
+export const heal = (health: Health, amount: number, level: Level, power: Power) => {
   let oldCount = getCount(health)
 
   let maxHeal

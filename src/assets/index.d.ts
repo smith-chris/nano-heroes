@@ -1,7 +1,7 @@
 declare module '*.png' {
   export type ImageAsset = {
-    src: string,
-    width: number,
+    src: string
+    width: number
     height: number
   }
 

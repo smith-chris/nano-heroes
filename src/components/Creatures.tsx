@@ -41,43 +41,38 @@ class Creatures extends Component<Props> {
 
     return (
       <OrderedContainer>
-        {each(
-          [attacker.creatures, defender.creatures],
-          (creature, key, index) => {
-            const isDefender = index === 1
-            const renderCreature = (animation?: Animation) => (
-              position: Point
-            ) => (
-              <AnimatedSprite
+        {each([attacker.creatures, defender.creatures], (creature, key, index) => {
+          const isDefender = index === 1
+          const renderCreature = (animation: Animation) => (position: Point) => (
+            <AnimatedSprite
+              key={key}
+              anchor={new Point(0.5, 1)}
+              position={(isDefender ? subPoints : sumPoints)(
+                position,
+                animation.offset,
+              )}
+              animation={animation}
+              scale={isDefender ? new Point(-1, 1) : new Point(1, 1)}
+            />
+          )
+          if (creature.id === selected.id && animateSelected && selected.path) {
+            return (
+              <Animate
                 key={key}
-                anchor={new Point(0.5, 1)}
-                position={(isDefender ? subPoints : sumPoints)(
-                  position,
-                  animation.offset
+                speed={0.5}
+                path={selected.path}
+                render={renderCreature(
+                  isDefender ? SkeletonAnimation.walk : KnightAnimation.walk,
                 )}
-                animation={animation}
-                scale={isDefender ? new Point(-1, 1) : new Point(1, 1)}
+                onFinish={this.handleAnimationFinish}
               />
             )
-            if (creature.id === selected.id && animateSelected) {
-              return (
-                <Animate
-                  key={key}
-                  speed={0.5}
-                  path={selected.path}
-                  render={renderCreature(
-                    isDefender ? SkeletonAnimation.walk : KnightAnimation.walk
-                  )}
-                  onFinish={this.handleAnimationFinish}
-                />
-              )
-            } else {
-              return renderCreature(
-                isDefender ? SkeletonAnimation.idle : KnightAnimation.idle
-              )(this.getPosition(creature))
-            }
+          } else {
+            return renderCreature(
+              isDefender ? SkeletonAnimation.idle : KnightAnimation.idle,
+            )(this.getPosition(creature))
           }
-        )}
+        })}
       </OrderedContainer>
     )
   }

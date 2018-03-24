@@ -8,7 +8,7 @@ import {
   Hex,
   Creatures,
   Id,
-  Player
+  Player,
 } from './types'
 import { higlightHexes } from './path'
 import { chooseRandom } from 'utils/battle'
@@ -39,12 +39,12 @@ const removeElement = <T>(data: T[], element: T) => {
 export const putAttackers = (
   attacker: Player,
   hexes: Hexes,
-  creaturesToPut: Creature[]
+  creaturesToPut: Creature[],
 ) => {
   const [newHexes, creatures] = putCreatures(
     attacker.creatures,
     hexes,
-    creaturesToPut
+    creaturesToPut,
   )
   return { hexes: newHexes, attacker: { ...attacker, creatures } }
 }
@@ -52,12 +52,12 @@ export const putAttackers = (
 export const putDefenders = (
   defender: Player,
   hexes: Hexes,
-  creaturesToPut: Creature[]
+  creaturesToPut: Creature[],
 ) => {
   const [newHexes, creatures] = putCreatures(
     defender.creatures,
     hexes,
-    creaturesToPut
+    creaturesToPut,
   )
   return { hexes: newHexes, defender: { ...defender, creatures } }
 }
@@ -65,7 +65,7 @@ export const putDefenders = (
 export const putCreatures = (
   creatures: Creatures,
   hexes: Hexes,
-  creaturesToPut: Creature[]
+  creaturesToPut: Creature[],
 ): [Hexes, Creatures] => {
   const newHexes = { ...hexes }
   const newCreatures = { ...creatures }
@@ -138,11 +138,11 @@ export const selectNextCreature = (battle: Battle) => {
   const nextCreatureId = chooseRandom(...player.availableCreatures)
   player.availableCreatures = removeElement(
     player.availableCreatures,
-    nextCreatureId
+    nextCreatureId,
   )
   return {
     ...setCurrentPlayer(battle, player),
-    ...selectCreature(battle, nextCreatureId)
+    ...selectCreature(battle, nextCreatureId),
   }
 }
 
@@ -154,8 +154,8 @@ export const selectCreature = (battle: Battle, id: Id) => {
     return {
       hexes,
       selected: {
-        id
-      }
+        id,
+      },
     }
   } else {
     return {}
@@ -175,7 +175,7 @@ export const moveSelected = (map: Battle) => {
     hexes[currentHexId] = newHex
     hexes[destinationHexId] = {
       ...hexes[destinationHexId],
-      occupant: map.selected.id
+      occupant: map.selected.id,
     }
     const newCreatures = { ...creatures }
     newCreatures[map.selected.id] = { ...selected, position }
@@ -183,9 +183,9 @@ export const moveSelected = (map: Battle) => {
       {
         ...map,
         hexes,
-        selected: {}
+        selected: {},
       },
-      newCreatures
+      newCreatures,
     )
   } else {
     return map
@@ -194,7 +194,7 @@ export const moveSelected = (map: Battle) => {
 
 export const each = <T, R>(
   input: HashMap<T> | HashMap<T>[],
-  f: (v: T, k: string, index: number) => R
+  f: (v: T, k: string, index: number) => R,
 ) => {
   const results: R[] = []
   const iterate = (object: HashMap<T>, index?: number) => {
@@ -226,8 +226,7 @@ export const idToPoint = (id: string) => {
   return new Point(parseInt(x, 10), parseInt(y, 10))
 }
 
-export const getHex = (hexes: Hexes, position: Point) =>
-  hexes[pointToId(position)]
+export const getHex = (hexes: Hexes, position: Point) => hexes[pointToId(position)]
 
 const fillMap = (map: Battle) => {
   const { top, right, bottom, left } = map.bounds
@@ -247,15 +246,15 @@ export const createMap = (width: number, height: number) => {
       left: 0,
       top: 0,
       right: width - 1,
-      bottom: height - 1
+      bottom: height - 1,
     },
     selected: {},
     attacker: new Player(),
     defender: new Player(),
     player: {
       current: 'Attacker',
-      hasMoved: false
-    }
+      hasMoved: false,
+    },
   }
   return fillMap(map)
 }

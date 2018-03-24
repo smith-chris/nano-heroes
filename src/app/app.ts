@@ -4,7 +4,7 @@ import styles from './app.sass'
 const screenSize = 128
 const App = new Application(screenSize, screenSize, {
   backgroundColor: 0x124234,
-  antialias: false
+  antialias: false,
 })
 const appElement = document.querySelector('#app')
 const canvasHolderElement = appElement.querySelector('div')

@@ -8,16 +8,16 @@ let removeNull = array => array.filter(e => e !== null)
 
 let urlLoaderOptions = Object.assign(
   {
-    limit: 16 * 1024
+    limit: 16 * 1024,
   },
   isDev
     ? {
         // use full path in development for better readability
-        name: '[path][name].[ext]'
+        name: '[path][name].[ext]',
       }
     : {
-        outputPath: 'assets/'
-      }
+        outputPath: 'assets/',
+      },
 )
 
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
   output: {
     path: path.resolve('./dist'),
     filename: 'bundle.js',
-    publicPath: ''
+    publicPath: '',
   },
   resolve: {
     extensions: [
@@ -34,15 +34,15 @@ module.exports = {
       '.js',
       '.json',
       isDev ? '.dev.tsx' : '.prod.tsx',
-      isDev ? '.dev.js' : '.prod.js'
+      isDev ? '.dev.js' : '.prod.js',
     ],
-    modules: ['node_modules', path.resolve('./src')]
+    modules: ['node_modules', path.resolve('./src')],
   },
   devtool: 'source-map',
   plugins: [
     new ForkTsCheckerWebpackPlugin(),
     new WatchIgnorePlugin([/sass\.d\.ts$/]),
-    new FriendlyErrorsWebpackPlugin()
+    new FriendlyErrorsWebpackPlugin(),
   ],
   module: {
     rules: [
@@ -55,17 +55,17 @@ module.exports = {
             loader: 'thread-loader',
             options: {
               // there should be 1 cpu for the fork-ts-checker-webpack-plugin
-              workers: require('os').cpus().length - 1
-            }
+              workers: require('os').cpus().length - 1,
+            },
           },
           {
             loader: 'ts-loader',
             options: {
               transpileOnly: true, // use transpileOnly mode to speed-up compilation
-              happyPackMode: true // use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
-            }
-          }
-        ]
+              happyPackMode: true, // use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
+            },
+          },
+        ],
       },
       {
         test: /\.(eot|ttf|woff|woff2|svg)$/,
@@ -73,9 +73,9 @@ module.exports = {
         use: [
           {
             loader: 'url-loader',
-            options: urlLoaderOptions
-          }
-        ]
+            options: urlLoaderOptions,
+          },
+        ],
       },
       {
         test: /\.(png|jpg|jpeg|gif)$/,
@@ -83,14 +83,14 @@ module.exports = {
         use: [
           {
             loader: 'sizeof-loader',
-            options: urlLoaderOptions
-          }
-        ]
+            options: urlLoaderOptions,
+          },
+        ],
       },
       {
         test: /\.(css)$/,
         include: [path.resolve('./src'), path.resolve('./node_modules')],
-        use: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.global\.(scss|sass)$/,
@@ -102,10 +102,10 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              includePaths: [path.resolve('./src/styles')]
-            }
-          }
-        ])
+              includePaths: [path.resolve('./src/styles')],
+            },
+          },
+        ]),
       },
       {
         // match only files that do not contain word '.global'
@@ -121,19 +121,19 @@ module.exports = {
                 : '[hash:base64:10]',
               modules: true,
               importLoaders: 1,
-              namedExport: true
-            }
+              namedExport: true,
+            },
           },
           'postcss-loader',
           {
             loader: 'sass-loader',
             options: {
               includePaths: [path.resolve('./src/styles')],
-              sourceMap: false
-            }
-          }
-        ])
-      }
-    ]
-  }
+              sourceMap: false,
+            },
+          },
+        ]),
+      },
+    ],
+  },
 }

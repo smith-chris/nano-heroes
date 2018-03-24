@@ -10,7 +10,7 @@ import {
   putAttackers,
   putDefenders,
   selectCreature,
-  canMove
+  canMove,
 } from 'transforms/map'
 import { Point } from 'utils/pixi'
 import { Creature } from 'transforms/creature'
@@ -44,27 +44,27 @@ export const battleActions = {
   changeRound: (): ChangeRound => ({ type: 'ChangeRound' }),
   changeTurn: (): ChangeTurn => ({ type: 'ChangeTurn' }),
   selectNextCreature: (): SelectNextCreature => ({
-    type: 'SelectNextCreature'
+    type: 'SelectNextCreature',
   }),
   addAttackers: (data: AddAttackers['data']): AddAttackers => ({
     type: 'AddAttackers',
-    data
+    data,
   }),
   addDefenders: (data: AddDefenders['data']): AddDefenders => ({
     type: 'AddDefenders',
-    data
+    data,
   }),
   selectCreature: (data: SelectCreature['data']): SelectCreature => ({
     type: 'SelectCreature',
-    data
+    data,
   }),
   moveSelected: (data: MoveSelectedStart['data']): MoveSelectedStart => ({
     type: 'MoveSelectedStart',
-    data
+    data,
   }),
   moveSelectedEnd: (): MoveSelectedEnd => ({
-    type: 'MoveSelectedEnd'
-  })
+    type: 'MoveSelectedEnd',
+  }),
 }
 
 export type BattleAction =
@@ -85,7 +85,7 @@ export const battle: Reducer = (state = initialState, action) => {
     case 'LoadMap':
       return {
         ...initialState,
-        ...createMap(action.data.width, action.data.height)
+        ...createMap(action.data.width, action.data.height),
       }
     case 'InitialRound':
       return {
@@ -94,8 +94,8 @@ export const battle: Reducer = (state = initialState, action) => {
         defender: resetPlayer(state.defender),
         player: {
           ...state.player,
-          current: 'Attacker'
-        }
+          current: 'Attacker',
+        },
       }
     case 'ChangeRound':
       return {
@@ -104,16 +104,16 @@ export const battle: Reducer = (state = initialState, action) => {
         defender: resetPlayer(state.defender),
         player: {
           ...state.player,
-          current: 'Attacker'
-        }
+          current: 'Attacker',
+        },
       }
     case 'ChangeTurn':
       return {
         ...state,
         player: {
           ...state.player,
-          current: chooseOther(state.player.current, 'Attacker', 'Defender')
-        }
+          current: chooseOther(state.player.current, 'Attacker', 'Defender'),
+        },
       }
     case 'SelectNextCreature':
       if (!canMove(state)) {
@@ -121,17 +121,17 @@ export const battle: Reducer = (state = initialState, action) => {
       }
       return {
         ...state,
-        ...selectNextCreature(state)
+        ...selectNextCreature(state),
       }
     case 'AddAttackers':
       return {
         ...state,
-        ...putAttackers(state.attacker, state.hexes, action.data)
+        ...putAttackers(state.attacker, state.hexes, action.data),
       }
     case 'AddDefenders':
       return {
         ...state,
-        ...putDefenders(state.defender, state.hexes, action.data)
+        ...putDefenders(state.defender, state.hexes, action.data),
       }
     case 'SelectCreature':
       if (!canMove(state)) {
@@ -139,7 +139,7 @@ export const battle: Reducer = (state = initialState, action) => {
       }
       return {
         ...state,
-        ...selectCreature(state, action.data)
+        ...selectCreature(state, action.data),
       }
     case 'MoveSelectedStart':
       if (!canMove(state)) {
@@ -156,15 +156,15 @@ export const battle: Reducer = (state = initialState, action) => {
         hexes: clearPaths(state.hexes),
         selected: {
           ...state.selected,
-          path: getPath(state.hexes, action.data)
-        }
+          path: getPath(state.hexes, action.data),
+        },
       }
     case 'MoveSelectedEnd':
       if (!canMove(state)) {
         return state
       }
       return {
-        ...moveSelected(state)
+        ...moveSelected(state),
       }
     default: {
       const exhaustiveCheck: never = action

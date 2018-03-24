@@ -26,7 +26,7 @@ export class Animate extends Component<Props, State> {
     let step = calculateStep({
       speed,
       from,
-      to
+      to,
     })
     let current = from
     this.setState({ position: current })
@@ -36,7 +36,7 @@ export class Animate extends Component<Props, State> {
       current.y += step.y
       const currentRounded = roundPoint(current)
       this.setState({
-        position: currentRounded
+        position: currentRounded,
       })
       if (pointsEqual(currentRounded, to)) {
         from = to
@@ -50,7 +50,7 @@ export class Animate extends Component<Props, State> {
         step = calculateStep({
           speed,
           from,
-          to
+          to,
         })
       }
     })

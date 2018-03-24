@@ -10,7 +10,7 @@ export const chooseOther = <T>(current: T, ...options: T[]): T => {
     }
   }
   console.warn(
-    `Couldn't choose any other than ${current} from ${JSON.stringify(options)}`
+    `Couldn't choose any other than ${current} from ${JSON.stringify(options)}`,
   )
   return current
 }

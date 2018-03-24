@@ -6,10 +6,10 @@ const Pixie = {
   defence: 2,
   damage: {
     min: 1,
-    max: 2
+    max: 2,
   },
   health: 3,
-  speed: 7
+  speed: 7,
 }
 
 type Model = typeof Pixie
@@ -21,7 +21,7 @@ export class CreatureStack extends Health {
   constructor(amount: number, model?: Model) {
     super({
       baseAmount: amount,
-      fullHealth: model.health
+      fullHealth: model.health,
     })
     init(this)
     this.model = model || Pixie
@@ -53,7 +53,7 @@ const getAttack = (creature: CreatureStack) => {
 export const hit = ({
   attacker,
   defender,
-  random
+  random,
 }: {
   attacker: CreatureStack
   defender: CreatureStack

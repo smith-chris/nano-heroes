@@ -7,12 +7,12 @@ import stone from 'assets/stone.png'
 const toTextures = <T>(txts: T) =>
   Object.entries(txts).reduce(
     (acc, [key, value]) => ({ ...acc, [key]: Texture.fromImage(value.src) }),
-    {}
+    {},
   ) as { [K in keyof T]: Texture }
 
 export const terrain = toTextures({
   grass,
   stone,
   grassRed,
-  grassDark
+  grassDark,
 })

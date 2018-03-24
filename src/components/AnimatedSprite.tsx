@@ -19,15 +19,9 @@ export class AnimatedSprite extends Component<Props, State> {
   texture: Texture
   componentWillMount() {
     if (this.props.animation) {
-      const {
-        texture,
-        width,
-        height,
-        framesCount,
-        frameGap
-      } = this.props.animation
+      const { texture, width, height, framesCount, frameGap } = this.props.animation
       this.setState({
-        currentFrame: 0
+        currentFrame: 0,
       })
       this.texture = new Texture(texture)
       this.texture.frame = new Rectangle(0, 0, width, height)
@@ -42,7 +36,7 @@ export class AnimatedSprite extends Component<Props, State> {
           }
           this.texture.frame = new Rectangle(frame * width, 0, width, height)
           this.setState({
-            currentFrame: frame
+            currentFrame: frame,
           })
         }
       })
@@ -53,8 +47,6 @@ export class AnimatedSprite extends Component<Props, State> {
     this.ticker.destroy()
   }
   render() {
-    return (
-      <Sprite {...this.props} texture={this.texture || this.props.texture} />
-    )
+    return <Sprite {...this.props} texture={this.texture || this.props.texture} />
   }
 }

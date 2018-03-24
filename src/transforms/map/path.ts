@@ -68,13 +68,13 @@ type Graph = {
 export const possiblePaths = (map: Battle, start: Point, limit: number = 4) => {
   const resultGraph: Graph = {
     map,
-    nodes: {}
+    nodes: {},
   }
   const startId = pointToId(start)
   const startNode: Node = {
     last: getHex(map.hexes, start),
     distance: 0,
-    path: []
+    path: [],
   }
   resultGraph.nodes[startId] = startNode
   const buildGraph = (graph: Graph, node: Node) => {
@@ -98,7 +98,7 @@ export const possiblePaths = (map: Battle, start: Point, limit: number = 4) => {
       const newNode = {
         last: hex,
         distance: currentDistance,
-        path: [...path, last]
+        path: [...path, last],
       }
       graph.nodes[id] = newNode
       buildGraph(graph, newNode)
@@ -126,11 +126,7 @@ export const canHexBeAttacked = (hexes: Hexes, hex: Hex) => {
   const neighbours = findNeighbours(hex.position)
   for (const neighbour of neighbours) {
     const neighbouringHex = getHex(hexes, neighbour)
-    if (
-      neighbouringHex &&
-      neighbouringHex.path &&
-      neighbouringHex.path.length > 0
-    ) {
+    if (neighbouringHex && neighbouringHex.path && neighbouringHex.path.length > 0) {
       return true
     }
   }

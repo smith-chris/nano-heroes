@@ -14,7 +14,7 @@ import {
   Level,
   Power,
   heal,
-  takeResurrected
+  takeResurrected,
 } from './Health'
 
 describe('Health', () => {
@@ -25,7 +25,7 @@ describe('Health', () => {
   beforeEach(() => {
     health = new Health({
       baseAmount,
-      fullHealth
+      fullHealth,
     })
   })
 
@@ -109,7 +109,7 @@ describe('Health', () => {
     level: Level,
     power: Power,
     initial: number,
-    expected: number
+    expected: number,
   ) => {
     let amountHealed = heal(health, initial, level, power)
     expect(amountHealed).toBe(expected)
@@ -179,7 +179,7 @@ describe('Health', () => {
         RESURRECT,
         ONE_BATTLE,
         fullHealth * baseAmount,
-        fullHealth * baseAmount
+        fullHealth * baseAmount,
       )
       expect(getCount(health)).toBe(baseAmount)
       expect(health.firstHPleft).toBe(fullHealth)
@@ -218,7 +218,7 @@ describe('Health', () => {
         RESURRECT,
         PERMANENT,
         baseAmount * fullHealth,
-        baseAmount * fullHealth
+        baseAmount * fullHealth,
       )
       expectFullHealth()
 
@@ -231,7 +231,7 @@ describe('Health', () => {
     it('should return correct values', () => {
       health = new Health({
         baseAmount: 1,
-        fullHealth: 300
+        fullHealth: 300,
       })
       init(health)
 

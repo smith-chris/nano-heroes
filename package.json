@@ -14,13 +14,8 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "src/**/*.test.{ts,tsx}": [
-      "jest"
-    ],
-    "src/**/*.{ts,tsx}": [
-      "lint",
-      "git add"
-    ]
+    "src/**/*.test.{ts,tsx}": ["jest"],
+    "src/**/*.{ts,tsx}": ["lint", "git add"]
   },
   "author": "Krzysztof Kowalski",
   "license": "ISC",

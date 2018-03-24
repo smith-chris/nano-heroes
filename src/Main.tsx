@@ -13,5 +13,5 @@ render(
   <Provider store={store}>
     <Game />
   </Provider>,
-  stage
+  stage,
 )

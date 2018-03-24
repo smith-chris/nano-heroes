@@ -6,7 +6,7 @@ type Subscriber<T> = (newSlice: Slice<T>, oldSlice: Slice<T>) => void
 
 export default (store: Store) => <T>(
   sliceState: SliceState<T>,
-  subscriber: Subscriber<T>
+  subscriber: Subscriber<T>,
 ) => {
   let currentSlice = sliceState(store.getState())
   store.subscribe(() => {

@@ -5,7 +5,7 @@ import {
   simplifyNodes,
   xyToId,
   putObstacles,
-  Obstacle
+  Obstacle,
 } from './map'
 import { Point } from 'utils/pixi'
 
@@ -24,7 +24,7 @@ describe('Map', () => {
         new Point(1, 0),
         new Point(1, 2),
         new Point(2, 1),
-        new Point(2, 2)
+        new Point(2, 2),
       ]
       expect(findNeighbours(input)).toEqual(output)
     })
@@ -36,7 +36,7 @@ describe('Map', () => {
         new Point(2, 1),
         new Point(2, 3),
         new Point(3, 1),
-        new Point(3, 2)
+        new Point(3, 2),
       ]
       expect(findNeighbours(input)).toEqual(output)
     })
@@ -48,7 +48,7 @@ describe('Map', () => {
       const distance = 1
       const output = {
         [xyToId(1, 0)]: 1,
-        [xyToId(0, 1)]: 1
+        [xyToId(0, 1)]: 1,
       }
       expect(simplifyNodes(possiblePaths(map, start, distance))).toEqual(output)
     })
@@ -71,7 +71,7 @@ describe('Map', () => {
         [xyToId(2, 3)]: 2,
         [xyToId(3, 0)]: 2,
         [xyToId(3, 1)]: 2,
-        [xyToId(3, 2)]: 2
+        [xyToId(3, 2)]: 2,
       }
       expect(simplifyNodes(possiblePaths(map, start, distance))).toEqual(output)
     })
@@ -80,7 +80,7 @@ describe('Map', () => {
       const map = createMap(10, 10)
       map.hexes = putObstacles(map.hexes, [
         new Obstacle(new Point(2, 1)),
-        new Obstacle(new Point(2, 2))
+        new Obstacle(new Point(2, 2)),
       ])
       const start = new Point(1, 1)
       const distance = 2
@@ -93,7 +93,7 @@ describe('Map', () => {
         [xyToId(1, 2)]: 1,
         [xyToId(1, 3)]: 2,
         [xyToId(2, 0)]: 2,
-        [xyToId(2, 3)]: 2
+        [xyToId(2, 3)]: 2,
       }
       expect(simplifyNodes(possiblePaths(map, start, distance))).toEqual(output)
     })

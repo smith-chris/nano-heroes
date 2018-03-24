@@ -1,16 +1,13 @@
 {
   "rules": {
-    "align": [true, "parameters", "statements"],
     "ban": false,
     "class-name": true,
     "comment-format": [true, "check-space"],
     "curly": true,
     "eofline": false,
-    "indent": [true, "spaces"],
     "interface-name": [true, "never-prefix"],
     "jsdoc-format": true,
     "label-position": true,
-    "max-line-length": [true, 120],
     "member-ordering": [
       true,
       "public-before-private",
@@ -47,12 +44,8 @@
       "check-open-brace",
       "check-whitespace"
     ],
-    "quotemark": [true, "single"],
     "radix": true,
-    "semicolon": [true, "never"],
     "switch-default": true,
-
-    "trailing-comma": [false],
 
     "triple-equals": [true, "allow-null-check"],
     "typedef": [true, "parameter", "property-declaration"],
@@ -72,16 +65,6 @@
       "check-format",
       "allow-leading-underscore",
       "allow-pascal-case"
-    ],
-    "whitespace": [
-      true,
-      "check-branch",
-      "check-decl",
-      "check-module",
-      "check-operator",
-      "check-separator",
-      "check-type",
-      "check-typecast"
     ]
   }
 }

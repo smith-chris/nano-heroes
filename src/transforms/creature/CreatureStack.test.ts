@@ -8,21 +8,21 @@ let models = {
     defence: 4,
     damage: {
       min: 1,
-      max: 3
+      max: 3,
     },
     health: 6,
-    speed: 5
+    speed: 5,
   },
   pixie: {
     attack: 2,
     defence: 2,
     damage: {
       min: 1,
-      max: 2
+      max: 2,
     },
     health: 3,
-    speed: 7
-  }
+    speed: 7,
+  },
 }
 
 let random = new RandomGenerator()
@@ -37,9 +37,7 @@ describe('CreatureStack', () => {
         var numbers = array.slice(0).sort((a, b) => a - b)
         var middle = Math.floor(numbers.length / 2)
         var isEven = numbers.length % 2 === 0
-        return isEven
-          ? (numbers[middle] + numbers[middle - 1]) / 2
-          : numbers[middle]
+        return isEven ? (numbers[middle] + numbers[middle - 1]) / 2 : numbers[middle]
       }
 
       let getAvg = (array: number[]) => {
@@ -55,7 +53,7 @@ describe('CreatureStack', () => {
           min: Math.min(...array),
           max: Math.max(...array),
           median: getMedian(array),
-          average: getAvg(array)
+          average: getAvg(array),
         }
         return result
       }
@@ -73,7 +71,7 @@ describe('CreatureStack', () => {
           maxDiff: info1.max - info2.max,
           medDiff: Math.abs(info1.median - info2.median),
           avrDiff: Math.abs(info1.average - info2.average),
-          totalDiff: 0
+          totalDiff: 0,
         }
         let totalDiff = 0
         Object.keys(result).forEach((key: keyof typeof result) => {
@@ -89,14 +87,11 @@ describe('CreatureStack', () => {
         let originalInfo = getResultsInfo(test.results)
         let newResults = []
         for (let i = 0; i < test.results.length; i++) {
-          let attacker = new CreatureStack(
-            test.attacker,
-            models.infernalTroglodyte
-          )
+          let attacker = new CreatureStack(test.attacker, models.infernalTroglodyte)
 
           let defender = new CreatureStack(test.defender, {
             ...models.pixie,
-            defence: 3
+            defence: 3,
           })
 
           let damage = hit({ attacker, defender, random })

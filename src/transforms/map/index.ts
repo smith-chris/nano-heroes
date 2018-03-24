@@ -6,7 +6,7 @@ export {
   possiblePaths,
   simplifyNodes,
   clearPaths,
-  getPath
+  getPath,
 } from './path'
 export {
   createMap,
@@ -19,5 +19,5 @@ export {
   putAttackers,
   putDefenders,
   selectCreature,
-  canMove
+  canMove,
 } from './map'
