@@ -1,4 +1,5 @@
 import { Point } from 'utils/pixi'
+import { Rect } from './types'
 
 export const sumPoints = (pA: Point, pB?: Point) => {
   if (!pB) {
@@ -23,6 +24,9 @@ export const pointsEqual = (pA: Point, pB?: Point) => {
 }
 
 export const roundPoint = (p: Point) => new Point(Math.round(p.x), Math.round(p.y))
+
+export const rectsEqual = (rA: Rect, rB: Rect) =>
+  rA.x === rB.x && rA.y === rB.y && rA.width === rB.width && rA.height === rB.height
 
 type transitionData = {
   speed?: number

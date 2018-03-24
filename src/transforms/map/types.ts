@@ -37,6 +37,13 @@ export class Bounds {
   }
 }
 
+export type Rect = {
+  x?: number
+  y?: number
+  width: number
+  height: number
+}
+
 export class Player {
   creatures: Creatures = {}
   availableCreatures: Id[] = []

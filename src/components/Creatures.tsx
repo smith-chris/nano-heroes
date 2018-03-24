@@ -13,6 +13,7 @@ import { AnimatedSprite } from './AnimatedSprite'
 import { KnightAnimation, SkeletonAnimation, Animation } from 'assets/animation'
 import { sumPoints, subPoints } from 'transforms/map/point'
 import { BitmapText } from 'utils/components'
+import { Rectangle } from './Rectangle'
 
 const mapStateToProps = (state: StoreState) => state
 type StateProps = ReturnType<typeof mapStateToProps>
@@ -45,7 +46,6 @@ class Creatures extends Component<Props> {
           const isDefender = index === 1
           const renderCreature = (animation: Animation) => (position: Point) => (
             <Container key={key} position={position}>
-              <BitmapText text={creature.fullUnits} />
               <AnimatedSprite
                 anchor={new Point(0.5, 1)}
                 position={(isDefender ? subPoints : sumPoints)(
@@ -55,6 +55,10 @@ class Creatures extends Component<Props> {
                 animation={animation}
                 scale={isDefender ? new Point(-1, 1) : new Point(1, 1)}
               />
+              <Container position={new Point(isDefender ? -6 : 6, 5)}>
+                <Rectangle width={10} height={7} anchor={0.5} alpha={0.5} />
+                <BitmapText text={creature.fullUnits} anchor={0.5} />
+              </Container>
             </Container>
           )
           if (creature.id === selected.id && animateSelected && selected.path) {
