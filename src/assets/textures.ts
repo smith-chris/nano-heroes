@@ -1,7 +1,8 @@
 import { Texture } from 'pixi.js'
 import grass from 'assets/grass.png'
+import grassRed from 'assets/grassRed.png'
+import grassDark from 'assets/grassDark.png'
 import stone from 'assets/stone.png'
-import redGrass from 'assets/redGrass.png'
 
 const toTextures = <T>(txts: T) =>
   Object.entries(txts).reduce(
@@ -12,5 +13,6 @@ const toTextures = <T>(txts: T) =>
 export const terrain = toTextures({
   grass,
   stone,
-  redGrass
+  grassRed,
+  grassDark
 })

@@ -29,8 +29,12 @@ class MapComponent extends Component<Props> {
     return (
       <>
         {each(hexes, (hex, key) => {
-          const isSelected =
-            hex.path.length > 0 || pointsEqual(hex.position, selectedPosition)
+          const isSelected = hex.path.length > 0
+          const texture = hex.canBeAttacked
+            ? terrain.grassRed
+            : pointsEqual(hex.position, selectedPosition)
+              ? terrain.grassDark
+              : terrain.grass
           return (
             <Sprite
               interactive
@@ -39,7 +43,7 @@ class MapComponent extends Component<Props> {
               key={key}
               anchor={0.5}
               position={pointToCoordinates(hex.position)}
-              texture={hex.canBeAttacked ? terrain.redGrass : terrain.grass}
+              texture={texture}
             />
           )
         })}
