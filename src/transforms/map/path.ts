@@ -1,5 +1,5 @@
 import { Hexes, Obstacle, Battle, HashMap, Hex, Bounds } from './types'
-import { getHex, pointToId } from './map'
+import { getHex, pointToId, isEnemyCreature } from './map'
 import { Point } from 'utils/pixi'
 
 export const clearPaths = (hexes: Hexes) => {
@@ -133,11 +133,11 @@ export const canHexBeAttacked = (hexes: Hexes, hex: Hex) => {
   return false
 }
 
-export const higlightHexes = (map: Battle, start: Point) => {
-  const nodes = possiblePaths(map, start)
+export const higlightHexes = (battle: Battle, start: Point) => {
+  const nodes = possiblePaths(battle, start)
   const hexes: Hexes = {}
-  for (const key in map.hexes) {
-    const hex = map.hexes[key]
+  for (const key in battle.hexes) {
+    const hex = battle.hexes[key]
     const node = nodes[key]
     if (node) {
       const path = node.path.map(n => n.position)
@@ -148,7 +148,7 @@ export const higlightHexes = (map: Battle, start: Point) => {
   }
   for (const key in hexes) {
     const hex = hexes[key]
-    if (hex.occupant) {
+    if (hex.occupant && isEnemyCreature(battle, hex.occupant)) {
       hex.canBeAttacked = canHexBeAttacked(hexes, hex)
     } else {
       hex.canBeAttacked = false

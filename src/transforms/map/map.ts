@@ -19,7 +19,7 @@ export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   for (const obstacle of obstacles) {
     const hex = getHex(result, obstacle.position)
     if (hex && !hex.occupant) {
-      hex.occupant = obstacle
+      hex.occupant = obstacle.type
     } else {
       throw new Error('No hex at id: ' + pointToId(obstacle.position))
     }
@@ -103,8 +103,7 @@ export const setCreatures = (battle: Battle, creatures: Creatures) => {
     case 'Defender':
       return { ...battle, defender: { ...battle.defender, creatures } }
     default:
-      const exhaustiveCheck: never = battle.player.current
-      return battle
+      assertNever(battle.player.current)
   }
 }
 
@@ -126,8 +125,18 @@ export const setCurrentPlayer = (battle: Battle, player: Player) => {
     case 'Defender':
       return { defender: player }
     default:
-      const exhaustiveCheck: never = battle.player.current
-      return battle
+      return assertNever(battle.player.current)
+  }
+}
+
+export const isEnemyCreature = (battle: Battle, creature: Id) => {
+  switch (battle.player.current) {
+    case 'Attacker':
+      return Boolean(battle.defender.creatures[creature])
+    case 'Defender':
+      return Boolean(battle.attacker.creatures[creature])
+    default:
+      return assertNever(battle.player.current)
   }
 }
 

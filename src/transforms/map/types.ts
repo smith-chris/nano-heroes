@@ -4,7 +4,7 @@ import { Point } from 'utils/pixi'
 export type Id = string
 
 export class Hex {
-  occupant: Obstacle | string
+  occupant: string
   canBeAttacked: boolean = false
   path: Point[]
   distance: number
