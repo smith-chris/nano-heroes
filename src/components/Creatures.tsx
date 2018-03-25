@@ -37,15 +37,21 @@ class Creatures extends Component<Props> {
   }
 
   render() {
-    const { battle: { selected, attacker, defender } } = this.props
+    const {
+      battle: { selected, attacker, defender },
+      ui: { attackTarget },
+    } = this.props
     const animateSelected = selected.path && selected.path.length > 0
 
     return (
       <OrderedContainer>
         {each([attacker.creatures, defender.creatures], (creature, key, index) => {
+          const fadeCreature = attackTarget
+            ? attackTarget !== key && selected.id !== key
+            : false
           const isDefender = index === 1
           const renderCreature = (animation: Animation) => (position: Point) => (
-            <Container key={key} position={position}>
+            <Container key={key} position={position} alpha={fadeCreature ? 0.33 : 1}>
               <AnimatedSprite
                 anchor={new Point(0.5, 1)}
                 position={(isDefender ? subPoints : sumPoints)(
