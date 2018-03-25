@@ -15,30 +15,42 @@ type State = {
 export class AnimatedSprite extends Component<Props, State> {
   ticker: ticker.Ticker
   texture: Texture
-  componentWillMount() {
-    if (this.props.animation) {
-      const { texture, width, height, framesCount, frameGap } = this.props.animation
-      this.setState({
-        currentFrame: 0,
-      })
-      this.texture = new Texture(texture)
-      this.texture.frame = new Rectangle(0, 0, width, height)
-      this.ticker = new ticker.Ticker()
-      let skipped = 0
-      this.ticker.add(() => {
-        if (++skipped > frameGap) {
-          skipped = 0
-          let frame = this.state.currentFrame + 1
-          if (frame >= framesCount) {
-            frame = 0
-          }
-          this.texture.frame = new Rectangle(frame * width, 0, width, height)
-          this.setState({
-            currentFrame: frame,
-          })
+  startAnimation = (animation: Animation) => {
+    if (this.ticker) {
+      this.ticker.stop()
+    }
+    const { texture, width, height, framesCount, frameGap } = animation
+    this.setState({
+      currentFrame: 0,
+    })
+    this.texture = new Texture(texture)
+    this.texture.frame = new Rectangle(0, 0, width, height)
+    this.ticker = new ticker.Ticker()
+    let skipped = 0
+    this.ticker.add(() => {
+      if (++skipped > frameGap) {
+        skipped = 0
+        let frame = this.state.currentFrame + 1
+        if (frame >= framesCount) {
+          frame = 0
         }
-      })
-      this.ticker.start()
+        this.texture.frame = new Rectangle(frame * width, 0, width, height)
+        this.setState({
+          currentFrame: frame,
+        })
+      }
+    })
+    this.ticker.start()
+  }
+  componentWillMount() {
+    const { animation } = this.props
+    if (animation) {
+      this.startAnimation(animation)
+    }
+  }
+  componentWillReceiveProps({ animation }: Props) {
+    if (animation && animation !== this.props.animation) {
+      this.startAnimation(animation)
     }
   }
   componentWillUnmount() {
