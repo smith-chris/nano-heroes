@@ -21,14 +21,28 @@ type Props = StateProps & ActionProps
 
 class MapComponent extends Component<Props> {
   createHandleClick = (hex: Hex) => () => {
-    const { moveSelected, battle, highlightTarget, resetTarget } = this.props
-    if (!hex.canBeAttacked) {
+    const {
+      moveSelected,
+      battle,
+      highlightTarget,
+      resetTarget,
+      resetPositions,
+      ui: { attackPositions },
+    } = this.props
+    if (attackPositions.indexOf(pointToId(hex.position)) >= 0) {
+      moveSelected(hex.position)
+      resetPositions()
+      return
+    } else if (hex.path && hex.path.length > 0) {
+      moveSelected(hex.position)
       resetTarget()
+      return
     }
     if (hex.canBeAttacked) {
       highlightTarget({ battle, hex })
-    } else if (hex.path && hex.path.length > 0) {
-      moveSelected(hex.position)
+      return
+    } else {
+      resetTarget()
     }
   }
 

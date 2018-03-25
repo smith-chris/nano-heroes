@@ -14,12 +14,13 @@ import { KnightAnimation, SkeletonAnimation, Animation } from 'assets/animation'
 import { sumPoints, subPoints } from 'transforms/map/point'
 import { BitmapText } from 'utils/components'
 import { Rectangle } from './Rectangle'
+import { uiActions } from 'store/ui'
 
 const mapStateToProps = (state: StoreState) => state
 type StateProps = ReturnType<typeof mapStateToProps>
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return bindActionCreators(battleActions, dispatch)
+  return bindActionCreators({ ...battleActions, ...uiActions }, dispatch)
 }
 type DispatchProps = ReturnType<typeof mapDispatchToProps>
 
@@ -32,6 +33,10 @@ class Creatures extends Component<Props> {
 
   handleAnimationFinish = () => {
     this.props.moveSelectedEnd()
+    if (this.props.ui.attackTarget) {
+      // TODO: Dispatch attack action
+      this.props.resetTarget()
+    }
     this.props.changeTurn()
     this.props.selectNextCreature()
   }

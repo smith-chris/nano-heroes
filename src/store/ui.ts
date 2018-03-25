@@ -19,6 +19,7 @@ type HighlightTarget = {
   }
 }
 type ResetTarget = { type: 'ResetTarget' }
+type ResetPositions = { type: 'ResetPositions' }
 
 export const uiActions = {
   highlightTarget: (data: HighlightTarget['data']): HighlightTarget => ({
@@ -28,9 +29,12 @@ export const uiActions = {
   resetTarget: (): ResetTarget => ({
     type: 'ResetTarget',
   }),
+  resetPositions: (): ResetPositions => ({
+    type: 'ResetPositions',
+  }),
 }
 
-export type UIAction = HighlightTarget | ResetTarget
+export type UIAction = HighlightTarget | ResetTarget | ResetPositions
 
 export const ui = (state: UIState = initialState, action: UIAction): UIState => {
   switch (action.type) {
@@ -48,6 +52,11 @@ export const ui = (state: UIState = initialState, action: UIAction): UIState => 
         ...state,
         attackPositions: [],
         attackTarget: '',
+      }
+    case 'ResetPositions':
+      return {
+        ...state,
+        attackPositions: [],
       }
     default: {
       const exhaustiveCheck: never = action
