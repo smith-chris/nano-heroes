@@ -73,7 +73,9 @@ class Creatures extends Component<Props> {
             ? attackTarget !== key && selected.id !== key
             : false
           const isDefender = index === 1
-          const renderCreature = (animation: Animation) => (position: Point) => (
+          const renderCreature = (animation: Animation, onFinish?: () => void) => (
+            position: Point,
+          ) => (
             <Container key={key} position={position} alpha={fadeCreature ? 0.33 : 1}>
               <AnimatedSprite
                 anchor={new Point(0.5, 1)}
@@ -81,6 +83,7 @@ class Creatures extends Component<Props> {
                   new Point(),
                   animation.offset,
                 )}
+                onFinish={onFinish}
                 animation={animation}
                 scale={isDefender ? new Point(-1, 1) : new Point(1, 1)}
               />
@@ -97,6 +100,7 @@ class Creatures extends Component<Props> {
           } else if (target.id && creature.id === selected.id) {
             return renderCreature(
               isDefender ? SkeletonAnimation.attack : KnightAnimation.attack,
+              this.handleAttackAnimationFinish,
             )(this.getPosition(creature))
           } else if (
             creature.id === selected.id &&

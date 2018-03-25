@@ -6,6 +6,7 @@ import { Animation } from 'assets/animation'
 type Props = SpriteProperties & {
   animation?: Animation
   pointerdown?: () => void
+  onFinish?: () => void
 }
 
 type State = {
@@ -14,24 +15,37 @@ type State = {
 
 export class AnimatedSprite extends Component<Props, State> {
   ticker: ticker.Ticker
+  tickerCallback: () => void
   texture: Texture
   startAnimation = (animation: Animation) => {
-    if (this.ticker) {
-      this.ticker.stop()
-    }
-    const { texture, width, height, framesCount, frameGap } = animation
+    const {
+      texture,
+      width,
+      totalWidth,
+      height,
+      framesCount,
+      frameGap,
+      options: { loop },
+    } = animation
+    const { onFinish } = this.props
     this.setState({
       currentFrame: 0,
     })
     this.texture = new Texture(texture)
     this.texture.frame = new Rectangle(0, 0, width, height)
-    this.ticker = new ticker.Ticker()
     let skipped = 0
-    this.ticker.add(() => {
+    this.tickerCallback = () => {
       if (++skipped > frameGap) {
         skipped = 0
         let frame = this.state.currentFrame + 1
         if (frame >= framesCount) {
+          if (!loop) {
+            this.ticker.remove(this.tickerCallback)
+            if (onFinish) {
+              onFinish()
+            }
+            return
+          }
           frame = 0
         }
         this.texture.frame = new Rectangle(frame * width, 0, width, height)
@@ -39,17 +53,20 @@ export class AnimatedSprite extends Component<Props, State> {
           currentFrame: frame,
         })
       }
-    })
-    this.ticker.start()
+    }
+    this.ticker.add(this.tickerCallback)
   }
   componentWillMount() {
     const { animation } = this.props
+    this.ticker = new ticker.Ticker()
     if (animation) {
       this.startAnimation(animation)
+      this.ticker.start()
     }
   }
   componentWillReceiveProps({ animation }: Props) {
     if (animation && animation !== this.props.animation) {
+      this.ticker.remove(this.tickerCallback)
       this.startAnimation(animation)
     }
   }

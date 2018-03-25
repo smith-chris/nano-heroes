@@ -192,8 +192,11 @@ export const battle = (
         },
       }
     case 'HitTargetCreatureEnd':
-      console.warn('HitTargetCreatureEnd dispatched!')
-      return state
+      return {
+        ...state,
+        target: {},
+        selected: {},
+      }
     default: {
       const exhaustiveCheck: never = action
       return state
