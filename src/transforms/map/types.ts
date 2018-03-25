@@ -64,4 +64,7 @@ export type Battle = {
     id?: Id
     path?: Point[]
   }
+  target: {
+    id?: Id
+  }
 }

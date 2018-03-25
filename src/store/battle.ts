@@ -14,7 +14,7 @@ import { Point } from 'utils/pixi'
 import { Creature } from 'transforms/creature'
 import { resetPlayer } from 'transforms/map/battle'
 import { chooseOther } from 'utils/battle'
-import { selectNextCreature } from 'transforms/map/map'
+import { selectNextCreature, canAttack } from 'transforms/map/map'
 
 export type Size = {
   width: number
@@ -36,6 +36,8 @@ type SelectCreature = { type: 'SelectCreature'; data: Id }
 type SelectAttackTarget = { type: 'SelectAttackTarget'; data: Id }
 export type MoveSelectedStart = { type: 'MoveSelectedStart'; data: Point }
 type MoveSelectedEnd = { type: 'MoveSelectedEnd' }
+type HitTargetCreatureStart = { type: 'HitTargetCreatureStart'; data: Id }
+type HitTargetCreatureEnd = { type: 'HitTargetCreatureEnd' }
 
 export const battleActions = {
   loadMap: (data: LoadMap['data']): LoadMap => ({ type: 'LoadMap', data }),
@@ -64,6 +66,15 @@ export const battleActions = {
   moveSelectedEnd: (): MoveSelectedEnd => ({
     type: 'MoveSelectedEnd',
   }),
+  hitTargetCreature: (
+    data: HitTargetCreatureStart['data'],
+  ): HitTargetCreatureStart => ({
+    type: 'HitTargetCreatureStart',
+    data,
+  }),
+  hitTargetCreatureEnd: (): HitTargetCreatureEnd => ({
+    type: 'HitTargetCreatureEnd',
+  }),
 }
 
 export type BattleAction =
@@ -77,6 +88,8 @@ export type BattleAction =
   | SelectCreature
   | MoveSelectedStart
   | MoveSelectedEnd
+  | HitTargetCreatureStart
+  | HitTargetCreatureEnd
 
 export const battle = (
   state: BattleState = initialState,
@@ -157,7 +170,7 @@ export const battle = (
         hexes: clearPaths(state.hexes),
         selected: {
           ...state.selected,
-          path: getPath(state.hexes, action.data),
+          path,
         },
       }
     case 'MoveSelectedEnd':
@@ -167,6 +180,20 @@ export const battle = (
       return {
         ...moveSelected(state),
       }
+    case 'HitTargetCreatureStart':
+      if (!canAttack(state, action.data)) {
+        console.warn(`You can't attack this creature: `, action.data, state)
+        return state
+      }
+      return {
+        ...state,
+        target: {
+          id: action.data,
+        },
+      }
+    case 'HitTargetCreatureEnd':
+      console.warn('HitTargetCreatureEnd dispatched!')
+      return state
     default: {
       const exhaustiveCheck: never = action
       return state

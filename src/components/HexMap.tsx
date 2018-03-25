@@ -6,7 +6,7 @@ import {
   Hex,
   each,
   pointsEqual,
-  getCreatures,
+  getCurrentCreatures,
   Id,
   getAttackPositions,
 } from 'transforms/map'
@@ -14,7 +14,7 @@ import { pointToCoordinates } from 'utils/math'
 import { connect } from 'react-redux'
 import { battleActions } from 'store/battle'
 import { terrain } from 'assets/textures'
-import { pointToId } from 'transforms/map/map'
+import { pointToId, getSelectedCreature } from 'transforms/map/map'
 import { uiActions } from 'store/ui'
 
 type Props = StateProps & ActionProps
@@ -27,7 +27,7 @@ class MapComponent extends Component<Props> {
       highlightTarget,
       resetTarget,
       resetPositions,
-      ui: { attackPositions },
+      ui: { attackPositions, attackTarget },
     } = this.props
     if (attackPositions.indexOf(pointToId(hex.position)) >= 0) {
       moveSelected(hex.position)
@@ -41,7 +41,7 @@ class MapComponent extends Component<Props> {
     if (hex.canBeAttacked) {
       highlightTarget({ battle, hex })
       return
-    } else {
+    } else if (attackTarget) {
       resetTarget()
     }
   }
@@ -50,8 +50,9 @@ class MapComponent extends Component<Props> {
     const { battle, ui: { attackPositions } } = this.props
     const { hexes, selected } = battle
     let selectedPosition = new Point(-1)
-    if (selected.id && !selected.path) {
-      selectedPosition = getCreatures(battle)[selected.id].position
+    const selectedCreature = getSelectedCreature(battle)
+    if (selectedCreature && !selected.path) {
+      selectedPosition = selectedCreature.position
     }
 
     return (

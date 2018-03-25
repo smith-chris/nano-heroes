@@ -1,4 +1,10 @@
-import { Battle, Id, getAttackPositions, getCreatures, Hex } from 'transforms/map'
+import {
+  Battle,
+  Id,
+  getAttackPositions,
+  getCurrentCreatures,
+  Hex,
+} from 'transforms/map'
 import { Point } from 'utils/pixi'
 
 export type UIState = {

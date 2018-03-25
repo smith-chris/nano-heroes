@@ -10,7 +10,7 @@ import {
   Id,
   Player,
 } from './types'
-import { higlightHexes } from './path'
+import { higlightHexes, getNeighbouringHexes, areNeighbours } from './path'
 import { chooseRandom } from 'utils/battle'
 import assertNever from 'utils/other'
 
@@ -84,17 +84,25 @@ export const putCreatures = (
   return [newHexes, newCreatures]
 }
 
-export const getCreatures = (map: Battle) => {
-  switch (map.player.current) {
+export const getCurrentCreatures = (battle: Battle) => {
+  switch (battle.player.current) {
     case 'Attacker':
-      return map.attacker.creatures
+      return battle.attacker.creatures
     case 'Defender':
-      return map.defender.creatures
+      return battle.defender.creatures
     default:
-      const exhaustiveCheck: never = map.player.current
+      const exhaustiveCheck: never = battle.player.current
       return {}
   }
 }
+
+export const getAllCreatures = (battle: Battle): Creatures => ({
+  ...battle.attacker.creatures,
+  ...battle.defender.creatures,
+})
+
+export const getSelectedCreature = (battle: Battle) =>
+  battle.selected.id ? getCurrentCreatures(battle)[battle.selected.id] : undefined
 
 export const setCreatures = (battle: Battle, creatures: Creatures) => {
   switch (battle.player.current) {
@@ -113,6 +121,17 @@ export const getCurrentPlayer = (battle: Battle) => {
       return battle.attacker
     case 'Defender':
       return battle.defender
+    default:
+      return assertNever(battle.player.current)
+  }
+}
+
+export const getPreviousPlayer = (battle: Battle) => {
+  switch (battle.player.current) {
+    case 'Attacker':
+      return battle.defender
+    case 'Defender':
+      return battle.attacker
     default:
       return assertNever(battle.player.current)
   }
@@ -142,6 +161,15 @@ export const isEnemyCreature = (battle: Battle, creature: Id) => {
 
 export const canMove = (battle: Battle) => !battle.player.hasMoved
 
+export const canAttack = (battle: Battle, id: Id) => {
+  const selectedCreature = getSelectedCreature(battle)
+  const targetCreature = getAllCreatures(battle)[id]
+  if (selectedCreature && targetCreature) {
+    return areNeighbours(battle, targetCreature.position, selectedCreature.position)
+  }
+  return false
+}
+
 export const selectNextCreature = (battle: Battle) => {
   const player = { ...getCurrentPlayer(battle) }
   const nextCreatureId = chooseRandom(...player.availableCreatures)
@@ -156,7 +184,7 @@ export const selectNextCreature = (battle: Battle) => {
 }
 
 export const selectCreature = (battle: Battle, id: Id) => {
-  const targetCreature = getCreatures(battle)[id]
+  const targetCreature = getCurrentCreatures(battle)[id]
   if (targetCreature) {
     const hexes = higlightHexes(battle, targetCreature.position)
 
@@ -176,7 +204,7 @@ export const moveSelected = (map: Battle) => {
     console.warn(`Required values not found on: ${JSON.stringify(map.selected)}`)
     return map
   }
-  const creatures = getCreatures(map)
+  const creatures = getCurrentCreatures(map)
   const selected = creatures[map.selected.id]
   const position = map.selected.path[map.selected.path.length - 1]
   const currentHexId = pointToId(selected.position)
@@ -196,7 +224,6 @@ export const moveSelected = (map: Battle) => {
       {
         ...map,
         hexes,
-        selected: {},
       },
       newCreatures,
     )
@@ -268,6 +295,7 @@ export const createMap = (width: number, height: number) => {
       current: 'Attacker',
       hasMoved: false,
     },
+    target: {},
   }
   return fillMap(map)
 }

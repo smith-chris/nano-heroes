@@ -16,7 +16,7 @@ export {
   putCreatures,
   moveSelected,
   each,
-  getCreatures,
+  getCurrentCreatures,
   putAttackers,
   putDefenders,
   selectCreature,

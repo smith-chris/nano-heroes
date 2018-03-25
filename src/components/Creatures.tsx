@@ -31,21 +31,39 @@ class Creatures extends Component<Props> {
     return pointToCoordinates(creature.position)
   }
 
-  handleAnimationFinish = () => {
-    this.props.moveSelectedEnd()
-    if (this.props.ui.attackTarget) {
-      // TODO: Dispatch attack action
-      this.props.resetTarget()
+  allAnimationsFinish = () => {
+    const { changeTurn, selectNextCreature } = this.props
+    changeTurn()
+    selectNextCreature()
+  }
+
+  handleAttackAnimationFinish = () => {
+    this.props.hitTargetCreatureEnd()
+    this.allAnimationsFinish()
+  }
+
+  handleMoveAnimationFinish = () => {
+    const {
+      moveSelectedEnd,
+      resetTarget,
+      hitTargetCreature,
+      ui: { attackTarget },
+    } = this.props
+    moveSelectedEnd()
+    if (attackTarget) {
+      resetTarget()
+      hitTargetCreature(attackTarget)
+    } else {
+      this.allAnimationsFinish()
     }
-    this.props.changeTurn()
-    this.props.selectNextCreature()
   }
 
   render() {
     const {
-      battle: { selected, attacker, defender },
+      battle: { selected, attacker, defender, target },
       ui: { attackTarget },
     } = this.props
+
     const animateSelected = selected.path && selected.path.length > 0
 
     return (
@@ -72,7 +90,19 @@ class Creatures extends Component<Props> {
               </Container>
             </Container>
           )
-          if (creature.id === selected.id && animateSelected && selected.path) {
+          if (target.id && creature.id === target.id) {
+            return renderCreature(
+              isDefender ? SkeletonAnimation.defend : KnightAnimation.defend,
+            )(this.getPosition(creature))
+          } else if (target.id && creature.id === selected.id) {
+            return renderCreature(
+              isDefender ? SkeletonAnimation.attack : KnightAnimation.attack,
+            )(this.getPosition(creature))
+          } else if (
+            creature.id === selected.id &&
+            animateSelected &&
+            selected.path
+          ) {
             return (
               <Animate
                 key={key}
@@ -81,7 +111,7 @@ class Creatures extends Component<Props> {
                 render={renderCreature(
                   isDefender ? SkeletonAnimation.walk : KnightAnimation.walk,
                 )}
-                onFinish={this.handleAnimationFinish}
+                onFinish={this.handleMoveAnimationFinish}
               />
             )
           } else {

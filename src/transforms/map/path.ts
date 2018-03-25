@@ -1,6 +1,7 @@
 import { Hexes, Battle, Hex, Bounds } from './types'
 import { getHex, pointToId, isEnemyCreature } from './map'
 import { Point } from 'utils/pixi'
+import { pointsEqual } from './point'
 
 export const clearPaths = (hexes: Hexes) => {
   const result: Hexes = {}
@@ -156,6 +157,9 @@ export const higlightHexes = (battle: Battle, start: Point) => {
   }
   return hexes
 }
+
+export const areNeighbours = (battle: Battle, pA: Point, pB: Point) =>
+  findNeighbours(pA, battle.bounds).filter(p => pointsEqual(p, pB)).length === 1
 
 export const getNeighbouringHexes = (battle: Battle, position: Point) =>
   findNeighbours(position, battle.bounds)
