@@ -12,6 +12,7 @@ import skeletonDefend from 'assets/skeleton/defend.png'
 const defaultOptions = {
   loop: true,
   delay: 0,
+  endReversed: false,
 }
 
 const optional = <T extends object>(o: T) => o as { [K in keyof T]?: T[K] }
@@ -44,8 +45,9 @@ export const KnightAnimation = {
   attack: createAnimation(knightAttack, { count: 10, gap: 6 }, new Point(19, 3), {
     loop: false,
   }),
-  defend: createAnimation(knightDefend, { count: 7, gap: 3 }, knightOfset, {
+  defend: createAnimation(knightDefend, { count: 7, gap: 6 }, knightOfset, {
     loop: false,
+    endReversed: true,
   }),
 }
 

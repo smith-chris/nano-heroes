@@ -25,24 +25,39 @@ export class AnimatedSprite extends Component<Props, State> {
       height,
       framesCount,
       frameGap,
-      options: { loop, delay },
+      options: { loop, delay, endReversed },
     } = animation
     const { onFinish } = this.props
     this.setState({
-      currentFrame: 0,
+      currentFrame: -1,
     })
     this.texture = new Texture(texture)
     this.texture.frame = new Rectangle(0, 0, width, height)
     let skipped = 0
     let currentDelay = delay
+    let direction = 1
     this.tickerCallback = () => {
       if (++skipped > frameGap) {
         if (--currentDelay > 0) {
           return
         }
         skipped = 0
-        let frame = this.state.currentFrame + 1
-        if (frame >= framesCount) {
+        let frame = this.state.currentFrame + direction
+        if (direction > 0 && frame >= framesCount - 1) {
+          if (endReversed) {
+            direction = -1
+          } else if (!loop) {
+            this.ticker.remove(this.tickerCallback)
+            if (onFinish) {
+              onFinish()
+            }
+            return
+          }
+          if (!endReversed) {
+            currentDelay = delay
+            frame = 0
+          }
+        } else if (direction < 0 && endReversed && frame <= 0) {
           if (!loop) {
             this.ticker.remove(this.tickerCallback)
             if (onFinish) {
@@ -52,7 +67,9 @@ export class AnimatedSprite extends Component<Props, State> {
           }
           currentDelay = delay
           frame = 0
+          direction = 1
         }
+
         this.texture.frame = new Rectangle(frame * width, 0, width, height)
         this.setState({
           currentFrame: frame,
