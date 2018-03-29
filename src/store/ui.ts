@@ -6,6 +6,7 @@ import {
   Hex,
 } from 'transforms/map'
 import { Point } from 'utils/pixi'
+import { Action, data, ActionUnion } from 'utils/redux'
 
 export type UIState = {
   attackPositions: Id[]
@@ -17,30 +18,16 @@ const initialState: UIState = {
   attackTarget: '',
 }
 
-type HighlightTarget = {
-  type: 'HighlightTarget'
-  data: {
+export const uiActions = {
+  highlightTarget: Action('HighlightTarget', data as {
     battle: Battle
     hex: Hex
-  }
-}
-type ResetTarget = { type: 'ResetTarget' }
-type ResetPositions = { type: 'ResetPositions' }
-
-export const uiActions = {
-  highlightTarget: (data: HighlightTarget['data']): HighlightTarget => ({
-    type: 'HighlightTarget',
-    data,
   }),
-  resetTarget: (): ResetTarget => ({
-    type: 'ResetTarget',
-  }),
-  resetPositions: (): ResetPositions => ({
-    type: 'ResetPositions',
-  }),
+  resetTarget: Action('ResetTarget'),
+  resetPositions: Action('ResetPositions'),
 }
 
-export type UIAction = HighlightTarget | ResetTarget | ResetPositions
+export type UIAction = ActionUnion<typeof uiActions>
 
 export const ui = (state: UIState = initialState, action: UIAction): UIState => {
   switch (action.type) {
