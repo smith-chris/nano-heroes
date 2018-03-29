@@ -11,43 +11,53 @@ import skeletonDefend from 'assets/skeleton/defend.png'
 
 const defaultOptions = {
   loop: true,
+  delay: 0,
 }
+
+const optional = <T extends object>(o: T) => o as { [K in keyof T]?: T[K] }
 
 export const createAnimation = (
   { src, width, height }: typeof knightWalk,
-  framesCount: number,
-  frameGap: number = 6,
+  { count = 0, gap = 6 },
   offset?: Point,
-  options = defaultOptions,
+  options = optional(defaultOptions),
 ) => {
-  return {
+  const result = {
     texture: BaseTexture.from(src),
-    framesCount,
-    width: width / framesCount,
+    framesCount: count,
+    width: width / count,
     totalWidth: width,
     height,
-    frameGap,
+    frameGap: gap,
     offset,
-    options,
+    options: { ...defaultOptions, ...options },
   }
+  return result
 }
 
 export type Animation = ReturnType<typeof createAnimation>
 
 const knightOfset = new Point(0, 4)
 export const KnightAnimation = {
-  walk: createAnimation(knightWalk, 8, 6, knightOfset),
-  idle: createAnimation(knightIdle, 4, 21, knightOfset),
-  attack: createAnimation(knightAttack, 10, 6, new Point(19, 3), { loop: false }),
-  defend: createAnimation(knightDefend, 7, 5, knightOfset, { loop: false }),
+  walk: createAnimation(knightWalk, { count: 8, gap: 6 }, knightOfset),
+  idle: createAnimation(knightIdle, { count: 4, gap: 21 }, knightOfset),
+  attack: createAnimation(knightAttack, { count: 10, gap: 6 }, new Point(19, 3), {
+    loop: false,
+  }),
+  defend: createAnimation(knightDefend, { count: 7, gap: 3 }, knightOfset, {
+    loop: false,
+  }),
 }
 
 const skeletonOfset = new Point(5, 0)
 export const SkeletonAnimation = {
-  walk: createAnimation(skeletonWalk, 13, 3, skeletonOfset),
-  idle: createAnimation(skeletonIdle, 11, 10, skeletonOfset),
-  attack: createAnimation(skeletonAttack, 18, 4, new Point(11, 0), {
+  walk: createAnimation(skeletonWalk, { count: 13, gap: 3 }, skeletonOfset),
+  idle: createAnimation(skeletonIdle, { count: 11, gap: 10 }, skeletonOfset),
+  attack: createAnimation(skeletonAttack, { count: 18, gap: 4 }, new Point(11, 0), {
     loop: false,
   }),
-  defend: createAnimation(skeletonDefend, 8, 6, new Point(2, 0), { loop: false }),
+  defend: createAnimation(skeletonDefend, { count: 8, gap: 6 }, new Point(2, 0), {
+    loop: false,
+    delay: 27,
+  }),
 }

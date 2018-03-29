@@ -28,6 +28,7 @@ class Game extends Component<Props> {
       selectNextCreature,
       battle,
       moveSelected,
+      changeTurn,
     } = this.props
     loadMap({ width: 9, height: 10 })
     addAttackers([2, 5, 8].map(y => new Creature(new Point(0, y))))
