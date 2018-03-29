@@ -15,6 +15,7 @@ import { Creature } from 'transforms/creature'
 import { resetPlayer } from 'transforms/map/battle'
 import { chooseOther } from 'utils/battle'
 import { selectNextCreature, canAttack } from 'transforms/map/map'
+import { Action, data, ActionUnion } from 'utils/redux'
 
 export type Size = {
   width: number
@@ -25,71 +26,22 @@ export type BattleState = Battle
 
 const initialState: BattleState = createMap(5, 5)
 
-type LoadMap = { type: 'LoadMap'; data: Size }
-type InitialRound = { type: 'InitialRound' }
-type ChangeRound = { type: 'ChangeRound' }
-type ChangeTurn = { type: 'ChangeTurn' }
-type SelectNextCreature = { type: 'SelectNextCreature' }
-type AddAttackers = { type: 'AddAttackers'; data: Creature[] }
-type AddDefenders = { type: 'AddDefenders'; data: Creature[] }
-type SelectCreature = { type: 'SelectCreature'; data: Id }
-type SelectAttackTarget = { type: 'SelectAttackTarget'; data: Id }
-export type MoveSelectedStart = { type: 'MoveSelectedStart'; data: Point }
-type MoveSelectedEnd = { type: 'MoveSelectedEnd' }
-type HitTargetCreatureStart = { type: 'HitTargetCreatureStart'; data: Id }
-type HitTargetCreatureEnd = { type: 'HitTargetCreatureEnd' }
-
 export const battleActions = {
-  loadMap: (data: LoadMap['data']): LoadMap => ({ type: 'LoadMap', data }),
-  initialRound: (): InitialRound => ({ type: 'InitialRound' }),
-  changeRound: (): ChangeRound => ({ type: 'ChangeRound' }),
-  changeTurn: (): ChangeTurn => ({ type: 'ChangeTurn' }),
-  selectNextCreature: (): SelectNextCreature => ({
-    type: 'SelectNextCreature',
-  }),
-  addAttackers: (data: AddAttackers['data']): AddAttackers => ({
-    type: 'AddAttackers',
-    data,
-  }),
-  addDefenders: (data: AddDefenders['data']): AddDefenders => ({
-    type: 'AddDefenders',
-    data,
-  }),
-  selectCreature: (data: SelectCreature['data']): SelectCreature => ({
-    type: 'SelectCreature',
-    data,
-  }),
-  moveSelected: (data: MoveSelectedStart['data']): MoveSelectedStart => ({
-    type: 'MoveSelectedStart',
-    data,
-  }),
-  moveSelectedEnd: (): MoveSelectedEnd => ({
-    type: 'MoveSelectedEnd',
-  }),
-  hitTargetCreature: (
-    data: HitTargetCreatureStart['data'],
-  ): HitTargetCreatureStart => ({
-    type: 'HitTargetCreatureStart',
-    data,
-  }),
-  hitTargetCreatureEnd: (): HitTargetCreatureEnd => ({
-    type: 'HitTargetCreatureEnd',
-  }),
+  loadMap: Action('LoadMap', data as Size),
+  initialRound: Action('InitialRound'),
+  changeRound: Action('ChangeRound'),
+  changeTurn: Action('ChangeTurn'),
+  selectNextCreature: Action('SelectNextCreature'),
+  addAttackers: Action('AddAttackers', data as Creature[]),
+  addDefenders: Action('AddDefenders', data as Creature[]),
+  selectCreature: Action('SelectCreature', data as Id),
+  moveSelected: Action('MoveSelectedStart', data as Point),
+  moveSelectedEnd: Action('MoveSelectedEnd'),
+  hitTargetCreature: Action('HitTargetCreatureStart', data as Id),
+  hitTargetCreatureEnd: Action('HitTargetCreatureEnd'),
 }
 
-export type BattleAction =
-  | LoadMap
-  | InitialRound
-  | ChangeRound
-  | ChangeTurn
-  | SelectNextCreature
-  | AddAttackers
-  | AddDefenders
-  | SelectCreature
-  | MoveSelectedStart
-  | MoveSelectedEnd
-  | HitTargetCreatureStart
-  | HitTargetCreatureEnd
+export type BattleAction = ActionUnion<typeof battleActions>
 
 export const battle = (
   state: BattleState = initialState,
