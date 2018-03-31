@@ -41,7 +41,7 @@ export const reset = (health: Health) => {
   health.resurrected = 0
 }
 
-const addResurrected = (health: Health, amount: number) => {
+export const addResurrected = (health: Health, amount: number) => {
   health.resurrected = Math.max(health.resurrected + amount, 0)
 }
 

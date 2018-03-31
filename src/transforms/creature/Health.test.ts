@@ -69,38 +69,40 @@ describe('Health', () => {
   })
 
   let expectDamage = (initial: number, expected: number) => {
-    let damageTaken = damage(health, initial)
+    let [newHealth, damageTaken] = damage(health, initial)
     expect(damageTaken).toBe(expected)
+    return newHealth
   }
 
   let expectNormalDamage = (initial: number) => {
-    expectDamage(initial, initial)
+    return expectDamage(initial, initial)
   }
 
   let expectNoDamage = (initial: number) => {
-    expectDamage(initial, 0)
+    return expectDamage(initial, 0)
   }
 
   describe('damage()', () => {
-    it('should return correct values', () => {
+    it('should damage correctly', () => {
       init(health)
-      expectNormalDamage(0)
+      health = expectNormalDamage(0)
       expectFullHealth()
 
-      expectNormalDamage(fullHealth - 1)
+      health = expectNormalDamage(fullHealth - 1)
       expect(getCount(health)).toBe(baseAmount)
       expect(health.firstHPleft).toBe(1)
       expect(health.resurrected).toBe(0)
 
-      expectNormalDamage(1)
+      health = expectNormalDamage(1)
       expect(getCount(health)).toBe(baseAmount - 1)
       expect(health.firstHPleft).toBe(fullHealth)
       expect(health.resurrected).toBe(0)
 
-      expectNormalDamage(fullHealth * (baseAmount - 1))
+      health = expectNormalDamage(fullHealth * (baseAmount - 1))
       expectEmptyHealth()
 
-      expectNoDamage(1337)
+      // TODO: Check why it would pass without `health =` down here
+      health = expectNoDamage(1337)
       expectEmptyHealth()
     })
   })
@@ -116,10 +118,10 @@ describe('Health', () => {
   }
 
   describe('heal()', () => {
-    it('should return correct values', () => {
+    it('should heal correctly', () => {
       init(health)
 
-      expectNormalDamage(99)
+      health = expectNormalDamage(99)
       expect(getCount(health)).toBe(baseAmount)
       expect(health.firstHPleft).toBe(fullHealth - 99)
       expect(health.resurrected).toBe(0)
@@ -140,10 +142,10 @@ describe('Health', () => {
   })
 
   describe('resurrect one', () => {
-    it('should return correct values', () => {
+    it('should resurrect correcly', () => {
       init(health)
 
-      expectNormalDamage(fullHealth)
+      health = expectNormalDamage(fullHealth)
       expect(getCount(health)).toBe(baseAmount - 1)
       expect(health.firstHPleft).toBe(fullHealth)
       expect(health.resurrected).toBe(0)
@@ -153,14 +155,14 @@ describe('Health', () => {
       expect(health.firstHPleft).toBe(fullHealth)
       expect(health.resurrected).toBe(1)
 
-      expectNormalDamage(fullHealth)
+      health = expectNormalDamage(fullHealth)
       expect(getCount(health)).toBe(baseAmount - 1)
       expect(health.firstHPleft).toBe(fullHealth)
       expect(health.resurrected).toBe(0)
 
       init(health)
 
-      expectNormalDamage(fullHealth)
+      health = expectNormalDamage(fullHealth)
       expect(getCount(health)).toBe(baseAmount - 1)
       expect(health.firstHPleft).toBe(fullHealth)
       expect(health.resurrected).toBe(0)
@@ -172,7 +174,7 @@ describe('Health', () => {
 
       init(health)
 
-      expectNormalDamage(fullHealth * baseAmount)
+      health = expectNormalDamage(fullHealth * baseAmount)
       expectEmptyHealth()
 
       expectHeal(
@@ -191,10 +193,10 @@ describe('Health', () => {
   })
 
   describe('resurrect permanent', () => {
-    it('should return correct values', () => {
+    it('should resurect premanently', () => {
       init(health)
 
-      expectNormalDamage(fullHealth)
+      health = expectNormalDamage(fullHealth)
       expect(getCount(health)).toBe(baseAmount - 1)
       expect(health.firstHPleft).toBe(fullHealth)
       expect(health.resurrected).toBe(0)
@@ -204,14 +206,14 @@ describe('Health', () => {
       expect(health.firstHPleft).toBe(fullHealth)
       expect(health.resurrected).toBe(0)
 
-      expectNormalDamage(fullHealth)
+      health = expectNormalDamage(fullHealth)
       expect(getCount(health)).toBe(baseAmount - 1)
       expect(health.firstHPleft).toBe(fullHealth)
       expect(health.resurrected).toBe(0)
 
       init(health)
 
-      expectNormalDamage(fullHealth * baseAmount)
+      health = expectNormalDamage(fullHealth * baseAmount)
       expectEmptyHealth()
 
       expectHeal(
@@ -228,14 +230,14 @@ describe('Health', () => {
   })
 
   describe('single unit stack', () => {
-    it('should return correct values', () => {
+    it('should have empty health', () => {
       health = new Health({
         baseAmount: 1,
         fullHealth: 300,
       })
       init(health)
 
-      expectDamage(1000, 300)
+      health = expectDamage(1000, 300)
       expectEmptyHealth()
 
       expectHeal(RESURRECT, PERMANENT, 300, 300)

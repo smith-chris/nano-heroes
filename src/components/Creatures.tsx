@@ -15,6 +15,7 @@ import { sumPoints, subPoints } from 'transforms/map/point'
 import { BitmapText } from 'utils/components'
 import { Rectangle } from './Rectangle'
 import { uiActions } from 'store/ui'
+import { getCount } from 'transforms/creature/Health'
 
 const mapStateToProps = (state: StoreState) => state
 type StateProps = ReturnType<typeof mapStateToProps>
@@ -89,7 +90,7 @@ class Creatures extends Component<Props> {
               />
               <Container position={new Point(isDefender ? -6 : 6, 5)}>
                 <Rectangle width={10} height={7} anchor={0.5} alpha={0.5} />
-                <BitmapText text={creature.fullUnits} anchor={0.5} />
+                <BitmapText text={getCount(creature)} anchor={0.5} />
               </Container>
             </Container>
           )
