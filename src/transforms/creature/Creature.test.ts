@@ -99,7 +99,7 @@ describe('CreatureStack', () => {
             defence: 3,
           })
 
-          let damage = hit({ attacker, defender, random })
+          let [, damage] = hit({ attacker, defender, random })
           newResults.push(damage)
         }
 

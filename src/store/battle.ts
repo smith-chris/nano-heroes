@@ -14,8 +14,16 @@ import { Point } from 'utils/pixi'
 import { Creature } from 'transforms/creature'
 import { resetPlayer } from 'transforms/map/battle'
 import { chooseOther } from 'utils/battle'
-import { selectNextCreature, canAttack } from 'transforms/map/map'
+import {
+  selectNextCreature,
+  canAttack,
+  getCurrentCreatures,
+  getTargetCreature,
+  getSelectedCreature,
+  setPreviousCreature,
+} from 'transforms/map/map'
 import { Action, data, ActionUnion } from 'utils/redux'
+import { hit } from 'transforms/creature/Creature'
 
 export type Size = {
   width: number
@@ -143,12 +151,30 @@ export const battle = (
           id: action.data,
         },
       }
-    case 'HitTargetCreatureEnd':
-      return {
-        ...state,
-        target: {},
-        selected: {},
+    case 'HitTargetCreatureEnd': {
+      const target = getTargetCreature(state)
+      const selected = getSelectedCreature(state)
+      if (target && selected) {
+        const [newTarget] = hit({
+          defender: target,
+          attacker: selected,
+        })
+        return {
+          ...setPreviousCreature(state, newTarget),
+          target: {},
+          selected: {},
+        }
+      } else {
+        console.warn(
+          `${!target ? 'Target' : 'Selected'} not available in state: ${state}`,
+        )
+        return {
+          ...state,
+          target: {},
+          selected: {},
+        }
       }
+    }
     default: {
       const exhaustiveCheck: never = action
       return state

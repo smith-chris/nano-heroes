@@ -53,30 +53,31 @@ export const total = (health: Health) => {
   return health.fullHealth * health.baseAmount
 }
 
-export const damage = (health: Health, amount: number) => {
-  let oldCount = getCount(health)
+export const damage = <T extends Health>(health: T, amount: number): [T, number] => {
+  const result = Object.assign({}, health)
+  let oldCount = getCount(result)
 
-  let withKills = amount >= health.firstHPleft
+  let withKills = amount >= result.firstHPleft
 
   if (withKills) {
-    let totalHealth = available(health)
+    let totalHealth = available(result)
     if (amount > totalHealth) {
       amount = totalHealth
     }
     totalHealth -= amount
     if (totalHealth <= 0) {
-      health.fullUnits = 0
-      health.firstHPleft = 0
+      result.fullUnits = 0
+      result.firstHPleft = 0
     } else {
-      setFromTotal(health, totalHealth)
+      setFromTotal(result, totalHealth)
     }
   } else {
-    health.firstHPleft -= amount
+    result.firstHPleft -= amount
   }
 
-  addResurrected(health, getCount(health) - oldCount)
+  addResurrected(result, getCount(result) - oldCount)
 
-  return amount
+  return [result, amount]
 }
 
 export const heal = (health: Health, amount: number, level: Level, power: Power) => {

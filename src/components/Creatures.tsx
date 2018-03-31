@@ -110,7 +110,7 @@ class Creatures extends Component<Props> {
             return (
               <Animate
                 key={key}
-                speed={0.5}
+                speed={2}
                 path={selected.path}
                 render={renderCreature(
                   isDefender ? SkeletonAnimation.walk : KnightAnimation.walk,

@@ -4,6 +4,8 @@ import { Id } from 'transforms/map'
 import { Point } from 'utils/pixi'
 import { idGenerator } from 'utils/math'
 
+const randomGenerator = new RandomGenerator()
+
 const pixieModel = {
   attack: 2,
   defence: 2,
@@ -67,9 +69,9 @@ export const hit = ({
 }: {
   attacker: Creature
   defender: Creature
-  random: RandomGenerator
-}) => {
-  let damageAmount = getDamage(attacker, random)
+  random?: RandomGenerator
+}): [Creature, number] => {
+  let damageAmount = getDamage(attacker, random || randomGenerator)
   let bonus = getAttack(attacker) - getDefence(defender)
   if (bonus > 0) {
     // attacker will hit increased damage
@@ -84,8 +86,8 @@ export const hit = ({
     damageDecrease = Math.min(damageDecrease, damageAmount * 0.7)
     damageAmount -= damageDecrease
   }
-  damage(defender, damageAmount)
-  return damageAmount
+  const [result] = damage(defender, damageAmount)
+  return [result, damageAmount]
 }
 
 const getDamage = (creature: Creature, random: RandomGenerator) => {

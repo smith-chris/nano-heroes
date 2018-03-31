@@ -84,6 +84,18 @@ export const putCreatures = (
   return [newHexes, newCreatures]
 }
 
+export const getPreviousCreatures = (battle: Battle) => {
+  switch (battle.player.current) {
+    case 'Attacker':
+      return battle.defender.creatures
+    case 'Defender':
+      return battle.attacker.creatures
+    default:
+      const exhaustiveCheck: never = battle.player.current
+      return {}
+  }
+}
+
 export const getCurrentCreatures = (battle: Battle) => {
   switch (battle.player.current) {
     case 'Attacker':
@@ -104,7 +116,32 @@ export const getAllCreatures = (battle: Battle): Creatures => ({
 export const getSelectedCreature = (battle: Battle) =>
   battle.selected.id ? getCurrentCreatures(battle)[battle.selected.id] : undefined
 
-export const setCreatures = (battle: Battle, creatures: Creatures) => {
+export const getTargetCreature = (battle: Battle) =>
+  battle.target.id ? getPreviousCreatures(battle)[battle.target.id] : undefined
+
+export const setPreviousCreature = (battle: Battle, creature: Creature) => {
+  const creatures = getPreviousCreatures(battle)
+  if (creatures[creature.id]) {
+    const newCreatures = { ...creatures }
+    newCreatures[creature.id] = creature
+    return setPreviousCreatures(battle, newCreatures)
+  } else {
+    return battle
+  }
+}
+
+export const setPreviousCreatures = (battle: Battle, creatures: Creatures) => {
+  switch (battle.player.current) {
+    case 'Attacker':
+      return { ...battle, defender: { ...battle.defender, creatures } }
+    case 'Defender':
+      return { ...battle, attacker: { ...battle.attacker, creatures } }
+    default:
+      return assertNever(battle.player.current)
+  }
+}
+
+export const setCurrentCreatures = (battle: Battle, creatures: Creatures) => {
   switch (battle.player.current) {
     case 'Attacker':
       return { ...battle, attacker: { ...battle.attacker, creatures } }
@@ -220,7 +257,7 @@ export const moveSelected = (map: Battle) => {
     }
     const newCreatures = { ...creatures }
     newCreatures[map.selected.id] = { ...selected, position }
-    return setCreatures(
+    return setCurrentCreatures(
       {
         ...map,
         hexes,
