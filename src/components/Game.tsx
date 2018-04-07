@@ -10,6 +10,8 @@ import { Creature } from 'transforms/creature'
 import { Point } from 'utils/pixi'
 import { getHex } from 'transforms/map/map'
 import { store } from 'store/store'
+import { BitmapText } from 'utils/components'
+import { Rectangle } from 'components/Rectangle'
 
 const mapStateToProps = (state: StoreState) => state
 type StateProps = ReturnType<typeof mapStateToProps>
@@ -28,10 +30,9 @@ class Game extends Component<Props> {
       addAttackers,
       addDefenders,
       initialRound,
-      selectNextCreature,
       battle,
       moveSelected,
-      changeTurn,
+      finishTurn,
       highlightTarget,
       resetPositions,
     } = this.props
@@ -39,7 +40,6 @@ class Game extends Component<Props> {
     addAttackers([1, 4].map(y => new Creature(new Point(0, y))))
     addDefenders([1, 4].map(y => new Creature(new Point(9, y))))
     initialRound()
-    selectNextCreature()
     setTimeout(() => {
       moveSelected(new Point(5, 2))
     }, 500)
@@ -54,11 +54,21 @@ class Game extends Component<Props> {
     }, 2000)
   }
   render() {
+    const { battle: { round, player: { current } } } = this.props
     return (
-      <Container x={14} y={35}>
-        <HexMap />
-        <Creatures />
-      </Container>
+      <>
+        <Rectangle width={128} height={7} alpha={0.33} />
+        <BitmapText text={`Round: ${round}`} position={new Point(1, 1)} />
+        <BitmapText
+          text={`Player: ${current}`}
+          position={new Point(127, 1)}
+          anchor={new Point(1, 0)}
+        />
+        <Container x={14} y={35}>
+          <HexMap />
+          <Creatures />
+        </Container>
+      </>
     ) as ReactNode
   }
 }

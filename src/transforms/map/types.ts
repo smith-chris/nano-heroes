@@ -56,6 +56,7 @@ export type Battle = {
   bounds: Bounds
   attacker: Player
   defender: Player
+  round: number
   player: {
     current: PlayerType
     hasMoved: Boolean

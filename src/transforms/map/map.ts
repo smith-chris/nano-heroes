@@ -9,11 +9,13 @@ import {
   Creatures,
   Id,
   Player,
+  PlayerType,
 } from './types'
 import { higlightHexes, getNeighbouringHexes, areNeighbours } from './path'
-import { chooseRandom } from 'utils/battle'
+import { chooseRandom, chooseOther } from 'utils/battle'
 import assertNever from 'utils/other'
-import { getCount } from '../creature/Health'
+import { getCount } from '../creature'
+import { resetPlayer } from './battle'
 
 export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   const result = { ...hexes }
@@ -153,14 +155,14 @@ export const setCurrentCreatures = (battle: Battle, creatures: Creatures) => {
   }
 }
 
-export const getCurrentPlayer = (battle: Battle) => {
-  switch (battle.player.current) {
+export const getPlayer = (battle: Battle, playerType: PlayerType) => {
+  switch (playerType) {
     case 'Attacker':
       return battle.attacker
     case 'Defender':
       return battle.defender
     default:
-      return assertNever(battle.player.current)
+      return assertNever(playerType)
   }
 }
 
@@ -175,14 +177,18 @@ export const getPreviousPlayer = (battle: Battle) => {
   }
 }
 
-export const setCurrentPlayer = (battle: Battle, player: Player) => {
-  switch (battle.player.current) {
+export const setPlayer = (
+  battle: Battle,
+  playerType: PlayerType,
+  player: Player,
+) => {
+  switch (playerType) {
     case 'Attacker':
       return { attacker: player }
     case 'Defender':
       return { defender: player }
     default:
-      return assertNever(battle.player.current)
+      return assertNever(playerType)
   }
 }
 
@@ -213,16 +219,47 @@ export const canAttack = (battle: Battle, id: Id) => {
   return false
 }
 
-export const selectNextCreature = (battle: Battle) => {
-  const player = { ...getCurrentPlayer(battle) }
+export const selectNextCreature = (
+  battle: Battle,
+  playerType: PlayerType,
+  attempts = 0,
+): Battle => {
+  if (attempts > 1) {
+    console.warn('No more creatures available. Starting new round...')
+    const newBattle = {
+      ...battle,
+      round: battle.round + 1,
+      attacker: resetPlayer(battle.attacker),
+      defender: resetPlayer(battle.defender),
+    }
+    return selectNextCreature(newBattle, 'Attacker')
+  }
+  let player = getPlayer(battle, playerType)
+  if (player.availableCreatures.length === 0) {
+    return selectNextCreature(
+      battle,
+      chooseOther(playerType, 'Attacker', 'Defender'),
+      attempts + 1,
+    )
+  }
+  player = { ...player }
   const nextCreatureId = chooseRandom(...player.availableCreatures)
+
   player.availableCreatures = removeElement(
     player.availableCreatures,
     nextCreatureId,
   )
+  const result = {
+    ...battle,
+    ...setPlayer(battle, playerType, player),
+    player: {
+      ...battle.player,
+      current: playerType,
+    },
+  }
   return {
-    ...setCurrentPlayer(battle, player),
-    ...selectCreature(battle, nextCreatureId),
+    ...result,
+    ...selectCreature(result, nextCreatureId),
   }
 }
 
@@ -238,6 +275,7 @@ export const selectCreature = (battle: Battle, id: Id) => {
       },
     }
   } else {
+    console.warn('map.selectCreature() - could not find creature.')
     return {}
   }
 }
@@ -334,6 +372,7 @@ export const createMap = (width: number, height: number) => {
     selected: {},
     attacker: new Player(),
     defender: new Player(),
+    round: 0,
     player: {
       current: 'Attacker',
       hasMoved: false,

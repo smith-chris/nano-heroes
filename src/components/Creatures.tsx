@@ -33,9 +33,7 @@ class Creatures extends Component<Props> {
   }
 
   allAnimationsFinish = () => {
-    const { changeTurn, selectNextCreature } = this.props
-    changeTurn()
-    selectNextCreature()
+    this.props.finishTurn()
   }
 
   handleAttackAnimationFinish = () => {

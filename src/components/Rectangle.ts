@@ -33,7 +33,7 @@ const behavior = {
       prev.color !== next.color ||
       prev.alpha !== next.alpha
     ) {
-      const { color, alpha, anchor = 0.5, x, y, width, height } = next
+      const { color, alpha, anchor = 0, x, y, width, height } = next
       instance.clear()
       instance.beginFill(color || 0xffffff, alpha)
       instance.drawRect(

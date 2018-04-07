@@ -38,9 +38,7 @@ const initialState: BattleState = createMap(5, 5)
 export const battleActions = {
   loadMap: Action('LoadMap', data as Size),
   initialRound: Action('InitialRound'),
-  changeRound: Action('ChangeRound'),
-  changeTurn: Action('ChangeTurn'),
-  selectNextCreature: Action('SelectNextCreature'),
+  finishTurn: Action('FinishTurn'),
   addAttackers: Action('AddAttackers', data as Creature[]),
   addDefenders: Action('AddDefenders', data as Creature[]),
   selectCreature: Action('SelectCreature', data as Id),
@@ -62,42 +60,6 @@ export const battle = (
         ...initialState,
         ...createMap(action.data.width, action.data.height),
       }
-    case 'InitialRound':
-      return {
-        ...state,
-        attacker: resetPlayer(state.attacker),
-        defender: resetPlayer(state.defender),
-        player: {
-          ...state.player,
-          current: 'Attacker',
-        },
-      }
-    case 'ChangeRound':
-      return {
-        ...state,
-        attacker: resetPlayer(state.attacker),
-        defender: resetPlayer(state.defender),
-        player: {
-          ...state.player,
-          current: 'Attacker',
-        },
-      }
-    case 'ChangeTurn':
-      return {
-        ...state,
-        player: {
-          ...state.player,
-          current: chooseOther(state.player.current, 'Attacker', 'Defender'),
-        },
-      }
-    case 'SelectNextCreature':
-      if (!canMove(state)) {
-        return state
-      }
-      return {
-        ...state,
-        ...selectNextCreature(state),
-      }
     case 'AddAttackers':
       return {
         ...state,
@@ -108,6 +70,13 @@ export const battle = (
         ...state,
         ...putDefenders(state.defender, state.hexes, action.data),
       }
+    case 'InitialRound':
+      return selectNextCreature(state, state.player.current)
+    case 'FinishTurn':
+      return selectNextCreature(
+        state,
+        chooseOther(state.player.current, 'Attacker', 'Defender'),
+      )
     case 'SelectCreature':
       if (!canMove(state)) {
         return state

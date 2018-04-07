@@ -4,7 +4,8 @@ import { Point } from './pixi'
 type Props = {
   text: string | number
   color?: number
-  anchor: number | Point
+  anchor?: number | Point
+  position?: number | Point
 }
 
 export const BitmapText: StatelessComponent<Props>
