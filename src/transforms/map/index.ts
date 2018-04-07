@@ -21,4 +21,6 @@ export {
   putDefenders,
   selectCreature,
   canMove,
+  getTargetCreature,
+  getSelectedCreature,
 } from './map'

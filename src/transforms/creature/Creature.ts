@@ -7,7 +7,7 @@ import { idGenerator } from 'utils/math'
 const randomGenerator = new RandomGenerator()
 
 const pixieModel = {
-  attack: 40, // TODO: set value back to 2
+  attack: 2,
   defence: 2,
   damage: {
     min: 1,

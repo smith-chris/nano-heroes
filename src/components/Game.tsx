@@ -49,7 +49,7 @@ class Game extends Component<Props> {
       highlightTarget({ battle: state.battle, hex })
     }, 1500)
     setTimeout(() => {
-      moveSelected(new Point(6, 2))
+      moveSelected(new Point(4, 3))
       resetPositions()
     }, 2000)
   }

@@ -72,7 +72,7 @@ export const KnightAnimation = {
   }),
 }
 
-const skeletonOffset = new Point(5, -4)
+const skeletonOffset = new Point(5, 4)
 export const SkeletonAnimation = {
   walk: createAnimation(skeletonWalk, { count: 13, gap: 3 }, skeletonOffset),
   idle: createAnimation(skeletonIdle, { count: 11, gap: 10 }, skeletonOffset),
