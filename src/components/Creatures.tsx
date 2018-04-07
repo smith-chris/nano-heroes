@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
-import { Point } from 'pixi.js'
+import { Point, Texture } from 'pixi.js'
 import { Container } from 'react-pixi-fiber'
 import { each } from 'transforms/map'
 import { pointToCoordinates } from 'utils/math'
@@ -61,6 +61,9 @@ class Creatures extends Component<Props> {
     } = this.props
 
     const animateSelected = selected.path && selected.path.length > 0
+    const isTargetDying = target.incomingData
+      ? target.incomingData.firstHPleft === 0 && target.incomingData.fullUnits === 0
+      : false
 
     return (
       <OrderedContainer>
@@ -69,34 +72,66 @@ class Creatures extends Component<Props> {
             ? attackTarget !== key && selected.id !== key
             : false
           const isDefender = index === 1
+          const isTarget = target.id && creature.id === target.id
           const count = getCount(creature)
-          const renderCreature = (animation: Animation, onFinish?: () => void) => (
-            position: Point,
-          ) => (
+          const isDead = count <= 0
+          type RenderCreatureProps = {
+            animation?: Animation
+            texture?: Texture
+            offset?: Point
+          }
+          const renderCreature = (
+            props: RenderCreatureProps,
+            onFinish?: () => void,
+          ) => (position: Point) => (
             <Container key={key} position={position} alpha={fadeCreature ? 0.33 : 1}>
               <AnimatedSprite
                 anchor={new Point(0.5, 1)}
                 position={(isDefender ? subPoints : sumPoints)(
                   new Point(),
-                  animation.offset,
+                  props.animation ? props.animation.offset : props.offset,
                 )}
                 onFinish={onFinish}
-                animation={animation}
+                animation={props.animation}
+                texture={props.texture}
                 scale={isDefender ? new Point(-1, 1) : new Point(1, 1)}
               />
-              <Container position={new Point(isDefender ? -6 : 6, 5)}>
-                <Rectangle width={9} height={7} anchor={0.5} alpha={0.5} />
-                <BitmapText text={count} anchor={0.5} />
-              </Container>
+              {!isDead && (
+                <Container position={new Point(isDefender ? -6 : 6, 5)}>
+                  <Rectangle width={9} height={7} anchor={0.5} alpha={0.5} />
+                  <BitmapText text={count} anchor={0.5} />
+                </Container>
+              )}
             </Container>
           )
-          if (target.id && creature.id === target.id) {
-            return renderCreature(
-              isDefender ? SkeletonAnimation.defend : KnightAnimation.defend,
-            )(this.getPosition(creature))
+          if (isDead) {
+            return renderCreature({
+              texture: isDefender
+                ? SkeletonAnimation.death.getLastFrameTexture()
+                : KnightAnimation.death.getLastFrameTexture(),
+              offset: isDefender
+                ? SkeletonAnimation.death.offset
+                : KnightAnimation.death.offset,
+            })(this.getPosition(creature))
+          } else if (isTarget && isTargetDying) {
+            return renderCreature({
+              animation: isDefender
+                ? SkeletonAnimation.death
+                : KnightAnimation.death,
+            })(this.getPosition(creature))
+          } else if (isTarget) {
+            return renderCreature({
+              animation: isDefender
+                ? SkeletonAnimation.defend
+                : KnightAnimation.defend,
+            })(this.getPosition(creature))
           } else if (target.id && creature.id === selected.id) {
             return renderCreature(
-              isDefender ? SkeletonAnimation.attack : KnightAnimation.attack,
+              {
+                animation: isDefender
+                  ? SkeletonAnimation.attack
+                  : KnightAnimation.attack,
+              },
               this.handleAttackAnimationFinish,
             )(this.getPosition(creature))
           } else if (
@@ -109,16 +144,18 @@ class Creatures extends Component<Props> {
                 key={key}
                 speed={2}
                 path={selected.path}
-                render={renderCreature(
-                  isDefender ? SkeletonAnimation.walk : KnightAnimation.walk,
-                )}
+                render={renderCreature({
+                  animation: isDefender
+                    ? SkeletonAnimation.walk
+                    : KnightAnimation.walk,
+                })}
                 onFinish={this.handleMoveAnimationFinish}
               />
             )
           } else {
-            return renderCreature(
-              isDefender ? SkeletonAnimation.idle : KnightAnimation.idle,
-            )(this.getPosition(creature))
+            return renderCreature({
+              animation: isDefender ? SkeletonAnimation.idle : KnightAnimation.idle,
+            })(this.getPosition(creature))
           }
         })}
       </OrderedContainer>

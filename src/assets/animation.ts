@@ -1,13 +1,15 @@
-import { BaseTexture } from 'pixi.js'
+import { BaseTexture, Texture, Rectangle } from 'pixi.js'
 import { Point } from 'utils/pixi'
 import knightWalk from 'assets/knight/walk.png'
 import knightIdle from 'assets/knight/idle.png'
 import knightAttack from 'assets/knight/attack.png'
 import knightDefend from 'assets/knight/defend.png'
+import knightDeath from 'assets/knight/death.png'
 import skeletonWalk from 'assets/skeleton/walk.png'
 import skeletonIdle from 'assets/skeleton/idle.png'
 import skeletonAttack from 'assets/skeleton/attack.png'
 import skeletonDefend from 'assets/skeleton/defend.png'
+import skeletonDeath from 'assets/skeleton/death.png'
 
 const defaultOptions = {
   loop: true,
@@ -23,15 +25,25 @@ export const createAnimation = (
   offset?: Point,
   options = optional(defaultOptions),
 ) => {
+  const singleFrameWidth = width / count
+  const texture = BaseTexture.from(src)
+  let _lastFrameTexture: Texture
   const result = {
-    texture: BaseTexture.from(src),
+    texture,
     framesCount: count,
-    width: width / count,
+    width: singleFrameWidth,
     totalWidth: width,
     height,
     frameGap: gap,
     offset,
     options: { ...defaultOptions, ...options },
+    getLastFrameTexture: () => {
+      if (!_lastFrameTexture) {
+        _lastFrameTexture = new Texture(texture)
+        _lastFrameTexture.frame = new Rectangle(0, 0, width, height)
+      }
+      return _lastFrameTexture
+    },
   }
   return result
 }
@@ -49,6 +61,10 @@ export const KnightAnimation = {
     loop: false,
     endReversed: true,
   }),
+  death: createAnimation(knightDeath, { count: 9, gap: 6 }, knightOfset, {
+    loop: false,
+    delay: 33,
+  }),
 }
 
 const skeletonOfset = new Point(5, 0)
@@ -61,5 +77,9 @@ export const SkeletonAnimation = {
   defend: createAnimation(skeletonDefend, { count: 8, gap: 6 }, new Point(2, 0), {
     loop: false,
     delay: 27,
+  }),
+  death: createAnimation(skeletonDeath, { count: 16, gap: 4 }, new Point(-2, 0), {
+    loop: false,
+    delay: 36,
   }),
 }
