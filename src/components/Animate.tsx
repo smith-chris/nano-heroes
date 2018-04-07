@@ -4,7 +4,7 @@ import { pointToCoordinates } from 'utils/math'
 import { calculateStep, roundPoint, pointsEqual } from 'transforms/map'
 
 type Props = {
-  render: (position: Point) => ReactNode
+  render: (position: Point, dirLeft?: boolean) => ReactNode
   onFinish: () => void
   path: Point[]
   speed?: number
@@ -13,6 +13,7 @@ type Props = {
 
 type State = {
   position: Point
+  dirLeft?: boolean
 }
 
 export class Animate extends Component<Props, State> {
@@ -28,6 +29,13 @@ export class Animate extends Component<Props, State> {
       from,
       to,
     })
+    const setDir = (stepX: number) => {
+      if (stepX === 0) { return }
+      this.setState({
+        dirLeft: stepX < 0,
+      })
+    }
+    setDir(step.x)
     let current = from
     if (current) {
       this.setState({ position: current })
@@ -58,6 +66,7 @@ export class Animate extends Component<Props, State> {
           from,
           to,
         })
+        setDir(step.x)
       }
     })
     this.ticker.start()
@@ -68,6 +77,6 @@ export class Animate extends Component<Props, State> {
   render() {
     const { render } = this.props
     const { position } = this.state
-    return render(position)
+    return render(position, this.state.dirLeft)
   }
 }

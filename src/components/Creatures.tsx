@@ -79,15 +79,12 @@ class Creatures extends Component<Props> {
             animation?: Animation
             texture?: Texture
             offset?: Point
-            dirLeft?: boolean
           }
           const renderCreature = (
             props: RenderCreatureProps,
             onFinish?: () => void,
-          ) => (position: Point) => {
+          ) => (position: Point, dirLeft = defenderCreatures) => {
             const offset = props.animation ? props.animation.offset : props.offset
-            const dirLeft =
-              props.dirLeft !== undefined ? props.dirLeft : defenderCreatures
             return (
               <Container
                 key={key}
@@ -138,8 +135,7 @@ class Creatures extends Component<Props> {
               animation: defenderCreatures
                 ? SkeletonAnimation.defend
                 : KnightAnimation.defend,
-              dirLeft,
-            })(this.getPosition(creature))
+            })(this.getPosition(creature), dirLeft)
           } else if (isAttacking) {
             const targetCreature = getTargetCreature(battle)
             if (!targetCreature) {
@@ -151,10 +147,9 @@ class Creatures extends Component<Props> {
                 animation: defenderCreatures
                   ? SkeletonAnimation.attack
                   : KnightAnimation.attack,
-                dirLeft,
               },
               this.handleAttackAnimationFinish,
-            )(this.getPosition(creature))
+            )(this.getPosition(creature), dirLeft)
           } else if (
             creature.id === selected.id &&
             animateSelected &&
