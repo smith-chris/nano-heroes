@@ -16,3 +16,7 @@ export const terrain = toTextures({
   grassRed,
   grassDark,
 })
+export const terrainSize = {
+  width: grass.width,
+  height: grass.height,
+}

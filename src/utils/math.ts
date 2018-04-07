@@ -1,12 +1,16 @@
 import { Id } from 'transforms/map'
 import { Point } from 'utils/pixi'
+import { terrainSize } from 'assets/textures'
+
+const offsetY = terrainSize.height
+const offsetX = Math.round(terrainSize.width - 3 - offsetY / 8)
 
 export const pointToCoordinates = (point: Point) => {
   let { x, y } = point
   const isEven = x % 2 === 1
-  const result = new Point(x * 12, y * 8)
+  const result = new Point(x * offsetX, y * offsetY)
   if (isEven) {
-    result.y += 4
+    result.y += offsetY / 2
   }
   return result
 }

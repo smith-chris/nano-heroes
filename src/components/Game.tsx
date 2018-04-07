@@ -35,27 +35,27 @@ class Game extends Component<Props> {
       highlightTarget,
       resetPositions,
     } = this.props
-    loadMap({ width: 9, height: 10 })
-    addAttackers([2, 5, 8].map(y => new Creature(new Point(0, y))))
-    addDefenders([2, 5, 8].map(y => new Creature(new Point(8, y))))
+    loadMap({ width: 10, height: 5 })
+    addAttackers([1, 4].map(y => new Creature(new Point(0, y))))
+    addDefenders([1, 4].map(y => new Creature(new Point(9, y))))
     initialRound()
     selectNextCreature()
     setTimeout(() => {
-      moveSelected(new Point(4, 5))
+      moveSelected(new Point(5, 2))
     }, 500)
     setTimeout(() => {
       const state = store.getState()
-      const hex = getHex(state.battle.hexes, new Point(4, 5))
+      const hex = getHex(state.battle.hexes, new Point(5, 2))
       highlightTarget({ battle: state.battle, hex })
     }, 1500)
     setTimeout(() => {
-      moveSelected(new Point(5, 4))
+      moveSelected(new Point(6, 2))
       resetPositions()
     }, 2000)
   }
   render() {
     return (
-      <Container x={16} y={35}>
+      <Container x={14} y={35}>
         <HexMap />
         <Creatures />
       </Container>

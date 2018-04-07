@@ -50,13 +50,18 @@ export const createAnimation = (
 
 export type Animation = ReturnType<typeof createAnimation>
 
-const knightOfset = new Point(0, 4)
+const knightOfset = new Point(0, 7)
 export const KnightAnimation = {
   walk: createAnimation(knightWalk, { count: 8, gap: 6 }, knightOfset),
   idle: createAnimation(knightIdle, { count: 4, gap: 21 }, knightOfset),
-  attack: createAnimation(knightAttack, { count: 10, gap: 6 }, new Point(19, 3), {
-    loop: false,
-  }),
+  attack: createAnimation(
+    knightAttack,
+    { count: 10, gap: 6 },
+    new Point(19, knightOfset.y - 1),
+    {
+      loop: false,
+    },
+  ),
   defend: createAnimation(knightDefend, { count: 7, gap: 6 }, knightOfset, {
     loop: false,
     endReversed: true,
@@ -67,19 +72,34 @@ export const KnightAnimation = {
   }),
 }
 
-const skeletonOfset = new Point(5, 0)
+const skeletonOffset = new Point(5, -4)
 export const SkeletonAnimation = {
-  walk: createAnimation(skeletonWalk, { count: 13, gap: 3 }, skeletonOfset),
-  idle: createAnimation(skeletonIdle, { count: 11, gap: 10 }, skeletonOfset),
-  attack: createAnimation(skeletonAttack, { count: 18, gap: 4 }, new Point(11, 0), {
-    loop: false,
-  }),
-  defend: createAnimation(skeletonDefend, { count: 8, gap: 6 }, new Point(2, 0), {
-    loop: false,
-    delay: 27,
-  }),
-  death: createAnimation(skeletonDeath, { count: 16, gap: 4 }, new Point(-2, 0), {
-    loop: false,
-    delay: 36,
-  }),
+  walk: createAnimation(skeletonWalk, { count: 13, gap: 3 }, skeletonOffset),
+  idle: createAnimation(skeletonIdle, { count: 11, gap: 10 }, skeletonOffset),
+  attack: createAnimation(
+    skeletonAttack,
+    { count: 18, gap: 4 },
+    new Point(11, skeletonOffset.y),
+    {
+      loop: false,
+    },
+  ),
+  defend: createAnimation(
+    skeletonDefend,
+    { count: 8, gap: 6 },
+    new Point(2, skeletonOffset.y),
+    {
+      loop: false,
+      delay: 27,
+    },
+  ),
+  death: createAnimation(
+    skeletonDeath,
+    { count: 16, gap: 4 },
+    new Point(-2, skeletonOffset.y),
+    {
+      loop: false,
+      delay: 36,
+    },
+  ),
 }
