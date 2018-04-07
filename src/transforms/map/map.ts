@@ -13,6 +13,7 @@ import {
 import { higlightHexes, getNeighbouringHexes, areNeighbours } from './path'
 import { chooseRandom } from 'utils/battle'
 import assertNever from 'utils/other'
+import { getCount } from '../creature/Health'
 
 export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   const result = { ...hexes }
@@ -194,6 +195,11 @@ export const isEnemyCreature = (battle: Battle, creature: Id) => {
     default:
       return assertNever(battle.player.current)
   }
+}
+
+export const isAlive = (battle: Battle, creatureId: Id) => {
+  const creature = getAllCreatures(battle)[creatureId]
+  return getCount(creature) > 0
 }
 
 export const canMove = (battle: Battle) => !battle.player.hasMoved

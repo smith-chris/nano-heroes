@@ -62,7 +62,7 @@ class Creatures extends Component<Props> {
 
     const animateSelected = selected.path && selected.path.length > 0
     const isTargetDying = target.incomingData
-      ? target.incomingData.firstHPleft === 0 && target.incomingData.fullUnits === 0
+      ? getCount(target.incomingData) === 0
       : false
 
     return (

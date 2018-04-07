@@ -1,5 +1,5 @@
 import { Hexes, Battle, Hex, Bounds } from './types'
-import { getHex, pointToId, isEnemyCreature } from './map'
+import { getHex, pointToId, isEnemyCreature, isAlive } from './map'
 import { Point } from 'utils/pixi'
 import { pointsEqual } from './point'
 
@@ -149,7 +149,11 @@ export const higlightHexes = (battle: Battle, start: Point) => {
   }
   for (const key in hexes) {
     const hex = hexes[key]
-    if (hex.occupant && isEnemyCreature(battle, hex.occupant)) {
+    if (
+      hex.occupant &&
+      isEnemyCreature(battle, hex.occupant) &&
+      isAlive(battle, hex.occupant)
+    ) {
       hex.canBeAttacked = canHexBeAttacked(hexes, hex)
     } else {
       hex.canBeAttacked = false
