@@ -1,2 +1,2 @@
-export { Creature } from './Creature'
-export { getCount } from './Health'
+export * from './Creature'
+export * from './Health'

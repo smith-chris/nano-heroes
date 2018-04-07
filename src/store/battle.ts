@@ -9,22 +9,15 @@ import {
   putDefenders,
   selectCreature,
   canMove,
-} from 'transforms/map'
-import { Point } from 'utils/pixi'
-import { Creature } from 'transforms/creature'
-import { resetPlayer } from 'transforms/map/battle'
-import { chooseOther } from 'utils/battle'
-import {
   selectNextCreature,
-  canAttack,
-  getCurrentCreatures,
-  getTargetCreature,
   getSelectedCreature,
   setPreviousCreature,
   getAllCreatures,
-} from 'transforms/map/map'
+} from 'transforms/map'
+import { Point } from 'utils/pixi'
+import { Creature, hit } from 'transforms/creature'
+import { chooseOther } from 'utils/battle'
 import { Action, data, ActionUnion } from 'utils/redux'
-import { hit, getDamageAmount } from 'transforms/creature/Creature'
 
 export type Size = {
   width: number

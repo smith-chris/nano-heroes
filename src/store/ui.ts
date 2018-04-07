@@ -2,10 +2,8 @@ import {
   Battle,
   Id,
   getAttackPositions,
-  getCurrentCreatures,
   Hex,
 } from 'transforms/map'
-import { Point } from 'utils/pixi'
 import { Action, data, ActionUnion } from 'utils/redux'
 
 export type UIState = {

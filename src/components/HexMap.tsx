@@ -6,15 +6,13 @@ import {
   Hex,
   each,
   pointsEqual,
-  getCurrentCreatures,
-  Id,
-  getAttackPositions,
+  pointToId,
+  getSelectedCreature,
 } from 'transforms/map'
 import { pointToCoordinates } from 'utils/math'
 import { connect } from 'react-redux'
 import { battleActions } from 'store/battle'
 import { terrain } from 'assets/textures'
-import { pointToId, getSelectedCreature } from 'transforms/map/map'
 import { uiActions } from 'store/ui'
 
 type Props = StateProps & ActionProps

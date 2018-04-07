@@ -36,6 +36,3 @@ if (!appElement) {
 
 export const stage = App.stage
 export const ticker = App.ticker
-export const screen = App.screen
-
-export default App

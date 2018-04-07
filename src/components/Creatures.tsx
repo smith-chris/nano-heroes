@@ -6,16 +6,14 @@ import { each, getTargetCreature, getSelectedCreature } from 'transforms/map'
 import { pointToCoordinates } from 'utils/math'
 import { connect } from 'react-redux'
 import { battleActions } from 'store/battle'
-import { Creature } from 'transforms/creature'
+import { Creature, getCount } from 'transforms/creature'
 import { Animate } from './Animate'
 import { OrderedContainer } from './OrderedContainer'
 import { AnimatedSprite } from './AnimatedSprite'
 import { KnightAnimation, SkeletonAnimation, Animation } from 'assets/animation'
-import { sumPoints, subPoints } from 'transforms/map/point'
 import { BitmapText } from 'utils/components'
 import { Rectangle } from './Rectangle'
 import { uiActions } from 'store/ui'
-import { getCount } from 'transforms/creature/Health'
 
 const mapStateToProps = (state: StoreState) => state
 type StateProps = ReturnType<typeof mapStateToProps>

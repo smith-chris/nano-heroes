@@ -1,7 +1,7 @@
 import { CustomPIXIComponent } from 'react-pixi-fiber'
-import PIXI, { Graphics } from 'pixi.js'
+import { Graphics } from 'pixi.js'
 import { Point } from 'utils/pixi'
-import { Bounds, rectsEqual } from 'transforms/map'
+import { rectsEqual } from 'transforms/map'
 
 type Props = {
   position?: Point

@@ -1,5 +1,5 @@
 import { Player } from './types'
-import { Creature, getCount } from '../creature'
+import { getCount } from 'transforms/creature'
 
 export const resetPlayer = (player: Player): Player => {
   return {

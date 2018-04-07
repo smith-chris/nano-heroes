@@ -1,5 +1,5 @@
 import { composeWithDevTools } from 'redux-devtools-extension'
-import Redux, { createStore, applyMiddleware, combineReducers } from 'redux'
+import Redux, { createStore, combineReducers } from 'redux'
 import isDev from 'utils/isDev'
 import { battle, BattleState } from './battle'
 import { ui, UIState } from './ui'
