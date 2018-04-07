@@ -62,9 +62,10 @@ export const KnightAnimation = {
       loop: false,
     },
   ),
-  defend: createAnimation(knightDefend, { count: 7, gap: 6 }, knightOfset, {
+  defend: createAnimation(knightDefend, { count: 8, gap: 4 }, knightOfset, {
     loop: false,
     endReversed: true,
+    delay: 3,
   }),
   death: createAnimation(knightDeath, { count: 9, gap: 6 }, knightOfset, {
     loop: false,
