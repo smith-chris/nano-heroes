@@ -21,9 +21,10 @@ import {
   getTargetCreature,
   getSelectedCreature,
   setPreviousCreature,
+  getAllCreatures,
 } from 'transforms/map/map'
 import { Action, data, ActionUnion } from 'utils/redux'
-import { hit } from 'transforms/creature/Creature'
+import { hit, getDamageAmount } from 'transforms/creature/Creature'
 
 export type Size = {
   width: number
@@ -45,8 +46,8 @@ export const battleActions = {
   selectCreature: Action('SelectCreature', data as Id),
   moveSelected: Action('MoveSelectedStart', data as Point),
   moveSelectedEnd: Action('MoveSelectedEnd'),
-  hitTargetCreature: Action('HitTargetCreatureStart', data as Id),
-  hitTargetCreatureEnd: Action('HitTargetCreatureEnd'),
+  attackTarget: Action('AttackTargetStart', data as Id),
+  attackTargetEnd: Action('AttackTargetEnd'),
 }
 
 export type BattleAction = ActionUnion<typeof battleActions>
@@ -140,41 +141,36 @@ export const battle = (
       return {
         ...moveSelected(state),
       }
-    case 'HitTargetCreatureStart':
-      if (!canAttack(state, action.data)) {
-        console.warn(`You can't attack this creature: `, action.data, state)
-        return state
-      }
-      return {
-        ...state,
-        target: {
-          id: action.data,
-        },
-      }
-    case 'HitTargetCreatureEnd': {
-      const target = getTargetCreature(state)
+    case 'AttackTargetStart':
+      const target = getAllCreatures(state)[action.data]
       const selected = getSelectedCreature(state)
-      if (target && selected) {
-        const [newTarget] = hit({
+      if (!(target && selected)) {
+        console.warn(
+          `${!target ? 'Target' : 'Selected'} not available in state: ${state}`,
+        )
+        return state
+      } else {
+        const [incomingData] = hit({
           defender: target,
           attacker: selected,
         })
         return {
-          ...setPreviousCreature(state, newTarget),
-          target: {},
-          selected: {},
-        }
-      } else {
-        console.warn(
-          `${!target ? 'Target' : 'Selected'} not available in state: ${state}`,
-        )
-        return {
           ...state,
-          target: {},
-          selected: {},
+          target: {
+            id: action.data,
+            incomingData,
+          },
         }
       }
-    }
+    case 'AttackTargetEnd':
+      if (!state.target.incomingData) {
+        return state
+      }
+      return {
+        ...setPreviousCreature(state, state.target.incomingData),
+        target: {},
+        selected: {},
+      }
     default: {
       const exhaustiveCheck: never = action
       return state

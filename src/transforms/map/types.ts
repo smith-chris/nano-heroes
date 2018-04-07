@@ -66,5 +66,6 @@ export type Battle = {
   }
   target: {
     id?: Id
+    incomingData?: Creature
   }
 }

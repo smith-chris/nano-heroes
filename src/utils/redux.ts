@@ -27,3 +27,14 @@ export type valueof<T> = T[keyof T]
 export type ActionUnion<T extends { [key: string]: (d?: {}) => {} }> = ReturnType<
   valueof<T>
 >
+
+export const uiActions = {
+  highlightTarget: Action('HighlightTarget', data as {
+    battle: number
+    hex: string
+  }),
+  resetTarget: Action('ResetTarget'),
+  resetPositions: Action('ResetPositions'),
+}
+
+export type UIAction = ActionUnion<typeof uiActions>

@@ -39,21 +39,16 @@ class Creatures extends Component<Props> {
   }
 
   handleAttackAnimationFinish = () => {
-    this.props.hitTargetCreatureEnd()
+    this.props.attackTargetEnd()
     this.allAnimationsFinish()
   }
 
   handleMoveAnimationFinish = () => {
-    const {
-      moveSelectedEnd,
-      resetTarget,
-      hitTargetCreature,
-      ui: { attackTarget },
-    } = this.props
+    const { moveSelectedEnd, resetTarget, attackTarget, ui } = this.props
     moveSelectedEnd()
-    if (attackTarget) {
+    if (ui.attackTarget) {
       resetTarget()
-      hitTargetCreature(attackTarget)
+      attackTarget(ui.attackTarget)
     } else {
       this.allAnimationsFinish()
     }
@@ -74,6 +69,7 @@ class Creatures extends Component<Props> {
             ? attackTarget !== key && selected.id !== key
             : false
           const isDefender = index === 1
+          const count = getCount(creature)
           const renderCreature = (animation: Animation, onFinish?: () => void) => (
             position: Point,
           ) => (
@@ -89,8 +85,8 @@ class Creatures extends Component<Props> {
                 scale={isDefender ? new Point(-1, 1) : new Point(1, 1)}
               />
               <Container position={new Point(isDefender ? -6 : 6, 5)}>
-                <Rectangle width={10} height={7} anchor={0.5} alpha={0.5} />
-                <BitmapText text={getCount(creature)} anchor={0.5} />
+                <Rectangle width={9} height={7} anchor={0.5} alpha={0.5} />
+                <BitmapText text={count} anchor={0.5} />
               </Container>
             </Container>
           )

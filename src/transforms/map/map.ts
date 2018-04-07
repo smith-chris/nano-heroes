@@ -200,7 +200,7 @@ export const canMove = (battle: Battle) => !battle.player.hasMoved
 
 export const canAttack = (battle: Battle, id: Id) => {
   const selectedCreature = getSelectedCreature(battle)
-  const targetCreature = getAllCreatures(battle)[id]
+  const targetCreature = getTargetCreature(battle)
   if (selectedCreature && targetCreature) {
     return areNeighbours(battle, targetCreature.position, selectedCreature.position)
   }

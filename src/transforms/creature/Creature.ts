@@ -62,7 +62,7 @@ const getAttack = (creature: Creature) => {
   return creature.model.attack
 }
 
-export const hit = ({
+export const getDamageAmount = ({
   attacker,
   defender,
   random,
@@ -70,7 +70,7 @@ export const hit = ({
   attacker: Creature
   defender: Creature
   random?: RandomGenerator
-}): [Creature, number] => {
+}) => {
   let damageAmount = getDamage(attacker, random || randomGenerator)
   let bonus = getAttack(attacker) - getDefence(defender)
   if (bonus > 0) {
@@ -86,6 +86,19 @@ export const hit = ({
     damageDecrease = Math.min(damageDecrease, damageAmount * 0.7)
     damageAmount -= damageDecrease
   }
+  return damageAmount
+}
+
+export const hit = ({
+  attacker,
+  defender,
+  random,
+}: {
+  attacker: Creature
+  defender: Creature
+  random?: RandomGenerator
+}): [Creature, number] => {
+  let damageAmount = getDamageAmount({ attacker, defender, random })
   const [result] = damage(defender, damageAmount)
   return [result, damageAmount]
 }
