@@ -14,35 +14,42 @@ import { connect } from 'react-redux'
 import { battleActions } from 'store/battle'
 import { terrain } from 'assets/textures'
 import { uiActions } from 'store/ui'
-
 type Props = StateProps & ActionProps
 
-class MapComponent extends Component<Props> {
-  createHandleClick = (hex: Hex) => () => {
-    const {
-      moveSelected,
-      battle,
-      highlightTarget,
-      resetTarget,
-      resetPositions,
-      ui: { attackPositions, attackTarget },
-    } = this.props
-    if (attackPositions.indexOf(pointToId(hex.position)) >= 0) {
+export const createHexHandleClick = (props: Props, hex: Hex) => () => {
+  const {
+    moveSelected,
+    battle,
+    highlightTarget,
+    eraseTargetAndPositions,
+    erasePositions,
+    attackTarget,
+    ui,
+  } = props
+  if (ui.attackPositions.indexOf(pointToId(hex.position)) >= 0) {
+    if (battle.selected.id === hex.occupant) {
+      eraseTargetAndPositions()
+      attackTarget(ui.attackTargetId)
+    } else {
+      erasePositions()
       moveSelected(hex.position)
-      resetPositions()
-      return
-    } else if (hex.path && hex.path.length > 0) {
-      moveSelected(hex.position)
-      resetTarget()
-      return
     }
-    if (hex.canBeAttacked) {
-      highlightTarget({ battle, hex })
-      return
-    } else if (attackTarget) {
-      resetTarget()
-    }
+    return
+  } else if (hex.path && hex.path.length > 0) {
+    eraseTargetAndPositions()
+    moveSelected(hex.position)
+    return
   }
+  if (hex.canBeAttacked) {
+    highlightTarget({ battle, hex })
+    return
+  } else if (ui.attackTargetId) {
+    eraseTargetAndPositions()
+  }
+}
+
+class MapComponent extends Component<Props> {
+  createHandleClick = (hex: Hex) => createHexHandleClick(this.props, hex)
 
   render() {
     const { battle, ui: { attackPositions } } = this.props

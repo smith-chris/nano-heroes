@@ -2,6 +2,7 @@
 export const data = {}
 
 export const ActionCreator = <T extends string, D>(type: T, data?: D) => {
+  // console.warn('ACTION', type)
   if (data) {
     return { type, data }
   } else {

@@ -1,50 +1,45 @@
-import {
-  Battle,
-  Id,
-  getAttackPositions,
-  Hex,
-} from 'transforms/map'
+import { Battle, Id, getAttackPositions, Hex } from 'transforms/map'
 import { Action, data, ActionUnion } from 'utils/redux'
 
 export type UIState = {
   attackPositions: Id[]
-  attackTarget: Id
+  attackTargetId: Id
 }
 
 const initialState: UIState = {
   attackPositions: [],
-  attackTarget: '',
+  attackTargetId: '',
 }
 
 export const uiActions = {
-  highlightTarget: Action('HighlightTarget', data as {
+  highlightTarget: Action('UI/HighlightTarget', data as {
     battle: Battle
     hex: Hex
   }),
-  resetTarget: Action('ResetTarget'),
-  resetPositions: Action('ResetPositions'),
+  eraseTargetAndPositions: Action('UI/EraseTargetAndPositions'),
+  erasePositions: Action('UI/ErasePositions'),
 }
 
 export type UIAction = ActionUnion<typeof uiActions>
 
 export const ui = (state: UIState = initialState, action: UIAction): UIState => {
   switch (action.type) {
-    case 'HighlightTarget':
+    case 'UI/HighlightTarget':
       return {
         ...state,
         attackPositions: getAttackPositions(
           action.data.battle,
           action.data.hex.position,
         ),
-        attackTarget: action.data.hex.occupant || '',
+        attackTargetId: action.data.hex.occupant || '',
       }
-    case 'ResetTarget':
+    case 'UI/EraseTargetAndPositions':
       return {
         ...state,
         attackPositions: [],
-        attackTarget: '',
+        attackTargetId: '',
       }
-    case 'ResetPositions':
+    case 'UI/ErasePositions':
       return {
         ...state,
         attackPositions: [],

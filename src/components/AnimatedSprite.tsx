@@ -17,7 +17,7 @@ export class AnimatedSprite extends Component<Props, State> {
   ticker: ticker.Ticker
   tickerCallback: () => void
   texture: Texture
-  startAnimation = (animation: Animation) => {
+  startAnimation = (animation: Animation, { onFinish }: Props) => {
     const {
       texture,
       width,
@@ -25,9 +25,9 @@ export class AnimatedSprite extends Component<Props, State> {
       height,
       framesCount,
       frameGap,
+      name,
       options: { loop, delay, endReversed },
     } = animation
-    const { onFinish } = this.props
     this.setState({
       currentFrame: -1,
     })
@@ -82,14 +82,15 @@ export class AnimatedSprite extends Component<Props, State> {
     const { animation } = this.props
     this.ticker = new ticker.Ticker()
     if (animation) {
-      this.startAnimation(animation)
+      this.startAnimation(animation, this.props)
       this.ticker.start()
     }
   }
-  componentWillReceiveProps({ animation }: Props) {
+  componentWillReceiveProps(newProps: Props) {
+    const { animation } = newProps
     if (animation && animation !== this.props.animation) {
       this.ticker.remove(this.tickerCallback)
-      this.startAnimation(animation)
+      this.startAnimation(animation, newProps)
     }
   }
   componentWillUnmount() {

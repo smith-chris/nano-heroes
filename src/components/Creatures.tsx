@@ -40,18 +40,18 @@ class Creatures extends Component<Props> {
   }
 
   handleMoveAnimationFinish = () => {
-    const { moveSelectedEnd, resetTarget, attackTarget, ui } = this.props
+    const { moveSelectedEnd, eraseTargetAndPositions, attackTarget, ui } = this.props
     moveSelectedEnd()
-    if (ui.attackTarget) {
-      resetTarget()
-      attackTarget(ui.attackTarget)
+    if (ui.attackTargetId) {
+      eraseTargetAndPositions()
+      attackTarget(ui.attackTargetId)
     } else {
       this.allAnimationsFinish()
     }
   }
 
   render() {
-    const { battle, ui: { attackTarget } } = this.props
+    const { battle, ui: { attackTargetId } } = this.props
     const { selected, attacker, defender, target } = battle
 
     const animateSelected = selected.path && selected.path.length > 0
@@ -72,8 +72,9 @@ class Creatures extends Component<Props> {
           const isDead = count <= 0
 
           const fadeCreature =
-            (attackTarget ? attackTarget !== key && selected.id !== key : false) ||
-            isDead
+            (attackTargetId
+              ? attackTargetId !== key && selected.id !== key
+              : false) || isDead
 
           type RenderCreatureProps = {
             animation?: Animation

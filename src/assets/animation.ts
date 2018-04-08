@@ -10,6 +10,7 @@ import skeletonIdle from 'assets/skeleton/idle.png'
 import skeletonAttack from 'assets/skeleton/attack.png'
 import skeletonDefend from 'assets/skeleton/defend.png'
 import skeletonDeath from 'assets/skeleton/death.png'
+import { each } from 'transforms/map'
 
 const defaultOptions = {
   loop: true,
@@ -35,6 +36,7 @@ export const createAnimation = (
     totalWidth: width,
     height,
     frameGap: gap,
+    name: '??',
     offset,
     options: { ...defaultOptions, ...options },
     getLastFrameTexture: () => {
@@ -67,11 +69,15 @@ export const KnightAnimation = {
     endReversed: true,
     delay: 3,
   }),
-  death: createAnimation(knightDeath, { count: 9, gap: 6 }, knightOfset, {
+  death: createAnimation(knightDeath, { count: 9, gap: 5 }, knightOfset, {
     loop: false,
-    delay: 33,
+    delay: 30,
   }),
 }
+
+each(KnightAnimation, (animation, key) => {
+  animation.name = `Knight.${key}`
+})
 
 const skeletonOffset = new Point(5, 4)
 export const SkeletonAnimation = {
@@ -104,3 +110,7 @@ export const SkeletonAnimation = {
     },
   ),
 }
+
+each(SkeletonAnimation, (animation, key) => {
+  animation.name = `Skeleton.${key}`
+})

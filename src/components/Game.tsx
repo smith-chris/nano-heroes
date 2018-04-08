@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react'
 import { Container } from 'react-pixi-fiber'
-import HexMap from 'components/HexMap'
+import HexMap, { createHexHandleClick } from 'components/HexMap'
 import Creatures from 'components/Creatures'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -23,6 +23,14 @@ type DispatchProps = ReturnType<typeof mapDispatchToProps>
 
 type Props = StateProps & DispatchProps
 
+const clickOnHex = (props: Props, position: Point) => {
+  const state = store.getState()
+  createHexHandleClick(
+    { ...props, ...state },
+    getHex(state.battle.hexes, position),
+  )()
+}
+
 class Game extends Component<Props> {
   componentWillMount() {
     const {
@@ -34,24 +42,27 @@ class Game extends Component<Props> {
       moveSelected,
       finishTurn,
       highlightTarget,
-      resetPositions,
+      erasePositions,
     } = this.props
     loadMap({ width: 10, height: 5 })
-    addAttackers([1, 4].map(y => new Creature(new Point(0, y))))
-    addDefenders([1, 4].map(y => new Creature(new Point(9, y))))
+    addAttackers([1].map(y => new Creature(new Point(0, y))))
+    addDefenders([1].map(y => new Creature(new Point(9, y))))
     initialRound()
     setTimeout(() => {
-      moveSelected(new Point(5, 2))
-    }, 500)
+      clickOnHex(this.props, new Point(5, 2))
+    }, 300)
     setTimeout(() => {
-      const state = store.getState()
-      const hex = getHex(state.battle.hexes, new Point(5, 2))
-      highlightTarget({ battle: state.battle, hex })
-    }, 1500)
+      clickOnHex(this.props, new Point(5, 2))
+    }, 1400)
     setTimeout(() => {
-      moveSelected(new Point(4, 3))
-      resetPositions()
-    }, 2000)
+      clickOnHex(this.props, new Point(4, 3))
+    }, 1700)
+    setTimeout(() => {
+      clickOnHex(this.props, new Point(4, 3))
+    }, 4300)
+    setTimeout(() => {
+      clickOnHex(this.props, new Point(5, 2))
+    }, 4600)
   }
   render() {
     const { battle: { round, player: { current } } } = this.props

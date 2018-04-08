@@ -1,5 +1,12 @@
 import { Hexes, Battle, Hex, Bounds } from './types'
-import { getHex, pointToId, isEnemyCreature, isAlive } from './map'
+import {
+  getHex,
+  pointToId,
+  isEnemyCreature,
+  isAlive,
+  getSelectedCreature,
+  selectCreature,
+} from './map'
 import { Point } from 'utils/pixi'
 import { pointsEqual } from './point'
 
@@ -170,7 +177,14 @@ export const getNeighbouringHexes = (battle: Battle, position: Point) =>
     .map(point => battle.hexes[pointToId(point)])
     .filter(hex => Boolean(hex))
 
-export const getAttackPositions = (battle: Battle, position: Point) =>
-  getNeighbouringHexes(battle, position)
-    .filter(elem => elem.path && elem.path.length > 1)
+export const getAttackPositions = (battle: Battle, position: Point) => {
+  const selectedCreature = getSelectedCreature(battle)
+  const selectedPosition = selectedCreature ? selectedCreature.position : undefined
+  return getNeighbouringHexes(battle, position)
+    .filter(
+      elem =>
+        (elem.path && elem.path.length >= 1) ||
+        pointsEqual(elem.position, selectedPosition),
+    )
     .map(elem => pointToId(elem.position))
+}
