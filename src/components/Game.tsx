@@ -8,10 +8,13 @@ import { battleActions } from 'store/battle'
 import { uiActions } from 'store/ui'
 import { Creature } from 'transforms/creature'
 import { Point } from 'utils/pixi'
-import { getHex } from 'transforms/map'
+import { getHex, Obstacle, pointsEqual } from 'transforms/map'
 import { store } from 'store/store'
 import { BitmapText } from 'utils/components'
 import { Rectangle } from 'components/Rectangle'
+import RandomGenerator from 'utils/RandomGenerator'
+
+const random = new RandomGenerator()
 
 const mapStateToProps = (state: StoreState) => state
 type StateProps = ReturnType<typeof mapStateToProps>
@@ -43,10 +46,23 @@ class Game extends Component<Props> {
       finishTurn,
       highlightTarget,
       erasePositions,
+      putObstacles,
     } = this.props
     loadMap({ width: 10, height: 5 })
     addAttackers([1].map(y => new Creature(new Point(0, y))))
     addDefenders([1].map(y => new Creature(new Point(9, y))))
+    const obstacles = []
+    for (let i = 0; i < random.integer(3, 6); i++) {
+      const obstaclePosition = new Point(random.integer(1, 8), random.integer(0, 4))
+      if (
+        pointsEqual(obstaclePosition, new Point(5, 2)) ||
+        pointsEqual(obstaclePosition, new Point(4, 3))
+      ) {
+        continue
+      }
+      obstacles.push(new Obstacle(obstaclePosition, 'stone'))
+    }
+    putObstacles(obstacles)
     initialRound()
     setTimeout(() => {
       clickOnHex(this.props, new Point(5, 2))

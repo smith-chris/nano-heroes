@@ -24,7 +24,14 @@ export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
     if (hex && !hex.occupant) {
       hex.occupant = obstacle.type
     } else {
-      throw new Error('No hex at id: ' + pointToId(obstacle.position))
+      if (hex.occupant) {
+        console.warn('Hex already occupied', hex)
+      } else {
+        console.warn(
+          `Could not add obstacle to hex at ${pointToId(obstacle.position)}: `,
+          hex,
+        )
+      }
     }
   }
   return result

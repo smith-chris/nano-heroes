@@ -13,6 +13,8 @@ import {
   getSelectedCreature,
   setPreviousCreature,
   getAllCreatures,
+  Obstacle,
+  putObstacles,
 } from 'transforms/map'
 import { Point } from 'utils/pixi'
 import { Creature, hit } from 'transforms/creature'
@@ -30,6 +32,7 @@ const initialState: BattleState = createMap(5, 5)
 
 export const battleActions = {
   loadMap: Action('LoadMap', data as Size),
+  putObstacles: Action('PutObstacles', data as Obstacle[]),
   initialRound: Action('InitialRound'),
   finishTurn: Action('FinishTurn'),
   addAttackers: Action('AddAttackers', data as Creature[]),
@@ -53,6 +56,8 @@ export const battle = (
         ...initialState,
         ...createMap(action.data.width, action.data.height),
       }
+    case 'PutObstacles':
+      return { ...state, hexes: putObstacles(state.hexes, action.data) }
     case 'AddAttackers':
       return {
         ...state,

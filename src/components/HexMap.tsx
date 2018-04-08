@@ -63,18 +63,26 @@ class MapComponent extends Component<Props> {
     return (
       <>
         {each(hexes, (hex, key) => {
-          const isSelected = hex.path.length > 0
-          const texture =
-            hex.canBeAttacked || attackPositions.indexOf(key) >= 0
-              ? terrain.grassRed
-              : pointsEqual(hex.position, selectedPosition)
-                ? terrain.grassDark
-                : terrain.grass
+          const hasPath = hex.path.length > 0
+          const isAttackPosition = attackPositions.indexOf(key) >= 0
+          const isSelectedPosition = pointsEqual(hex.position, selectedPosition)
+          let texture = terrain.grass
+          if (hex.occupant === 'stone') {
+            texture = terrain.stone
+          } else if (isSelectedPosition) {
+            if (isAttackPosition) {
+              texture = terrain.grassRedDark
+            } else {
+              texture = terrain.grassDark
+            }
+          } else if (hex.canBeAttacked || isAttackPosition) {
+            texture = terrain.grassRed
+          }
           return (
             <Sprite
               interactive
               pointerdown={this.createHandleClick(hex)}
-              alpha={isSelected ? 0.5 : 1}
+              alpha={hasPath || isAttackPosition ? 0.5 : 1}
               key={key}
               anchor={0.5}
               position={pointToCoordinates(hex.position)}

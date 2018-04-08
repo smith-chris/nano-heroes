@@ -21,7 +21,7 @@ export type Creatures = ObjectOf<Creature>
 export type Hexes = ObjectOf<Hex>
 
 export class Obstacle {
-  constructor(public position: Point, public type: string = 'grass') {}
+  constructor(public position: Point, public type: string = 'stone') {}
 }
 
 export class Bounds {
