@@ -24,14 +24,14 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 }
 type DispatchProps = ReturnType<typeof mapDispatchToProps>
 
-type Props = StateProps & DispatchProps
+type Props = StateProps &
+  DispatchProps & {
+    dev: boolean
+  }
 
-const clickOnHex = (props: Props, position: Point) => {
+const clickOnHex = ({ dev, ...rest }: Props, position: Point) => {
   const state = store.getState()
-  createHexHandleClick(
-    { ...props, ...state },
-    getHex(state.battle.hexes, position),
-  )()
+  createHexHandleClick({ ...rest, ...state }, getHex(state.battle.hexes, position))()
 }
 
 class Game extends Component<Props> {
@@ -47,10 +47,11 @@ class Game extends Component<Props> {
       highlightTarget,
       erasePositions,
       putObstacles,
+      dev,
     } = this.props
     loadMap({ width: 10, height: 5 })
-    addAttackers([1].map(y => new Creature(new Point(0, y))))
-    addDefenders([1].map(y => new Creature(new Point(9, y))))
+    addAttackers((dev ? [1] : [1, 4]).map(y => new Creature(new Point(0, y))))
+    addDefenders((dev ? [1] : [1, 4]).map(y => new Creature(new Point(9, y))))
     const obstacles = []
     for (let i = 0; i < random.integer(3, 6); i++) {
       const obstaclePosition = new Point(random.integer(1, 8), random.integer(0, 4))
@@ -64,6 +65,9 @@ class Game extends Component<Props> {
     }
     putObstacles(obstacles)
     initialRound()
+    if (!dev) {
+      return
+    }
     setTimeout(() => {
       clickOnHex(this.props, new Point(5, 2))
     }, 300)

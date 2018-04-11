@@ -1,4 +1,4 @@
-import isDev from './isDev'
+import { isDev } from './isDev'
 
 describe('isDev', () => {
   it('should return false', () => {

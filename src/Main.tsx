@@ -4,10 +4,11 @@ import { store } from 'store/store'
 import { render } from 'react-pixi-fiber'
 import Game from 'components/Game'
 import { Provider } from 'react-redux'
+import { isDev } from 'utils/isDev'
 
 render(
   <Provider store={store}>
-    <Game />
+    <Game dev={isDev} />
   </Provider>,
   stage,
 )
