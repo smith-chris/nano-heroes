@@ -1,6 +1,6 @@
 import { Id } from 'transforms/map'
 import { Point } from 'utils/pixi'
-import { terrainSize } from 'assets/textures'
+import { terrainSize } from 'assets/const'
 
 const offsetY = terrainSize.height
 const offsetX = Math.round(terrainSize.width - 3 - offsetY / 8)

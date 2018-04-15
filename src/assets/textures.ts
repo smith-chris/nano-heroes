@@ -20,7 +20,3 @@ export const terrain = toTextures({
   grassRedRing,
   grassRedDark,
 })
-export const terrainSize = {
-  width: grass.width,
-  height: grass.height,
-}

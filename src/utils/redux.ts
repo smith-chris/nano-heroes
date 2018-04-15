@@ -9,16 +9,15 @@ export const ActionCreator = <T extends string, D>(type: T, data?: D) => {
     return { type }
   }
 }
-function _Action<T extends string, D>(
-  type: T,
-  data: D,
-): (data: D) => { type: T; data: D }
-function _Action<T extends string, D>(type: T): () => { type: T }
-function _Action<T extends string, D>(type: T, data?: D) {
+type ActionType = {
+  <T extends string, D>(type: T, data: D): (data: D) => { type: T; data: D }
+  <T extends string, _D>(type: T): () => { type: T }
+}
+const _Action: ActionType = <T extends string, D>(type: T, data?: D) => {
   if (data) {
     return ActionCreator.bind(null, type)
   } else {
-    return () => ActionCreator(type)
+    return ActionCreator.bind(null, type, null)
   }
 }
 export const Action = _Action

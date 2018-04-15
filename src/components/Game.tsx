@@ -53,7 +53,7 @@ class Game extends Component<Props> {
     addAttackers((dev ? [1] : [1, 4]).map(y => new Creature(new Point(0, y))))
     addDefenders((dev ? [1] : [1, 4]).map(y => new Creature(new Point(9, y))))
     const obstacles = []
-    for (let i = 0; i < random.integer(3, 6); i++) {
+    for (let i = 0; i < (dev ? 2 : random.integer(3, 6)); i++) {
       const obstaclePosition = new Point(random.integer(1, 8), random.integer(0, 4))
       if (
         pointsEqual(obstaclePosition, new Point(5, 2)) ||
@@ -85,7 +85,12 @@ class Game extends Component<Props> {
     }, 4600)
   }
   render() {
-    const { battle: { round, player: { current } } } = this.props
+    const {
+      battle: {
+        round,
+        player: { current },
+      },
+    } = this.props
     return (
       <>
         <Rectangle width={128} height={7} alpha={0.33} />
