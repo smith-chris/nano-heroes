@@ -8,14 +8,20 @@
   },
   "scripts": {
     "start": "webpack-dev-server  --config webpack.dev.js",
+    "start:docs": "webpack-dev-server  --config webpack.docs.js",
     "prod": "webpack --config webpack.prod.js -p",
     "test": "jest --watch",
     "lint": "tslint 'src/**/*.{ts,tsx}' --fix",
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "src/**/*.test.{ts,tsx}": ["jest"],
-    "src/**/*.{ts,tsx}": ["lint", "git add"]
+    "src/**/*.test.{ts,tsx}": [
+      "jest"
+    ],
+    "src/**/*.{ts,tsx}": [
+      "lint",
+      "git add"
+    ]
   },
   "author": "Krzysztof Kowalski",
   "license": "ISC",
@@ -23,10 +29,14 @@
     "@types/bluebird": "^3.5.20",
     "@types/random-js": "^1.0.30",
     "@types/react": "^16.0.40",
+    "@types/react-dom": "^16.0.5",
+    "@types/react-hot-loader": "^3.0.6",
     "@types/react-redux": "^5.0.15",
     "pixi.js": "^4.7.0",
     "random-js": "^1.0.8",
     "react": "^16.2.0",
+    "react-dom": "^16.3.1",
+    "react-hot-loader": "^4.0.1",
     "react-pixi-fiber": "^0.4.0",
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
