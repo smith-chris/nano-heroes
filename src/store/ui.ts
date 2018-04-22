@@ -22,7 +22,10 @@ export const uiActions = {
 
 export type UIAction = ActionUnion<typeof uiActions>
 
-export const ui = (state: UIState = initialState, action: UIAction): UIState => {
+export const uiReducer = (
+  state: UIState = initialState,
+  action: UIAction,
+): UIState => {
   switch (action.type) {
     case 'UI/HighlightTarget':
       return {

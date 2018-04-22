@@ -32,6 +32,7 @@ module.exports = {
       '.tsx',
       '.ts',
       '.js',
+      '.jsx',
       '.json',
       isDev ? '.dev.tsx' : '.prod.tsx',
       isDev ? '.dev.js' : '.prod.js',
@@ -47,7 +48,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(tsx?|js)$/,
+        test: /\.(tsx?|jsx?)$/,
         include: path.resolve('./src'),
         use: [
           { loader: 'cache-loader' },

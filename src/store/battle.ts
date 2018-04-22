@@ -46,7 +46,7 @@ export const battleActions = {
 
 export type BattleAction = ActionUnion<typeof battleActions>
 
-export const battle = (
+export const battleReducer = (
   state: BattleState = initialState,
   action: BattleAction,
 ): BattleState => {

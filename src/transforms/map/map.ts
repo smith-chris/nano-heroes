@@ -232,7 +232,7 @@ export const selectNextCreature = (
   attempts = 0,
 ): Battle => {
   if (attempts > 1) {
-    console.warn('No more creatures available. Starting new round...')
+    console.info('No more creatures available. Starting new round...')
     const newBattle = {
       ...battle,
       round: battle.round + 1,

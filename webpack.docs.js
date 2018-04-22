@@ -7,7 +7,7 @@ const { NamedModulesPlugin, HotModuleReplacementPlugin } = require('webpack')
 
 module.exports = merge(common, {
   entry: './src/docs/index.tsx',
-  devtool: 'eval',
+  devtool: 'source-map',
   devServer: {
     contentBase: path.resolve('./dist'),
     historyApiFallback: true,

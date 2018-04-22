@@ -1,8 +1,8 @@
 import { composeWithDevTools } from 'redux-devtools-extension'
 import Redux, { createStore, combineReducers } from 'redux'
 import { isDev } from 'utils/isDev'
-import { battle, BattleState } from './battle'
-import { ui, UIState } from './ui'
+import { battleReducer, BattleState } from './battle'
+import { uiReducer, UIState } from './ui'
 import genericSubscribe from './genericSubscribe'
 
 declare global {
@@ -14,9 +14,9 @@ declare global {
   type Dispatch = Redux.Dispatch<StoreState>
 }
 
-const reducers = combineReducers<StoreState>({
-  battle,
-  ui,
+export const reducers = combineReducers<StoreState>({
+  battle: battleReducer,
+  ui: uiReducer,
 })
 
 export const store: Redux.Store<StoreState> = isDev
