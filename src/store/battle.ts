@@ -28,7 +28,7 @@ export type Size = {
 
 export type BattleState = Battle
 
-const initialState: BattleState = createMap(5, 5)
+const initialState: BattleState = createMap(0, 0)
 
 export const battleActions = {
   loadMap: Action('LoadMap', data as Size),
@@ -52,10 +52,7 @@ export const battleReducer = (
 ): BattleState => {
   switch (action.type) {
     case 'LoadMap':
-      return {
-        ...initialState,
-        ...createMap(action.data.width, action.data.height),
-      }
+      return createMap(action.data.width, action.data.height)
     case 'PutObstacles':
       return { ...state, hexes: putObstacles(state.hexes, action.data) }
     case 'AddAttackers':

@@ -29,7 +29,7 @@ type Props = StateProps &
     dev: boolean
   }
 
-const clickOnHex = ({ dev, ...rest }: Props, position: Point) => {
+export const clickOnHex = ({ dev, ...rest }: Props, position: Point) => {
   const state = store.getState()
   createHexHandleClick({ ...rest, ...state }, getHex(state.battle.hexes, position))()
 }
@@ -49,9 +49,15 @@ class Game extends Component<Props> {
       putObstacles,
       dev,
     } = this.props
-    loadMap({ width: 10, height: 5 })
-    addAttackers((dev ? [1] : [1, 4]).map(y => new Creature(new Point(0, y))))
-    addDefenders((dev ? [1] : [1, 4]).map(y => new Creature(new Point(9, y))))
+    if (dev) {
+      loadMap({ width: 4, height: 2 })
+      addAttackers([0].map(y => new Creature(new Point(0, y))))
+      addDefenders([1].map(y => new Creature(new Point(3, y))))
+    } else {
+      loadMap({ width: 10, height: 5 })
+      addAttackers((dev ? [1] : [1, 4]).map(y => new Creature(new Point(0, y))))
+      addDefenders((dev ? [1] : [1, 4]).map(y => new Creature(new Point(9, y))))
+    }
     const obstacles = []
     for (let i = 0; i < (dev ? 2 : random.integer(3, 6)); i++) {
       const obstaclePosition = new Point(random.integer(1, 8), random.integer(0, 4))
@@ -63,29 +69,14 @@ class Game extends Component<Props> {
       }
       obstacles.push(new Obstacle(obstaclePosition, 'stone'))
     }
-    putObstacles(obstacles)
-    initialRound()
     if (!dev) {
-      return
+      putObstacles(obstacles)
     }
-    setTimeout(() => {
-      clickOnHex(this.props, new Point(5, 2))
-    }, 300)
-    setTimeout(() => {
-      clickOnHex(this.props, new Point(5, 2))
-    }, 1400)
-    setTimeout(() => {
-      clickOnHex(this.props, new Point(4, 3))
-    }, 1700)
-    setTimeout(() => {
-      clickOnHex(this.props, new Point(4, 3))
-    }, 4300)
-    setTimeout(() => {
-      clickOnHex(this.props, new Point(5, 2))
-    }, 4600)
+    initialRound()
   }
   render() {
     const {
+      dev,
       battle: {
         round,
         player: { current },
@@ -100,7 +91,11 @@ class Game extends Component<Props> {
           position={new Point(127, 1)}
           anchor={new Point(1, 0)}
         />
-        <Container x={14} y={35}>
+        <Container
+          x={dev ? 33 : 14}
+          y={dev ? 62 : 35}
+          scale={dev ? new Point(2, 2) : new Point(1, 1)}
+        >
           <HexMap />
           <Creatures />
         </Container>
