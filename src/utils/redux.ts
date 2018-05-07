@@ -1,8 +1,11 @@
 // tslint:disable no-shadowed-variable
+import { ObjectOf } from 'transforms/map'
+import { store } from 'store/store'
+
 export const data = {}
 
 // TODO: make this less complicated!
-export const _ActionCreatorInner = <T extends string, D>(type: T, data?: D) => {
+export const createActionObject = <T extends string, D>(type: T, data?: D) => {
   console.warn('ACTION', type)
   if (data) {
     return { type, data }
@@ -10,32 +13,49 @@ export const _ActionCreatorInner = <T extends string, D>(type: T, data?: D) => {
     return { type }
   }
 }
+
+type Validate = (s: StoreState) => boolean
+
 type ActionCreatorType = {
-  <T extends string, D>(type: T, data: D): (data: D) => { type: T; data: D }
-  <T extends string, _D>(type: T): () => { type: T }
+  <T extends string>(type: T, val?: Validate): () => { type: T }
+  <T extends string, D>(type: T, data: D, val?: Validate): (
+    data: D,
+  ) => { type: T; data: D }
 }
 export const ActionCreator: ActionCreatorType = <T extends string, D>(
   type: T,
-  data?: D,
+  data?: D | Validate,
+  validate?: Validate,
 ) => {
-  if (data) {
-    return _ActionCreatorInner.bind(null, type)
+  if (validate) {
+    return (data: D) => {
+      if (validate(store.getState())) {
+        return createActionObject(type, data)
+      } else {
+        return { type: `@@SKIP(${type})`, data }
+      }
+    }
+  } else if (typeof data === 'function') {
+    const _validate = data
+    return () => {
+      if (_validate(store.getState())) {
+        return createActionObject(type)
+      } else {
+        return { type: `@@SKIP(${type})` }
+      }
+    }
+  } else if (data) {
+    return createActionObject.bind(null, type)
   } else {
-    return _ActionCreatorInner.bind(null, type, null)
+    return createActionObject.bind(null, type, null)
   }
 }
 
 type ActionType = {
+  <T extends string>(type: T): { type: T }
   <T extends string, D>(type: T, data: D): { type: T; data: D }
-  <T extends string, _D>(type: T): { type: T }
 }
-export const Action = (<T extends string, D>(type: T, data?: D) => {
-  if (data) {
-    return _ActionCreatorInner(type, data)
-  } else {
-    return _ActionCreatorInner(type)
-  }
-}) as ActionType
+export const Action = createActionObject as ActionType
 
 export type ValueOf<T> = T[keyof T]
 
@@ -44,4 +64,3 @@ type Flatten<T> = T extends Array<infer U> ? U : T
 export type ActionUnion<T extends { [key: string]: (d?: {}) => {} }> = Flatten<
   ReturnType<ValueOf<T>>
 >
-type Union = { t: 'a' } | { t: 'b' } | { t: 'a'; d: string }
