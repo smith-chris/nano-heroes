@@ -1,5 +1,6 @@
 import { composeWithDevTools } from 'redux-devtools-extension'
-import Redux, { createStore, combineReducers } from 'redux'
+import multi from 'redux-multi'
+import Redux, { createStore, combineReducers, applyMiddleware } from 'redux'
 import { isDev } from 'utils/isDev'
 import { battleReducer, BattleState } from './battle'
 import { uiReducer, UIState } from './ui'
@@ -20,8 +21,8 @@ export const reducers = combineReducers<StoreState>({
 })
 
 export const store: Redux.Store<StoreState> = isDev
-  ? createStore(reducers, composeWithDevTools())
-  : createStore(reducers)
+  ? createStore(reducers, composeWithDevTools(applyMiddleware(multi)))
+  : createStore(reducers, applyMiddleware(multi))
 
 export type Store = typeof store
 

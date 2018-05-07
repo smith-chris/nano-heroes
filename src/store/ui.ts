@@ -1,5 +1,5 @@
 import { Battle, Id, getAttackPositions, Hex } from 'transforms/map'
-import { Action, data, ActionUnion } from 'utils/redux'
+import { ActionCreator, data, ActionUnion, Action } from 'utils/redux'
 
 export type UIState = {
   attackPositions: Id[]
@@ -12,12 +12,12 @@ const initialState: UIState = {
 }
 
 export const uiActions = {
-  highlightTarget: Action('UI/HighlightTarget', data as {
+  highlightTarget: ActionCreator('UI/HighlightTarget', data as {
     battle: Battle
     hex: Hex
   }),
-  eraseTargetAndPositions: Action('UI/EraseTargetAndPositions'),
-  erasePositions: Action('UI/ErasePositions'),
+  eraseTargetAndPositions: ActionCreator('UI/EraseTargetAndPositions'),
+  erasePositions: ActionCreator('UI/ErasePositions'),
 }
 
 export type UIAction = ActionUnion<typeof uiActions>

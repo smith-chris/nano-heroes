@@ -226,29 +226,33 @@ export const canAttack = (battle: Battle, id: Id) => {
   return false
 }
 
+export const nextRound = (battle: Battle) => {
+  return {
+    round: battle.round + 1,
+    attacker: resetPlayer(battle.attacker),
+    defender: resetPlayer(battle.defender),
+  }
+}
+
 export const selectNextCreature = (
   battle: Battle,
-  playerType: PlayerType,
+  playerType?: PlayerType,
   attempts = 0,
 ): Battle => {
-  if (attempts > 1) {
-    console.info('No more creatures available. Starting new round...')
-    const newBattle = {
-      ...battle,
-      round: battle.round + 1,
-      attacker: resetPlayer(battle.attacker),
-      defender: resetPlayer(battle.defender),
-    }
-    return selectNextCreature(newBattle, 'Attacker')
+  if (attempts > 5) {
+    throw new Error('Infinite recursion in "selectNextCreature".')
   }
-  let player = getPlayer(battle, playerType)
+  let _playerType =
+    playerType || chooseOther(battle.player.current, 'Attacker', 'Defender')
+  let player = getPlayer(battle, _playerType)
   if (player.availableCreatures.length === 0) {
     return selectNextCreature(
       battle,
-      chooseOther(playerType, 'Attacker', 'Defender'),
+      chooseOther(_playerType, 'Attacker', 'Defender'),
       attempts + 1,
     )
   }
+
   player = { ...player }
   const nextCreatureId = chooseRandom(...player.availableCreatures)
 
@@ -258,10 +262,10 @@ export const selectNextCreature = (
   )
   const result = {
     ...battle,
-    ...setPlayer(battle, playerType, player),
+    ...setPlayer(battle, _playerType, player),
     player: {
       ...battle.player,
-      current: playerType,
+      current: _playerType,
     },
   }
   return {
@@ -269,6 +273,20 @@ export const selectNextCreature = (
     ...selectCreature(result, nextCreatureId),
   }
 }
+
+export const nextTurn = (battle: Battle) => {
+  return {
+    selected: {},
+    player: {
+      ...battle.player,
+      current: chooseOther(battle.player.current, 'Attacker', 'Defender'),
+    },
+  }
+}
+
+export const availableCreaturesCount = (battle: Battle) =>
+  battle.defender.availableCreatures.length +
+  battle.attacker.availableCreatures.length
 
 export const selectCreature = (battle: Battle, id: Id) => {
   const targetCreature = getCurrentCreatures(battle)[id]

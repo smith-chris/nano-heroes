@@ -15,11 +15,15 @@ import {
   getAllCreatures,
   Obstacle,
   putObstacles,
+  nextRound,
+  nextTurn,
+  availableCreaturesCount,
+  PlayerType,
 } from 'transforms/map'
 import { Point } from 'utils/pixi'
 import { Creature, hit } from 'transforms/creature'
 import { chooseOther } from 'utils/battle'
-import { Action, data, ActionUnion } from 'utils/redux'
+import { ActionCreator, data, ActionUnion, Action } from 'utils/redux'
 
 export type Size = {
   width: number
@@ -31,17 +35,16 @@ export type BattleState = Battle
 const initialState: BattleState = createMap(0, 0)
 
 export const battleActions = {
-  loadMap: Action('LoadMap', data as Size),
-  putObstacles: Action('PutObstacles', data as Obstacle[]),
-  initialRound: Action('InitialRound'),
-  finishTurn: Action('FinishTurn'),
-  addAttackers: Action('AddAttackers', data as Creature[]),
-  addDefenders: Action('AddDefenders', data as Creature[]),
-  selectCreature: Action('SelectCreature', data as Id),
-  moveSelected: Action('MoveSelectedStart', data as Point),
-  moveSelectedEnd: Action('MoveSelectedEnd'),
-  attackTarget: Action('AttackTargetStart', data as Id),
-  attackTargetEnd: Action('AttackTargetEnd'),
+  loadMap: ActionCreator('LoadMap', data as Size),
+  putObstacles: ActionCreator('PutObstacles', data as Obstacle[]),
+  initialRound: () => [Action('InitialRound'), Action('SelectInitialCreature')],
+  finishTurn: () => [Action('FinishTurn'), Action('SelectNextCreature')],
+  addAttackers: ActionCreator('AddAttackers', data as Creature[]),
+  addDefenders: ActionCreator('AddDefenders', data as Creature[]),
+  moveSelected: ActionCreator('MoveSelectedStart', data as Point),
+  moveSelectedEnd: ActionCreator('MoveSelectedEnd'),
+  attackTarget: ActionCreator('AttackTargetStart', data as Id),
+  attackTargetEnd: ActionCreator('AttackTargetEnd'),
 }
 
 export type BattleAction = ActionUnion<typeof battleActions>
@@ -66,19 +69,34 @@ export const battleReducer = (
         ...putDefenders(state.defender, state.hexes, action.data),
       }
     case 'InitialRound':
-      return selectNextCreature(state, state.player.current)
+      return {
+        ...state,
+        ...nextRound(state),
+      }
     case 'FinishTurn':
-      return selectNextCreature(
-        state,
-        chooseOther(state.player.current, 'Attacker', 'Defender'),
-      )
-    case 'SelectCreature':
+      let _state = state
+      if (availableCreaturesCount(state) === 0) {
+        // TODO: introduce FinishRound
+        _state = {
+          ...state,
+          ...nextRound(state),
+        }
+      }
+      return {
+        ..._state,
+        ...nextTurn(state),
+      }
+    case 'SelectInitialCreature':
+    case 'SelectNextCreature':
       if (!canMove(state)) {
         return state
       }
       return {
         ...state,
-        ...selectCreature(state, action.data),
+        ...selectNextCreature(
+          state,
+          action.type === 'SelectInitialCreature' ? 'Attacker' : undefined,
+        ),
       }
     case 'MoveSelectedStart':
       if (!canMove(state)) {

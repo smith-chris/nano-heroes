@@ -54,7 +54,8 @@
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
     "redux-devtools": "^3.4.1",
-    "redux-devtools-inspector": "^0.11.3"
+    "redux-devtools-inspector": "^0.11.3",
+    "redux-multi": "^0.1.12"
   },
   "devDependencies": {
     "@types/jest": "^22.1.3",
