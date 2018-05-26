@@ -1,12 +1,15 @@
 // tslint:disable no-shadowed-variable
 import { ObjectOf } from 'transforms/map'
 import { store } from 'store/store'
+import { isDev } from './env'
 
 export const data = {}
 
 // TODO: make this less complicated!
 export const createActionObject = <T extends string, D>(type: T, data?: D) => {
-  console.warn('ACTION', type)
+  if (isDev) {
+    console.warn('ACTION', type)
+  }
   if (data) {
     return { type, data }
   } else {

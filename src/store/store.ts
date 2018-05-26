@@ -1,6 +1,6 @@
 import { composeWithDevTools } from 'redux-devtools-extension'
 import Redux, { createStore, combineReducers, applyMiddleware } from 'redux'
-import { isDev } from 'utils/isDev'
+import { isDev } from 'utils/env'
 import { battleReducer, BattleState } from './battle'
 import { uiReducer, UIState } from './ui'
 import genericSubscribe from './genericSubscribe'

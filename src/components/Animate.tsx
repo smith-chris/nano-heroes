@@ -30,7 +30,9 @@ export class Animate extends Component<Props, State> {
       to,
     })
     const setDir = (stepX: number) => {
-      if (stepX === 0) { return }
+      if (stepX === 0) {
+        return
+      }
       this.setState({
         dirLeft: stepX < 0,
       })

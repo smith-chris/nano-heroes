@@ -57,19 +57,20 @@ class Game extends Component<Props> {
       loadMap({ width: 10, height: 5 })
       addAttackers((dev ? [1] : [1, 4]).map(y => new Creature(new Point(0, y))))
       addDefenders((dev ? [1] : [1, 4]).map(y => new Creature(new Point(9, y))))
-    }
-    const obstacles = []
-    for (let i = 0; i < (dev ? 2 : random.integer(3, 6)); i++) {
-      const obstaclePosition = new Point(random.integer(1, 8), random.integer(0, 4))
-      if (
-        pointsEqual(obstaclePosition, new Point(5, 2)) ||
-        pointsEqual(obstaclePosition, new Point(4, 3))
-      ) {
-        continue
+      const obstacles = []
+      for (let i = 0; i < (dev ? 2 : random.integer(3, 6)); i++) {
+        const obstaclePosition = new Point(
+          random.integer(1, 8),
+          random.integer(0, 4),
+        )
+        if (
+          pointsEqual(obstaclePosition, new Point(5, 2)) ||
+          pointsEqual(obstaclePosition, new Point(4, 3))
+        ) {
+          continue
+        }
+        obstacles.push(new Obstacle(obstaclePosition, 'stone'))
       }
-      obstacles.push(new Obstacle(obstaclePosition, 'stone'))
-    }
-    if (!dev) {
       putObstacles(obstacles)
     }
     initialRound()

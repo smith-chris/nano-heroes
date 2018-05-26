@@ -73,10 +73,6 @@ export const battleReducer = (
         ...putDefenders(state.defender, state.hexes, action.data),
       }
     case 'InitialRound':
-      return {
-        ...state,
-        ...nextRound(state),
-      }
     case 'NextRound':
       return {
         ...state,

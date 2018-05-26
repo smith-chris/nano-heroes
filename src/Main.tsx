@@ -4,7 +4,7 @@ import { store } from 'store/store'
 import { render } from 'react-pixi-fiber'
 import Game from 'components/Game'
 import { Provider } from 'react-redux'
-import { isDev } from 'utils/isDev'
+import { isDev } from 'utils/env'
 
 render(
   <Provider store={store}>
