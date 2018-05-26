@@ -38,9 +38,9 @@ export const battleActions = {
   loadMap: ActionCreator('LoadMap', data as Size),
   putObstacles: ActionCreator('PutObstacles', data as Obstacle[]),
   initialRound: () => [Action('InitialRound'), Action('SelectInitialCreature')],
-  finishTurn: () => ({ battle }: StoreState) => [
-    availableCreaturesCount(battle) === 0 && Action('FinishRound'),
-    Action('FinishTurn'),
+  nextTurn: () => ({ battle }: StoreState) => [
+    availableCreaturesCount(battle) === 0 && Action('NextRound'),
+    Action('NextTurn'),
     Action('SelectNextCreature'),
   ],
   addAttackers: ActionCreator('AddAttackers', data as Creature[]),
@@ -77,20 +77,14 @@ export const battleReducer = (
         ...state,
         ...nextRound(state),
       }
-    case 'FinishRound':
-      console.warn('FinishRound!!!')
-      return state
-    case 'FinishTurn':
-      let _state = state
-      if (availableCreaturesCount(state) === 0) {
-        // TODO: introduce FinishRound
-        _state = {
-          ...state,
-          ...nextRound(state),
-        }
-      }
+    case 'NextRound':
       return {
-        ..._state,
+        ...state,
+        ...nextRound(state),
+      }
+    case 'NextTurn':
+      return {
+        ...state,
         ...nextTurn(state),
       }
     case 'SelectInitialCreature':
@@ -158,7 +152,6 @@ export const battleReducer = (
       return {
         ...setPreviousCreature(state, state.target.incomingData),
         target: {},
-        selected: {},
       }
     default: {
       const exhaustiveCheck: never = action

@@ -43,7 +43,7 @@ class Game extends Component<Props> {
       initialRound,
       battle,
       moveSelected,
-      finishTurn,
+      nextTurn,
       highlightTarget,
       erasePositions,
       putObstacles,

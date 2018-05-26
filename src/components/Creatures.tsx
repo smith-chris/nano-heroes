@@ -31,7 +31,7 @@ class Creatures extends Component<Props> {
   }
 
   allAnimationsFinish = () => {
-    this.props.finishTurn()
+    this.props.nextTurn()
   }
 
   handleAttackAnimationFinish = () => {
@@ -51,7 +51,10 @@ class Creatures extends Component<Props> {
   }
 
   render() {
-    const { battle, ui: { attackTargetId } } = this.props
+    const {
+      battle,
+      ui: { attackTargetId },
+    } = this.props
     const { selected, attacker, defender, target } = battle
 
     const animateSelected = selected.path && selected.path.length > 0
