@@ -12,9 +12,9 @@ export const addCreatures = (
   for (const creature of creaturesToPut) {
     const { id } = creature
     const hexId = pointToId(creature.position)
-    const hex = hexes[hexId]
+    const hex = newHexes[hexId]
     if (hex && !hex.occupant) {
-      hexes[hexId] = { ...hex, occupant: id }
+      newHexes[hexId] = { ...hex, occupant: id }
       newCreatures[id] = creature
     } else {
       throw new Error('No hex at id: ' + pointToId(creature.position))
