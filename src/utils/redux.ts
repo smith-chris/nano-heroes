@@ -61,6 +61,25 @@ export type ValueOf<T> = T[keyof T]
 
 type Flatten<T> = T extends Array<infer U> ? U : T
 
-export type ActionUnion<T extends { [key: string]: (d?: {}) => {} }> = Flatten<
-  ReturnType<ValueOf<T>>
->
+// tslint:disable-next-line
+type ReturnTypeIfPossible<T> = T extends (...args: any[]) => any ? ReturnType<T> : T
+
+type CurriedReturnType<T> = ReturnTypeIfPossible<ReturnTypeIfPossible<T>>
+
+export type ActionsUnion<
+  T extends ObjectOf<(d?: {}, s?: StoreState) => {}>
+> = Exclude<NonNullable<Flatten<CurriedReturnType<ValueOf<T>>>>, boolean>
+
+export const transformActions = (({ dispatch, getState }) => {
+  return next => _action => {
+    let action = _action
+    if (typeof action === 'function') {
+      action = (action as Function)(getState())
+    }
+    if (Array.isArray(action)) {
+      action.filter(Boolean).map(dispatch)
+    } else {
+      next(action)
+    }
+  }
+}) as Redux.Middleware

@@ -1,5 +1,5 @@
 import { Battle, Id, getAttackPositions, Hex } from 'transforms/map'
-import { ActionCreator, data, ActionUnion, Action } from 'utils/redux'
+import { ActionCreator, data, ActionsUnion, Action } from 'utils/redux'
 import { store } from './store'
 
 export type UIState = {
@@ -24,7 +24,7 @@ export const uiActions = {
   erasePositions: ActionCreator('UI/ErasePositions'),
 }
 
-export type UIAction = ActionUnion<typeof uiActions>
+export type UIAction = ActionsUnion<typeof uiActions>
 
 export const uiReducer = (
   state: UIState = initialState,

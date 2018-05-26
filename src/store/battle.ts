@@ -23,7 +23,7 @@ import {
 import { Point } from 'utils/pixi'
 import { Creature, hit } from 'transforms/creature'
 import { chooseOther } from 'utils/battle'
-import { ActionCreator, data, ActionUnion, Action } from 'utils/redux'
+import { ActionCreator, data, ActionsUnion, Action } from 'utils/redux'
 
 export type Size = {
   width: number
@@ -38,7 +38,11 @@ export const battleActions = {
   loadMap: ActionCreator('LoadMap', data as Size),
   putObstacles: ActionCreator('PutObstacles', data as Obstacle[]),
   initialRound: () => [Action('InitialRound'), Action('SelectInitialCreature')],
-  finishTurn: () => [Action('FinishTurn'), Action('SelectNextCreature')],
+  finishTurn: () => ({ battle }: StoreState) => [
+    availableCreaturesCount(battle) === 0 && Action('FinishRound'),
+    Action('FinishTurn'),
+    Action('SelectNextCreature'),
+  ],
   addAttackers: ActionCreator('AddAttackers', data as Creature[]),
   addDefenders: ActionCreator('AddDefenders', data as Creature[]),
   moveSelected: ActionCreator('MoveSelectedStart', data as Point),
@@ -47,7 +51,7 @@ export const battleActions = {
   attackTargetEnd: ActionCreator('AttackTargetEnd'),
 }
 
-export type BattleAction = ActionUnion<typeof battleActions>
+export type BattleAction = ActionsUnion<typeof battleActions>
 
 export const battleReducer = (
   state: BattleState = initialState,
@@ -73,6 +77,9 @@ export const battleReducer = (
         ...state,
         ...nextRound(state),
       }
+    case 'FinishRound':
+      console.warn('FinishRound!!!')
+      return state
     case 'FinishTurn':
       let _state = state
       if (availableCreaturesCount(state) === 0) {
