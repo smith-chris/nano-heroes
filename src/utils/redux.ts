@@ -14,37 +14,15 @@ export const createActionObject = <T extends string, D>(type: T, data?: D) => {
   }
 }
 
-type Validate = (s: StoreState) => boolean
-
 type ActionCreatorType = {
-  <T extends string>(type: T, val?: Validate): () => { type: T }
-  <T extends string, D>(type: T, data: D, val?: Validate): (
-    data: D,
-  ) => { type: T; data: D }
+  <T extends string>(type: T): () => { type: T }
+  <T extends string, D>(type: T, data: D): (data: D) => { type: T; data: D }
 }
 export const ActionCreator: ActionCreatorType = <T extends string, D>(
   type: T,
-  data?: D | Validate,
-  validate?: Validate,
+  data?: D,
 ) => {
-  if (validate) {
-    return (data: D) => {
-      if (validate(store.getState())) {
-        return createActionObject(type, data)
-      } else {
-        return { type: `@@SKIP(${type})`, data }
-      }
-    }
-  } else if (typeof data === 'function') {
-    const _validate = data
-    return () => {
-      if (_validate(store.getState())) {
-        return createActionObject(type)
-      } else {
-        return { type: `@@SKIP(${type})` }
-      }
-    }
-  } else if (data) {
+  if (data) {
     return createActionObject.bind(null, type)
   } else {
     return createActionObject.bind(null, type, null)
