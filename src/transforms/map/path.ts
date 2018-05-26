@@ -20,7 +20,7 @@ export const clearPaths = (hexes: Hexes) => {
 
 export const getPath = (hexes: Hexes, position: Point) => {
   const hex = hexes[pointToId(position)]
-  return [...hex.path, hex.position]
+  return [...(hex.path || []), hex.position]
 }
 
 export const findNeighbours = (center: Point, bounds = new Bounds()) => {

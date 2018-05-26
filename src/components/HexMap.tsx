@@ -52,7 +52,10 @@ class MapComponent extends Component<Props> {
   createHandleClick = (hex: Hex) => createHexHandleClick(this.props, hex)
 
   render() {
-    const { battle, ui: { attackPositions } } = this.props
+    const {
+      battle,
+      ui: { attackPositions },
+    } = this.props
     const { hexes, selected } = battle
     let selectedPosition = new Point(-1)
     const selectedCreature = getSelectedCreature(battle)
@@ -63,7 +66,7 @@ class MapComponent extends Component<Props> {
     return (
       <>
         {each(hexes, (hex, key) => {
-          const hasPath = hex.path.length > 0
+          const hasPath = hex.path && hex.path.length > 0
           const isAttackPosition = attackPositions.indexOf(key) >= 0
           const isSelectedPosition = pointsEqual(hex.position, selectedPosition)
           let texture = terrain.grass

@@ -5,11 +5,9 @@ export type Id = string
 
 export class Hex {
   occupant: string
-  canBeAttacked: boolean = false
-  path: Point[]
-  constructor(public position: Point, public type: string = 'grass') {
-    this.path = []
-  }
+  canBeAttacked?: boolean
+  path?: Point[]
+  constructor(public position: Point, public type: string = 'grass') {}
 }
 
 export type ObjectOf<T> = {
