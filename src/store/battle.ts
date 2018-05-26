@@ -5,8 +5,8 @@ import {
   clearPaths,
   Id,
   getPath,
-  putAttackers,
-  putDefenders,
+  addAttackers,
+  addDefenders,
   selectCreature,
   canMove,
   selectNextCreature,
@@ -65,12 +65,12 @@ export const battleReducer = (
     case 'AddAttackers':
       return {
         ...state,
-        ...putAttackers(state.attacker, state.hexes, action.data),
+        ...addAttackers(state.attacker, state.hexes, action.data),
       }
     case 'AddDefenders':
       return {
         ...state,
-        ...putDefenders(state.defender, state.hexes, action.data),
+        ...addDefenders(state.defender, state.hexes, action.data),
       }
     case 'InitialRound':
     case 'NextRound':

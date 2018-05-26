@@ -6,7 +6,7 @@ import {
   xyToId,
   putObstacles,
   Obstacle,
-} from './map'
+} from './index'
 import { Point } from 'utils/pixi'
 
 describe('Map', () => {
