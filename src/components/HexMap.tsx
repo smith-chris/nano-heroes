@@ -26,10 +26,15 @@ export const createHexHandleClick = (props: Props, hex: Hex) => () => {
     attackTarget,
     ui,
   } = props
-  if (ui.attackPositions.indexOf(pointToId(hex.position)) >= 0) {
+  if (
+    ui.attackPositions &&
+    ui.attackPositions.indexOf(pointToId(hex.position)) >= 0
+  ) {
     if (battle.selected.id === hex.occupant) {
       eraseTargetAndPositions()
-      attackTarget(ui.attackTargetId)
+      if (ui.attackTargetId) {
+        attackTarget(ui.attackTargetId)
+      }
     } else {
       erasePositions()
       moveSelected(hex.position)
@@ -67,7 +72,8 @@ class MapComponent extends Component<Props> {
       <>
         {each(hexes, (hex, key) => {
           const hasPath = hex.path && hex.path.length > 0
-          const isAttackPosition = attackPositions.indexOf(key) >= 0
+          const isAttackPosition =
+            attackPositions && attackPositions.indexOf(key) >= 0
           const isSelectedPosition = pointsEqual(hex.position, selectedPosition)
           let texture = terrain.grass
           if (hex.occupant === 'stone') {

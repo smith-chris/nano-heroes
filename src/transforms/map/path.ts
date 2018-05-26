@@ -13,7 +13,9 @@ import { pointsEqual } from './point'
 export const clearPaths = (hexes: Hexes) => {
   const result: Hexes = {}
   for (const key in hexes) {
-    result[key] = { ...hexes[key], path: [], canBeAttacked: false }
+    result[key] = { ...hexes[key] }
+    delete result[key].path
+    delete result[key].canBeAttacked
   }
   return result
 }
@@ -151,7 +153,8 @@ export const higlightHexes = (battle: Battle, start: Point) => {
       const path = node.path.map(n => n.position)
       hexes[key] = { ...hex, path }
     } else {
-      hexes[key] = { ...hex, path: [] }
+      hexes[key] = { ...hex }
+      delete hexes[key].path
     }
   }
   for (const key in hexes) {
@@ -159,11 +162,12 @@ export const higlightHexes = (battle: Battle, start: Point) => {
     if (
       hex.occupant &&
       isEnemyCreature(battle, hex.occupant) &&
-      isAlive(battle, hex.occupant)
+      isAlive(battle, hex.occupant) &&
+      canHexBeAttacked(hexes, hex)
     ) {
-      hex.canBeAttacked = canHexBeAttacked(hexes, hex)
+      hex.canBeAttacked = true
     } else {
-      hex.canBeAttacked = false
+      delete hex.canBeAttacked
     }
   }
   return hexes

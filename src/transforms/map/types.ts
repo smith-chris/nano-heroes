@@ -4,7 +4,7 @@ import { Point } from 'utils/pixi'
 export type Id = string
 
 export class Hex {
-  occupant: string
+  occupant?: string
   canBeAttacked?: boolean
   path?: Point[]
   constructor(public position: Point, public type: string = 'grass') {}

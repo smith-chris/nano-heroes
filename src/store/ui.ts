@@ -3,24 +3,21 @@ import { ActionCreator, data, ActionsUnion, Action } from 'utils/redux'
 import { store } from './store'
 
 export type UIState = {
-  attackPositions: Id[]
-  attackTargetId: Id
+  attackPositions?: Id[]
+  attackTargetId?: Id
 }
 
-const initialState: UIState = {
-  attackPositions: [],
-  attackTargetId: '',
-}
+const initialState: UIState = {}
 
 export const uiActions = {
   highlightTarget: ActionCreator('UI/HighlightTarget', data as {
     battle: Battle
     hex: Hex
   }),
-  eraseTargetAndPositions: ActionCreator(
-    'UI/EraseTargetAndPositions',
-    ({ ui }) => ui.attackPositions.length > 0 || ui.attackTargetId !== '',
-  ),
+  eraseTargetAndPositions: () => ({ ui }: StoreState) => [
+    Boolean(ui.attackPositions || ui.attackTargetId) &&
+      Action('UI/EraseTargetAndPositions'),
+  ],
   erasePositions: ActionCreator('UI/ErasePositions'),
 }
 
@@ -38,19 +35,21 @@ export const uiReducer = (
           action.data.battle,
           action.data.hex.position,
         ),
-        attackTargetId: action.data.hex.occupant || '',
+        ...(action.data.hex.occupant
+          ? { attackTargetId: action.data.hex.occupant }
+          : {}),
       }
-    case 'UI/EraseTargetAndPositions':
-      return {
-        ...state,
-        attackPositions: [],
-        attackTargetId: '',
-      }
-    case 'UI/ErasePositions':
-      return {
-        ...state,
-        attackPositions: [],
-      }
+    case 'UI/EraseTargetAndPositions': {
+      const newState = { ...state }
+      delete newState.attackPositions
+      delete newState.attackTargetId
+      return newState
+    }
+    case 'UI/ErasePositions': {
+      const newState = { ...state }
+      delete newState.attackPositions
+      return newState
+    }
     default: {
       const exhaustiveCheck: never = action
       return state
