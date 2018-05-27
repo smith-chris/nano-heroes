@@ -22,8 +22,8 @@ export const reducers = combineReducers<StoreState>({
   ui: uiReducer,
 })
 
-export const store: Store = isDev
-  ? createStore(reducers, composeWithDevTools(applyMiddleware(transformActions)))
-  : createStore(reducers, applyMiddleware(transformActions))
-
+export const store: Store = createStore(
+  reducers,
+  composeWithDevTools(applyMiddleware(transformActions)),
+)
 export const subscribe = genericSubscribe(store)
