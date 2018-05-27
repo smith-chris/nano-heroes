@@ -62,16 +62,14 @@ describe('battle store', () => {
       const attackFromHex = getHex(battle().hexes, new Point(2, 1))
       createHexHandleClick(props(), attackFromHex)()
       handleMoveAnimationFinish(props())
-      console.warn(battle().selected.id)
       handleAttackAnimationFinish(props())
-      console.warn(battle().selected.id)
       defender = getAllCreatures(battle())[defender.id]
 
       // lets check if defender is dead
       expect(getCount(defender.health)).toBe(0)
 
       // and if its NOT selected
-      // expect(battle().selected.id).not.toBe(defender.id)
+      expect(battle().selected.id).not.toBe(defender.id)
     })
   })
 })

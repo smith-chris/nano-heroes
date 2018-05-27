@@ -1,16 +1,7 @@
 import { chooseOther, chooseRandom } from 'utils/battle'
 import { getPlayer, setPlayer, selectCreature } from '../map'
 import { PlayerType, Battle } from '../types'
-
-const removeElement = <T>(data: T[], element: T) => {
-  const index = data.indexOf(element)
-  if (index > -1) {
-    const result = [...data]
-    result.splice(index, 1)
-    return result
-  }
-  return data
-}
+import { removeElement } from './utils'
 
 export const selectNextCreature = (
   battle: Battle,
