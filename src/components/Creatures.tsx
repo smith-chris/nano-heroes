@@ -48,13 +48,13 @@ class Creatures extends Component<Props> {
 
     const animateSelected = selected.path && selected.path.length > 0
     const isTargetDying = target.incomingData
-      ? getCount(target.incomingData) <= 0
+      ? getCount(target.incomingData.health) <= 0
       : false
 
     return (
       <OrderedContainer>
         {each([attacker.creatures, defender.creatures], (creature, key, index) => {
-          const count = getCount(creature)
+          const count = getCount(creature.health)
 
           const defenderCreatures = index === 1
 

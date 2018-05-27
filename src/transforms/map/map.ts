@@ -154,7 +154,7 @@ export const isEnemyCreature = (battle: Battle, creature: Id) => {
 
 export const isAlive = (battle: Battle, creatureId: Id) => {
   const creature = getAllCreatures(battle)[creatureId]
-  return getCount(creature) > 0
+  return getCount(creature.health) > 0
 }
 
 export const canMove = (battle: Battle) => !battle.player.hasMoved

@@ -3,21 +3,24 @@ import { store } from './store'
 import { bindActionCreators } from 'redux'
 import { Creature, getCount } from 'transforms/creature'
 import { Point } from 'utils/pixi'
-import { getHex, getSelectedCreature, getAllCreatures } from 'transforms/map';
-import { uiActions } from './ui';
-import { createHexHandleClick } from 'components/createHexHandleClick';
-import { handleMoveAnimationFinish, handleAttackAnimationFinish } from 'components/attackController';
+import { getHex, getSelectedCreature, getAllCreatures } from 'transforms/map'
+import { uiActions } from './ui'
+import { createHexHandleClick } from 'components/createHexHandleClick'
+import {
+  handleMoveAnimationFinish,
+  handleAttackAnimationFinish,
+} from 'components/attackController'
 
 const battle = () => store.getState().battle
 const ui = () => store.getState().ui
 const state = () => store.getState()
 
 const boundActions = bindActionCreators(
-  {...battleActions, ...uiActions},
+  { ...battleActions, ...uiActions },
   store.dispatch,
 )
 
-const props = () => ({...boundActions, ...state()})
+const props = () => ({ ...boundActions, ...state() })
 
 const { createMap, addAttackers, addDefenders, initialRound } = boundActions
 
@@ -54,7 +57,7 @@ describe('battle store', () => {
       const defenderHex = getHex(battle().hexes, defender.position)
       createHexHandleClick(props(), defenderHex)()
 
-      expect(ui().attackPositions).toEqual([ '2_1', '3_0' ])
+      expect(ui().attackPositions).toEqual(['2_1', '3_0'])
 
       const attackFromHex = getHex(battle().hexes, new Point(2, 1))
       createHexHandleClick(props(), attackFromHex)()
@@ -63,9 +66,9 @@ describe('battle store', () => {
       handleAttackAnimationFinish(props())
       console.warn(battle().selected.id)
       defender = getAllCreatures(battle())[defender.id]
-      
+
       // lets check if defender is dead
-      expect(getCount(defender)).toBe(0)
+      expect(getCount(defender.health)).toBe(0)
 
       // and if its NOT selected
       // expect(battle().selected.id).not.toBe(defender.id)

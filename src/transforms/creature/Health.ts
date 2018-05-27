@@ -52,10 +52,10 @@ export const total = (health: StackHealth) => {
   return health.unitMaxHealth * health.initialAmount
 }
 
-export const damage = <T extends StackHealth>(
-  health: T,
+export const damage = (
+  health: StackHealth,
   amount: number,
-): [T, number] => {
+): [StackHealth, number] => {
   const result = Object.assign({}, health)
   let oldCount = getCount(result)
 

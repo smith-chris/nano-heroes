@@ -20,20 +20,21 @@ const pixieModel = {
 type Model = typeof pixieModel
 
 const getId = idGenerator('creature')
-export class Creature extends StackHealth {
+export class Creature {
   model: Model
   id: Id
   position: Point
+  health: StackHealth
   constructor(position: Point, amount: number = 10, model: Model = pixieModel) {
     if (!(model && model.health)) {
       console.warn(`Model.health is not definded: ${JSON.stringify(model)}`)
       return
     }
-    super({
+    this.health = new StackHealth({
       initialAmount: amount,
       unitMaxHealth: model.health,
     })
-    init(this)
+    init(this.health)
     this.model = model
     this.position = position
     this.id = getId()
@@ -49,8 +50,8 @@ const getMaxDamage = (creature: Creature) => {
 }
 
 const damageRange = (creature: Creature) => {
-  let min = getMinDamage(creature) * getCount(creature)
-  let max = getMaxDamage(creature) * getCount(creature)
+  let min = getMinDamage(creature) * getCount(creature.health)
+  let max = getMaxDamage(creature) * getCount(creature.health)
   return { min, max }
 }
 
@@ -99,8 +100,8 @@ export const hit = ({
   random?: RandomGenerator
 }): [Creature, number] => {
   let damageAmount = getDamageAmount({ attacker, defender, random })
-  const [result] = damage(defender, damageAmount)
-  return [result, damageAmount]
+  const [health] = damage(defender.health, damageAmount)
+  return [{ ...defender, health }, damageAmount]
 }
 
 const getDamage = (creature: Creature, random: RandomGenerator) => {
@@ -108,7 +109,7 @@ const getDamage = (creature: Creature, random: RandomGenerator) => {
 
   if (min !== max) {
     let sum = 0
-    let attackerCount = getCount(creature)
+    let attackerCount = getCount(creature.health)
     for (let i = 0; i < attackerCount; ++i) {
       sum += random.integer(min, max)
     }
