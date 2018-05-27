@@ -47,8 +47,8 @@ class Creatures extends Component<Props> {
     const { selected, attacker, defender, target } = battle
 
     const animateSelected = selected.path && selected.path.length > 0
-    const isTargetDying = target.incomingData
-      ? getCount(target.incomingData.health) <= 0
+    const isTargetDying = target.incomingHealth
+      ? getCount(target.incomingHealth) <= 0
       : false
 
     return (

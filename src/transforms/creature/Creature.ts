@@ -98,10 +98,10 @@ export const hit = ({
   attacker: Creature
   defender: Creature
   random?: RandomGenerator
-}): [Creature, number] => {
+}): [StackHealth, number] => {
   let damageAmount = getDamageAmount({ attacker, defender, random })
   const [health] = damage(defender.health, damageAmount)
-  return [{ ...defender, health }, damageAmount]
+  return [health, damageAmount]
 }
 
 const getDamage = (creature: Creature, random: RandomGenerator) => {

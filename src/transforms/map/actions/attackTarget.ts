@@ -1,4 +1,9 @@
-import { getAllCreatures, getSelectedCreature, setPreviousCreature } from '../map'
+import {
+  getAllCreatures,
+  getSelectedCreature,
+  setPreviousCreature,
+  setCreature,
+} from '../map'
 import { Battle, Id } from '../types'
 import { hit } from '../../creature'
 
@@ -12,25 +17,35 @@ export const attackTargetStart = (battle: Battle, id: Id) => {
     )
     return {}
   } else {
-    const [incomingData] = hit({
-      defender: target,
+    const [incomingHealth] = hit({
       attacker: selected,
+      defender: target,
     })
     return {
       target: {
         id,
-        incomingData,
+        incomingHealth,
       },
     }
   }
 }
 
 export const attackTargetEnd = (battle: Battle) => {
-  if (!battle.target.incomingData) {
+  if (!battle.target.incomingHealth) {
+    console.warn('No incomingHealth!', battle)
     return battle
   }
+  if (!battle.target.id) {
+    console.warn('No target.id!', battle)
+    return battle
+  }
+  const newTargetCreature = {
+    ...getAllCreatures(battle)[battle.target.id],
+    health: battle.target.incomingHealth,
+  }
+
   return {
-    ...setPreviousCreature(battle, battle.target.incomingData),
+    ...setCreature(battle, newTargetCreature),
     target: {},
   }
 }

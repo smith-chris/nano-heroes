@@ -82,13 +82,47 @@ export const setPreviousCreature = (battle: Battle, creature: Creature) => {
   }
 }
 
+const setCreatureHelper = (creatures: Creatures, creature: Creature) => {
+  if (creatures[creature.id]) {
+    const newCreatures = { ...creatures }
+    newCreatures[creature.id] = creature
+    return newCreatures
+  } else {
+    console.warn('Creature is not in creatures: ', creatures, creature)
+    return creatures
+  }
+}
+
+export const setCreature = (battle: Battle, creature: Creature) => {
+  if (battle.defender.creatures[creature.id]) {
+    return setDefenderCreatures(
+      battle,
+      setCreatureHelper(battle.defender.creatures, creature),
+    )
+  } else {
+    return setAttackerCreatures(
+      battle,
+      setCreatureHelper(battle.attacker.creatures, creature),
+    )
+  }
+}
+
+export const setAttackerCreatures = (battle: Battle, creatures: Creatures) => {
+  return { ...battle, attacker: { ...battle.attacker, creatures } }
+}
+
+export const setDefenderCreatures = (battle: Battle, creatures: Creatures) => {
+  return { ...battle, defender: { ...battle.defender, creatures } }
+}
+
 export const setPreviousCreatures = (battle: Battle, creatures: Creatures) => {
   switch (battle.player.current) {
     case 'Attacker':
-      return { ...battle, defender: { ...battle.defender, creatures } }
+      return setDefenderCreatures(battle, creatures)
     case 'Defender':
-      return { ...battle, attacker: { ...battle.attacker, creatures } }
+      return setAttackerCreatures(battle, creatures)
     default:
+      console.warn('Incorrect state at setPreviousCreatures', battle)
       return assertNever(battle.player.current)
   }
 }

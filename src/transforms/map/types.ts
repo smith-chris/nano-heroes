@@ -1,4 +1,4 @@
-import { Creature } from 'transforms/creature'
+import { Creature, StackHealth } from 'transforms/creature'
 import { Point } from 'utils/pixi'
 
 export type Id = string
@@ -65,6 +65,6 @@ export type Battle = {
   }
   target: {
     id?: Id
-    incomingData?: Creature
+    incomingHealth?: StackHealth
   }
 }
