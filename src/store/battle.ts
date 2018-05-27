@@ -1,7 +1,7 @@
 import {
   createMap,
   Battle,
-  moveSelected,
+  moveSelectedEnd,
   clearPaths,
   Id,
   getPath,
@@ -19,6 +19,7 @@ import {
   nextTurn,
   availableCreaturesCount,
   PlayerType,
+  moveSelectedStart,
 } from 'transforms/map'
 import { Point } from 'utils/pixi'
 import { Creature, hit } from 'transforms/creature'
@@ -49,9 +50,9 @@ export const battleActions = {
   ],
   addAttackers: ActionCreator('AddAttackers', data as Creature[]),
   addDefenders: ActionCreator('AddDefenders', data as Creature[]),
-  moveSelected: ActionCreator('MoveSelectedStart', data as Point),
+  moveSelectedStart: ActionCreator('MoveSelectedStart', data as Point),
   moveSelectedEnd: ActionCreator('MoveSelectedEnd'),
-  attackTarget: ActionCreator('AttackTargetStart', data as Id),
+  attackTargetStart: ActionCreator('AttackTargetStart', data as Id),
   attackTargetEnd: ActionCreator('AttackTargetEnd'),
 }
 
@@ -100,30 +101,9 @@ export const battleReducer = (
         ),
       }
     case 'MoveSelectedStart':
-      if (!canMove(state)) {
-        console.warn(`You can't move at this state:`, state)
-        return state
-      }
-      const path = getPath(state.hexes, action.data)
-      if (path.length <= 1) {
-        console.warn('Selected unaccessible hex to move to: ', action.data)
-        return state
-      }
-      return {
-        ...state,
-        hexes: clearPaths(state.hexes),
-        selected: {
-          ...state.selected,
-          path,
-        },
-      }
+      return moveSelectedStart(state, action.data)
     case 'MoveSelectedEnd':
-      if (!canMove(state)) {
-        return state
-      }
-      return {
-        ...moveSelected(state),
-      }
+      return moveSelectedEnd(state)
     case 'AttackTargetStart':
       return {
         ...state,

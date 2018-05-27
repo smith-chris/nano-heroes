@@ -13,7 +13,7 @@ import { store } from 'store/store'
 import { BitmapText } from 'utils/components'
 import { Rectangle } from 'components/Rectangle'
 import RandomGenerator from 'utils/RandomGenerator'
-import { createHexHandleClick } from './createHexHandleClick';
+import { createHexHandleClick } from './createHexHandleClick'
 
 const random = new RandomGenerator()
 
@@ -43,7 +43,7 @@ class Game extends Component<Props> {
       addDefenders,
       initialRound,
       battle,
-      moveSelected,
+      moveSelectedStart,
       nextTurn,
       highlightTarget,
       erasePositions,

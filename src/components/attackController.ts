@@ -1,5 +1,5 @@
-import { battleActions } from "store/battle";
-import { uiActions } from "store/ui";
+import { battleActions } from 'store/battle'
+import { uiActions } from 'store/ui'
 
 type Props = typeof battleActions & typeof uiActions & StoreState
 
@@ -13,11 +13,11 @@ export const handleAttackAnimationFinish = (props: Props) => {
 }
 
 export const handleMoveAnimationFinish = (props: Props) => {
-  const { moveSelectedEnd, eraseTargetAndPositions, attackTarget, ui } = props
+  const { moveSelectedEnd, eraseTargetAndPositions, attackTargetStart, ui } = props
   moveSelectedEnd()
   if (ui.attackTargetId) {
     eraseTargetAndPositions()
-    attackTarget(ui.attackTargetId)
+    attackTargetStart(ui.attackTargetId)
   } else {
     allAnimationsFinish(props)
   }
