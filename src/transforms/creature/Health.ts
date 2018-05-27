@@ -11,53 +11,55 @@ export const PERMANENT = 'PERMANENT'
 
 export type Power = 'ONE_BATTLE' | 'PERMANENT'
 
-export class Health {
-  baseAmount: number
-  fullHealth: number
-  firstHPleft: number
-  fullUnits: number
+type Props = {
+  initialAmount: number
+  unitMaxHealth: number
+}
+
+export class StackHealth {
+  initialAmount: number
+  currentAmount: number
+  unitMaxHealth: number
+  unitCurrentHealth: number
   resurrected: number
-  constructor({
-    baseAmount,
-    fullHealth,
-  }: {
-    baseAmount: number
-    fullHealth: number
-  }) {
-    this.baseAmount = baseAmount
-    this.fullHealth = fullHealth
+  constructor({ initialAmount, unitMaxHealth }: Props) {
+    this.initialAmount = initialAmount
+    this.unitMaxHealth = unitMaxHealth
     reset(this)
   }
 }
 
-export const init = (health: Health) => {
-  health.fullUnits = health.baseAmount > 1 ? health.baseAmount - 1 : 0
-  health.firstHPleft = health.baseAmount > 0 ? health.fullHealth : 0
+export const init = (health: StackHealth) => {
+  health.currentAmount = health.initialAmount > 1 ? health.initialAmount - 1 : 0
+  health.unitCurrentHealth = health.initialAmount > 0 ? health.unitMaxHealth : 0
 }
 
-export const reset = (health: Health) => {
-  health.fullUnits = 0
-  health.firstHPleft = 0
+export const reset = (health: StackHealth) => {
+  health.currentAmount = 0
+  health.unitCurrentHealth = 0
   health.resurrected = 0
 }
 
-export const addResurrected = (health: Health, amount: number) => {
+export const addResurrected = (health: StackHealth, amount: number) => {
   health.resurrected = Math.max(health.resurrected + amount, 0)
 }
 
-export const available = (health: Health) => {
-  return health.firstHPleft + health.fullHealth * health.fullUnits
+export const available = (health: StackHealth) => {
+  return health.unitCurrentHealth + health.unitMaxHealth * health.currentAmount
 }
 
-export const total = (health: Health) => {
-  return health.fullHealth * health.baseAmount
+export const total = (health: StackHealth) => {
+  return health.unitMaxHealth * health.initialAmount
 }
 
-export const damage = <T extends Health>(health: T, amount: number): [T, number] => {
+export const damage = <T extends StackHealth>(
+  health: T,
+  amount: number,
+): [T, number] => {
   const result = Object.assign({}, health)
   let oldCount = getCount(result)
 
-  let withKills = amount >= result.firstHPleft
+  let withKills = amount >= result.unitCurrentHealth
 
   if (withKills) {
     let totalHealth = available(result)
@@ -66,13 +68,13 @@ export const damage = <T extends Health>(health: T, amount: number): [T, number]
     }
     totalHealth -= amount
     if (totalHealth <= 0) {
-      result.fullUnits = 0
-      result.firstHPleft = 0
+      result.currentAmount = 0
+      result.unitCurrentHealth = 0
     } else {
       setFromTotal(result, totalHealth)
     }
   } else {
-    result.firstHPleft -= amount
+    result.unitCurrentHealth -= amount
   }
 
   addResurrected(result, getCount(result) - oldCount)
@@ -80,13 +82,18 @@ export const damage = <T extends Health>(health: T, amount: number): [T, number]
   return [result, amount]
 }
 
-export const heal = (health: Health, amount: number, level: Level, power: Power) => {
+export const heal = (
+  health: StackHealth,
+  amount: number,
+  level: Level,
+  power: Power,
+) => {
   let oldCount = getCount(health)
 
   let maxHeal = 0
   switch (level) {
     case HEAL:
-      maxHeal = health.fullHealth - health.firstHPleft
+      maxHeal = health.unitMaxHealth - health.unitCurrentHealth
       break
     case RESURRECT:
       maxHeal = total(health) - available(health)
@@ -122,26 +129,26 @@ export const heal = (health: Health, amount: number, level: Level, power: Power)
   return amount
 }
 
-export const getCount = (health: Health) => {
-  return health.fullUnits + (health.firstHPleft > 0 ? 1 : 0)
+export const getCount = (health: StackHealth) => {
+  return health.currentAmount + (health.unitCurrentHealth > 0 ? 1 : 0)
 }
 
-const setFromTotal = (health: Health, totalHealth: number) => {
-  const unitHealth = health.fullHealth
-  health.firstHPleft = totalHealth % unitHealth
-  health.fullUnits = Math.floor(totalHealth / unitHealth)
+const setFromTotal = (health: StackHealth, totalHealth: number) => {
+  const unitHealth = health.unitMaxHealth
+  health.unitCurrentHealth = totalHealth % unitHealth
+  health.currentAmount = Math.floor(totalHealth / unitHealth)
 
-  if (health.firstHPleft === 0 && health.fullUnits >= 1) {
-    health.firstHPleft = unitHealth
-    health.fullUnits -= 1
+  if (health.unitCurrentHealth === 0 && health.currentAmount >= 1) {
+    health.unitCurrentHealth = unitHealth
+    health.currentAmount -= 1
   }
 }
 
-export const takeResurrected = (health: Health) => {
+export const takeResurrected = (health: StackHealth) => {
   if (health.resurrected !== 0) {
     let totalHealth = available(health)
 
-    totalHealth -= health.resurrected * health.fullHealth
+    totalHealth -= health.resurrected * health.unitMaxHealth
     totalHealth = Math.max(totalHealth, 0)
     setFromTotal(health, totalHealth)
     health.resurrected = 0

@@ -5,9 +5,10 @@ import { hit } from '../../creature'
 export const attackTargetStart = (battle: Battle, id: Id) => {
   const target = getAllCreatures(battle)[id]
   const selected = getSelectedCreature(battle)
-  if (!(target && selected)) {
+  if (!target || !selected) {
     console.warn(
-      `${!target ? 'Target' : 'Selected'} not available in state: ${battle}`,
+      `${!target ? 'Target' : 'Selected'} is not available in state: `,
+      battle,
     )
     return {}
   } else {

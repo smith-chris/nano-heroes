@@ -1,5 +1,5 @@
 import RandomGenerator from 'utils/RandomGenerator'
-import { Health, getCount, damage, init } from './Health'
+import { StackHealth, getCount, damage, init } from './Health'
 import { Id } from 'transforms/map'
 import { Point } from 'utils/pixi'
 import { idGenerator } from 'utils/math'
@@ -20,7 +20,7 @@ const pixieModel = {
 type Model = typeof pixieModel
 
 const getId = idGenerator('creature')
-export class Creature extends Health {
+export class Creature extends StackHealth {
   model: Model
   id: Id
   position: Point
@@ -30,11 +30,11 @@ export class Creature extends Health {
       return
     }
     super({
-      baseAmount: amount,
-      fullHealth: model.health,
+      initialAmount: amount,
+      unitMaxHealth: model.health,
     })
     init(this)
-    this.model = model || pixieModel
+    this.model = model
     this.position = position
     this.id = getId()
   }
