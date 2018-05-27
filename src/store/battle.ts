@@ -14,7 +14,7 @@ import {
   setPreviousCreature,
   getAllCreatures,
   Obstacle,
-  putObstacles,
+  addObstacles,
   nextRound,
   nextTurn,
   availableCreaturesCount,
@@ -35,8 +35,8 @@ export type BattleState = Battle
 const initialState: BattleState = createMap(0, 0)
 
 export const battleActions = {
-  loadMap: ActionCreator('LoadMap', data as Size),
-  putObstacles: ActionCreator('PutObstacles', data as Obstacle[]),
+  createMap: ActionCreator('CreateMap', data as Size),
+  addObstacles: ActionCreator('AddObstacles', data as Obstacle[]),
   initialRound: () => [Action('InitialRound'), Action('SelectInitialCreature')],
   nextTurn: () => ({ battle }: StoreState) => [
     availableCreaturesCount(battle) === 0 && Action('NextRound'),
@@ -58,10 +58,10 @@ export const battleReducer = (
   action: BattleAction,
 ): BattleState => {
   switch (action.type) {
-    case 'LoadMap':
+    case 'CreateMap':
       return createMap(action.data.width, action.data.height)
-    case 'PutObstacles':
-      return { ...state, hexes: putObstacles(state.hexes, action.data) }
+    case 'AddObstacles':
+      return { ...state, hexes: addObstacles(state.hexes, action.data) }
     case 'AddAttackers':
       return {
         ...state,

@@ -4,7 +4,7 @@ import {
   possiblePaths,
   simplifyNodes,
   xyToId,
-  putObstacles,
+  addObstacles,
   Obstacle,
 } from './index'
 import { Point } from 'utils/pixi'
@@ -78,7 +78,7 @@ describe('Map', () => {
 
     it('should find possible paths avoiding obstacles', () => {
       const map = createMap(10, 10)
-      map.hexes = putObstacles(map.hexes, [
+      map.hexes = addObstacles(map.hexes, [
         new Obstacle(new Point(2, 1)),
         new Obstacle(new Point(2, 2)),
       ])

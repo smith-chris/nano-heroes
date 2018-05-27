@@ -16,7 +16,7 @@ import { chooseRandom, chooseOther } from 'utils/battle'
 import assertNever from 'utils/other'
 import { getCount } from '../creature'
 
-export const putObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
+export const addObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   const result = { ...hexes }
   for (const obstacle of obstacles) {
     const hex = getHex(result, obstacle.position)

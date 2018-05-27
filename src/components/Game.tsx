@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from 'react'
 import { Container } from 'react-pixi-fiber'
-import HexMap, { createHexHandleClick } from 'components/HexMap'
+import HexMap from 'components/HexMap'
 import Creatures from 'components/Creatures'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -13,6 +13,7 @@ import { store } from 'store/store'
 import { BitmapText } from 'utils/components'
 import { Rectangle } from 'components/Rectangle'
 import RandomGenerator from 'utils/RandomGenerator'
+import { createHexHandleClick } from './createHexHandleClick';
 
 const random = new RandomGenerator()
 
@@ -37,7 +38,7 @@ export const clickOnHex = ({ dev, ...rest }: Props, position: Point) => {
 class Game extends Component<Props> {
   componentWillMount() {
     const {
-      loadMap,
+      createMap,
       addAttackers,
       addDefenders,
       initialRound,
@@ -46,15 +47,15 @@ class Game extends Component<Props> {
       nextTurn,
       highlightTarget,
       erasePositions,
-      putObstacles,
+      addObstacles,
       dev,
     } = this.props
     if (dev) {
-      loadMap({ width: 4, height: 2 })
+      createMap({ width: 4, height: 2 })
       addAttackers([0].map(y => new Creature(new Point(0, y))))
       addDefenders([1].map(y => new Creature(new Point(3, y))))
     } else {
-      loadMap({ width: 10, height: 5 })
+      createMap({ width: 10, height: 5 })
       addAttackers((dev ? [1] : [1, 4]).map(y => new Creature(new Point(0, y))))
       addDefenders((dev ? [1] : [1, 4]).map(y => new Creature(new Point(9, y))))
       const obstacles = []
@@ -71,7 +72,7 @@ class Game extends Component<Props> {
         }
         obstacles.push(new Obstacle(obstaclePosition, 'stone'))
       }
-      putObstacles(obstacles)
+      addObstacles(obstacles)
     }
     initialRound()
   }

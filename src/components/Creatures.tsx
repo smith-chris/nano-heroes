@@ -14,6 +14,7 @@ import { KnightAnimation, SkeletonAnimation, Animation } from 'assets/animation'
 import { BitmapText } from 'utils/components'
 import { Rectangle } from './Rectangle'
 import { uiActions } from 'store/ui'
+import * as attackController from './attackController'
 
 const mapStateToProps = (state: StoreState) => state
 type StateProps = ReturnType<typeof mapStateToProps>
@@ -30,24 +31,12 @@ class Creatures extends Component<Props> {
     return pointToCoordinates(creature.position)
   }
 
-  allAnimationsFinish = () => {
-    this.props.nextTurn()
-  }
-
   handleAttackAnimationFinish = () => {
-    this.props.attackTargetEnd()
-    this.allAnimationsFinish()
+    attackController.handleAttackAnimationFinish(this.props)
   }
 
   handleMoveAnimationFinish = () => {
-    const { moveSelectedEnd, eraseTargetAndPositions, attackTarget, ui } = this.props
-    moveSelectedEnd()
-    if (ui.attackTargetId) {
-      eraseTargetAndPositions()
-      attackTarget(ui.attackTargetId)
-    } else {
-      this.allAnimationsFinish()
-    }
+    attackController.handleMoveAnimationFinish(this.props)
   }
 
   render() {
