@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Texture, ticker, Rectangle } from 'pixi.js'
-import { Sprite, SpriteProperties } from 'react-pixi-fiber'
+import { Sprite, SpriteProps } from 'react-pixi-fiber'
 import { Animation } from 'assets/animation'
 
-type Props = SpriteProperties & {
+type Props = SpriteProps & {
   animation?: Animation
   pointerdown?: () => void
   onFinish?: () => void

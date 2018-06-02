@@ -1,4 +1,4 @@
-import { CustomPIXIComponent } from 'react-pixi-fiber'
+import { CustomPIXIComponent, BaseProps } from 'react-pixi-fiber'
 import { Container } from 'pixi.js'
 import { Point } from 'utils/pixi'
 
