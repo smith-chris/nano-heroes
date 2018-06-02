@@ -1,9 +1,9 @@
-import { battleReducer, battleActions } from 'store/battle'
+import { battleActions } from 'store/battle'
 import { store } from './store'
 import { bindActionCreators } from 'redux'
 import { Creature, getCount } from 'transforms/creature'
 import { Point } from 'utils/pixi'
-import { getHex, getSelectedCreature, getAllCreatures } from 'transforms/map'
+import { getHex, getAllCreatures } from 'transforms/map'
 import { uiActions } from './ui'
 import { createHexHandleClick } from 'components/createHexHandleClick'
 import {

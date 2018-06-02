@@ -1,7 +1,7 @@
 import { addCreatures } from './addCreatures'
 import { Creature } from '../../creature'
 import { Point } from 'utils/pixi'
-import { createMap, pointToId, getHex } from '../index'
+import { createMap, pointToId } from '../index'
 
 describe('map.actions', () => {
   describe('addCreatures()', () => {

@@ -1,4 +1,4 @@
-import { Application, Point } from 'pixi.js'
+import { Application } from 'pixi.js'
 import styles from './app.sass'
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST

@@ -1,4 +1,4 @@
-import { Player, Hexes, Creatures } from '../types'
+import { Player, Hexes, Creatures, PlayerType } from '../types'
 import { Creature } from '../../creature'
 import { pointToId } from '../map'
 
@@ -28,10 +28,14 @@ export const addDefenders = (
   hexes: Hexes,
   creaturesToPut: Creature[],
 ) => {
+  const owner: PlayerType = 'Defender'
   const [newHexes, creatures] = addCreatures(
     defender.creatures,
     hexes,
-    creaturesToPut,
+    creaturesToPut.map(creature => ({
+      ...creature,
+      owner,
+    })),
   )
   return { hexes: newHexes, defender: { ...defender, creatures } }
 }
@@ -41,10 +45,14 @@ export const addAttackers = (
   hexes: Hexes,
   creaturesToPut: Creature[],
 ) => {
+  const owner: PlayerType = 'Attacker'
   const [newHexes, creatures] = addCreatures(
     attacker.creatures,
     hexes,
-    creaturesToPut,
+    creaturesToPut.map(creature => ({
+      ...creature,
+      owner,
+    })),
   )
   return { hexes: newHexes, attacker: { ...attacker, creatures } }
 }

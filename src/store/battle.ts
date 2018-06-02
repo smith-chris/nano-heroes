@@ -2,28 +2,20 @@ import {
   createMap,
   Battle,
   moveSelectedEnd,
-  clearPaths,
   Id,
-  getPath,
   addAttackers,
   addDefenders,
-  selectCreature,
   canMove,
   selectNextCreature,
-  getSelectedCreature,
-  setPreviousCreature,
-  getAllCreatures,
   Obstacle,
   addObstacles,
   nextRound,
   nextTurn,
   availableCreaturesCount,
-  PlayerType,
   moveSelectedStart,
 } from 'transforms/map'
 import { Point } from 'utils/pixi'
-import { Creature, hit } from 'transforms/creature'
-import { chooseOther } from 'utils/battle'
+import { Creature } from 'transforms/creature'
 import { ActionCreator, data, ActionsUnion, Action } from 'utils/redux'
 import {
   attackTargetStart,

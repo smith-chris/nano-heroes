@@ -5,7 +5,6 @@ import {
   isEnemyCreature,
   isAlive,
   getSelectedCreature,
-  selectCreature,
 } from './map'
 import { Point } from 'utils/pixi'
 import { pointsEqual } from './point'

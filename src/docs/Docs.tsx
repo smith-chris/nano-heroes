@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { battleReducer, battleActions } from 'store/battle'
+import { battleActions } from 'store/battle'
 import { Creature } from 'transforms/creature'
 import { Point } from 'pixi.js'
 import { reducers } from 'store/store'

@@ -1,6 +1,5 @@
 import { Battle, Id, getAttackPositions, Hex } from 'transforms/map'
 import { ActionCreator, data, ActionsUnion, Action } from 'utils/redux'
-import { store } from './store'
 
 export type UIState = {
   attackPositions?: Id[]

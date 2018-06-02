@@ -21,11 +21,9 @@ export class AnimatedSprite extends Component<Props, State> {
     const {
       texture,
       width,
-      totalWidth,
       height,
       framesCount,
       frameGap,
-      name,
       options: { loop, delay, endReversed },
     } = animation
     this.setState({

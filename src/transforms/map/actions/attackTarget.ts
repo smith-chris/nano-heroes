@@ -1,7 +1,6 @@
 import {
   getAllCreatures,
   getSelectedCreature,
-  setPreviousCreature,
   setCreature,
 } from '../map'
 import { Battle, Id } from '../types'

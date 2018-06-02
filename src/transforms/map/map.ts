@@ -12,7 +12,6 @@ import {
   PlayerType,
 } from './types'
 import { higlightHexes, areNeighbours } from './path'
-import { chooseRandom, chooseOther } from 'utils/battle'
 import assertNever from 'utils/other'
 import { getCount } from '../creature'
 

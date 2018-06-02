@@ -6,7 +6,6 @@ import {
   Hex,
   each,
   pointsEqual,
-  pointToId,
   getSelectedCreature,
 } from 'transforms/map'
 import { pointToCoordinates } from 'utils/math'

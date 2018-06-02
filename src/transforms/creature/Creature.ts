@@ -1,6 +1,6 @@
 import RandomGenerator from 'utils/RandomGenerator'
 import { StackHealth, getCount, damage, init } from './Health'
-import { Id } from 'transforms/map'
+import { Id, PlayerType } from 'transforms/map'
 import { Point } from 'utils/pixi'
 import { idGenerator } from 'utils/math'
 
@@ -25,6 +25,7 @@ export class Creature {
   id: Id
   position: Point
   health: StackHealth
+  owner: PlayerType
   constructor(position: Point, amount: number = 10, model: Model = pixieModel) {
     if (!(model && model.health)) {
       console.warn(`Model.health is not definded: ${JSON.stringify(model)}`)

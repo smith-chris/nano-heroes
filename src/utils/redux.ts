@@ -1,6 +1,5 @@
 // tslint:disable no-shadowed-variable
 import { ObjectOf } from 'transforms/map'
-import { store } from 'store/store'
 import { isTest } from './env'
 
 export const data = {}
