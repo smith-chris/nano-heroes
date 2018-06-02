@@ -60,10 +60,7 @@ class Game extends Component<Props> {
       addDefenders((dev ? [1] : [1, 4]).map(y => new Creature(new Point(9, y))))
       const obstacles = []
       for (let i = 0; i < (dev ? 2 : random.integer(3, 6)); i++) {
-        const obstaclePosition = new Point(
-          random.integer(1, 8),
-          random.integer(0, 4),
-        )
+        const obstaclePosition = new Point(random.integer(1, 8), random.integer(0, 4))
         if (
           pointsEqual(obstaclePosition, new Point(5, 2)) ||
           pointsEqual(obstaclePosition, new Point(4, 3))
@@ -106,4 +103,7 @@ class Game extends Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Game)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Game)

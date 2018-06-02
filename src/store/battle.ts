@@ -17,10 +17,7 @@ import {
 import { Point } from 'utils/pixi'
 import { Creature } from 'transforms/creature'
 import { ActionCreator, data, ActionsUnion, Action } from 'utils/redux'
-import {
-  attackTargetStart,
-  attackTargetEnd,
-} from 'transforms/map/actions/attackTarget'
+import { attackTargetStart, attackTargetEnd } from 'transforms/map/actions/attackTarget'
 
 export type Size = {
   width: number

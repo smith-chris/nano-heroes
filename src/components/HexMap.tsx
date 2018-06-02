@@ -2,18 +2,13 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { Sprite } from 'react-pixi-fiber'
 import { Point } from 'pixi.js'
-import {
-  Hex,
-  each,
-  pointsEqual,
-  getSelectedCreature,
-} from 'transforms/map'
+import { Hex, each, pointsEqual, getSelectedCreature } from 'transforms/map'
 import { pointToCoordinates } from 'utils/math'
 import { connect } from 'react-redux'
 import { battleActions } from 'store/battle'
 import { terrain } from 'assets/textures'
 import { uiActions } from 'store/ui'
-import { createHexHandleClick } from './createHexHandleClick';
+import { createHexHandleClick } from './createHexHandleClick'
 type Props = StateProps & ActionProps
 
 class MapComponent extends Component<Props> {
@@ -35,8 +30,7 @@ class MapComponent extends Component<Props> {
       <>
         {each(hexes, (hex, key) => {
           const hasPath = hex.path && hex.path.length > 0
-          const isAttackPosition =
-            attackPositions && attackPositions.indexOf(key) >= 0
+          const isAttackPosition = attackPositions && attackPositions.indexOf(key) >= 0
           const isSelectedPosition = pointsEqual(hex.position, selectedPosition)
           let texture = terrain.grass
           if (hex.occupant === 'stone') {
@@ -75,4 +69,7 @@ const mapDispatchToProps = (dispatch: Dispatch): ActionProps => {
   return bindActionCreators({ ...battleActions, ...uiActions }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapComponent)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MapComponent)

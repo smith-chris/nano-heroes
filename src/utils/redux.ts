@@ -46,9 +46,10 @@ type ReturnTypeIfPossible<T> = T extends (...args: any[]) => any ? ReturnType<T>
 
 type CurriedReturnType<T> = ReturnTypeIfPossible<ReturnTypeIfPossible<T>>
 
-export type ActionsUnion<
-  T extends ObjectOf<(d?: {}, s?: StoreState) => {}>
-> = Exclude<NonNullable<Flatten<CurriedReturnType<ValueOf<T>>>>, boolean>
+export type ActionsUnion<T extends ObjectOf<(d?: {}, s?: StoreState) => {}>> = Exclude<
+  NonNullable<Flatten<CurriedReturnType<ValueOf<T>>>>,
+  boolean
+>
 
 export const transformActions = (({ dispatch, getState }) => {
   return next => _action => {

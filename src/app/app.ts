@@ -16,7 +16,7 @@ const appElement = document.querySelector('#app')
 const canvasHolderElement = appElement && appElement.querySelector('div')
 
 const getClosestMultiplication = (base: number, max: number) =>
-  ((max - max % base) / base + 1) * base
+  ((max - (max % base)) / base + 1) * base
 
 if (!appElement) {
   console.warn('App element not found..')

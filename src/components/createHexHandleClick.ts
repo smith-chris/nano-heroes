@@ -14,10 +14,7 @@ export const createHexHandleClick = (props: Props, hex: Hex) => () => {
     attackTargetStart,
     ui,
   } = props
-  if (
-    ui.attackPositions &&
-    ui.attackPositions.indexOf(pointToId(hex.position)) >= 0
-  ) {
+  if (ui.attackPositions && ui.attackPositions.indexOf(pointToId(hex.position)) >= 0) {
     if (battle.selected.id === hex.occupant) {
       eraseTargetAndPositions()
       if (ui.attackTargetId) {

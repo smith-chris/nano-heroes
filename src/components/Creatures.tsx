@@ -64,9 +64,8 @@ class Creatures extends Component<Props> {
           const isDead = count <= 0
 
           const fadeCreature =
-            (attackTargetId
-              ? attackTargetId !== key && selected.id !== key
-              : false) || isDead
+            (attackTargetId ? attackTargetId !== key && selected.id !== key : false) ||
+            isDead
 
           type RenderCreatureProps = {
             animation?: Animation
@@ -79,11 +78,7 @@ class Creatures extends Component<Props> {
           ) => (position: Point, dirLeft = defenderCreatures) => {
             const offset = props.animation ? props.animation.offset : props.offset
             return (
-              <Container
-                key={key}
-                position={position}
-                alpha={fadeCreature ? 0.33 : 1}
-              >
+              <Container key={key} position={position} alpha={fadeCreature ? 0.33 : 1}>
                 <AnimatedSprite
                   anchor={new Point(0.5, 1)}
                   position={
@@ -143,11 +138,7 @@ class Creatures extends Component<Props> {
               },
               this.handleAttackAnimationFinish,
             )(this.getPosition(creature), dirLeft)
-          } else if (
-            creature.id === selected.id &&
-            animateSelected &&
-            selected.path
-          ) {
+          } else if (creature.id === selected.id && animateSelected && selected.path) {
             return (
               <Animate
                 key={key}
@@ -174,4 +165,7 @@ class Creatures extends Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Creatures)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Creatures)
