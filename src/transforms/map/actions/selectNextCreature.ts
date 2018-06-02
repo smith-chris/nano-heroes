@@ -1,44 +1,49 @@
 import { chooseOther, chooseRandom } from 'utils/battle'
-import { getPlayer, setPlayer, selectCreature } from '../map'
-import { PlayerType, Battle } from '../types'
+import {
+  getPlayer,
+  setPlayer,
+  getAllCreatures,
+  getCurrentCreatures,
+  canCreatureMove,
+} from '../map'
+import { PlayerType, Battle, Id } from '../types'
 import { removeElement } from './utils'
+import { higlightHexes } from '..'
+import { getCount } from '../../creature'
 
-export const selectNextCreature = (
-  battle: Battle,
-  playerType?: PlayerType,
-  attempts = 0,
-): Battle => {
-  if (attempts > 5) {
-    throw new Error('Infinite recursion in "selectNextCreature".')
+const selectCreature = (battle: Battle, id: Id) => {
+  const targetCreature = getAllCreatures(battle)[id]
+  if (targetCreature) {
+    const hexes = higlightHexes(battle, targetCreature.position)
+
+    return {
+      hexes,
+      selected: {
+        id,
+      },
+    }
+  } else {
+    console.warn('map.selectCreature() - could not find creature.')
+    return {}
   }
-  let _playerType =
-    playerType || chooseOther(battle.player.current, 'Attacker', 'Defender')
-  let player = getPlayer(battle, _playerType)
-  if (player.availableCreatures.length === 0) {
-    return selectNextCreature(
-      battle,
-      chooseOther(_playerType, 'Attacker', 'Defender'),
-      attempts + 1,
-    )
-  }
+}
 
-  player = { ...player }
-  const nextCreatureId = chooseRandom(...player.availableCreatures)
+export const selectNextCreature = (battle: Battle, playerType?: PlayerType): Battle => {
+  const allCreatures = getAllCreatures(battle)
 
-  player.availableCreatures = removeElement(
-    player.availableCreatures,
-    nextCreatureId,
+  const nextCreature = chooseRandom(
+    ...Object.values(allCreatures).filter(canCreatureMove),
   )
+
   const result = {
     ...battle,
-    ...setPlayer(battle, _playerType, player),
     player: {
       ...battle.player,
-      current: _playerType,
+      current: nextCreature.owner,
     },
   }
   return {
     ...result,
-    ...selectCreature(result, nextCreatureId),
+    ...selectCreature(result, nextCreature.id),
   }
 }

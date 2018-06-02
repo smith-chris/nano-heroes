@@ -1,12 +1,15 @@
+import mapValues from 'lodash.mapvalues'
 import { Battle, Player } from '../types'
 import { getCount } from '../../creature'
 
 const resetPlayer = (player: Player): Player => {
   return {
     ...player,
-    availableCreatures: Object.entries(player.creatures)
-      .filter(([key, creature]) => getCount(creature.health) > 0)
-      .map(([key]) => key),
+    creatures: mapValues(player.creatures, creature => {
+      const result = { ...creature }
+      delete result.hasMoved
+      return result
+    }),
   }
 }
 

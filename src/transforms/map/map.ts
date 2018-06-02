@@ -159,11 +159,7 @@ export const getPreviousPlayer = (battle: Battle) => {
   }
 }
 
-export const setPlayer = (
-  battle: Battle,
-  playerType: PlayerType,
-  player: Player,
-) => {
+export const setPlayer = (battle: Battle, playerType: PlayerType, player: Player) => {
   switch (playerType) {
     case 'Attacker':
       return { attacker: player }
@@ -201,26 +197,11 @@ export const canAttack = (battle: Battle, id: Id) => {
   return false
 }
 
+export const canCreatureMove = (creature: Creature) =>
+  !creature.hasMoved && getCount(creature.health) > 0
+
 export const availableCreaturesCount = (battle: Battle) =>
-  battle.defender.availableCreatures.length +
-  battle.attacker.availableCreatures.length
-
-export const selectCreature = (battle: Battle, id: Id) => {
-  const targetCreature = getCurrentCreatures(battle)[id]
-  if (targetCreature) {
-    const hexes = higlightHexes(battle, targetCreature.position)
-
-    return {
-      hexes,
-      selected: {
-        id,
-      },
-    }
-  } else {
-    console.warn('map.selectCreature() - could not find creature.')
-    return {}
-  }
-}
+  Object.values(getAllCreatures(battle)).filter(canCreatureMove).length
 
 export const each = <T, R>(
   input: ObjectOf<T> | ObjectOf<T>[],

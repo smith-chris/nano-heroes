@@ -1,8 +1,4 @@
-import {
-  getAllCreatures,
-  getSelectedCreature,
-  setCreature,
-} from '../map'
+import { getAllCreatures, getSelectedCreature, setCreature } from '../map'
 import { Battle, Id } from '../types'
 import { hit, getCount } from '../../creature'
 import { removeElement } from './utils'
@@ -46,22 +42,8 @@ export const attackTargetEnd = (battle: Battle) => {
     health: target.incomingHealth,
   }
 
-  const result = {
+  return {
     ...setCreature(battle, newTargetCreature),
     target: {},
-  }
-
-  if (getCount(target.incomingHealth) === 0) {
-    // If unit has been just killed it has to be removed from the player's queue
-    const { defender } = result
-    return {
-      ...result,
-      defender: {
-        ...defender,
-        availableCreatures: removeElement(defender.availableCreatures, target.id),
-      },
-    }
-  } else {
-    return result
   }
 }

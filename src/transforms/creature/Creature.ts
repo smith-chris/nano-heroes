@@ -24,6 +24,7 @@ export class Creature {
   model: Model
   id: Id
   position: Point
+  hasMoved?: boolean
   health: StackHealth
   owner: PlayerType
   constructor(position: Point, amount: number = 10, model: Model = pixieModel) {

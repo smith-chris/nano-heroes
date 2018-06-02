@@ -44,7 +44,6 @@ export type Rect = {
 
 export class Player {
   creatures: Creatures = {}
-  availableCreatures: Id[] = []
 }
 
 export type PlayerType = 'Attacker' | 'Defender'

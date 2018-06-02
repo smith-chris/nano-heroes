@@ -8,7 +8,7 @@ import { isDev } from 'utils/env'
 
 render(
   <Provider store={store}>
-    <Game dev={isDev} />
+    <Game dev={false} />
   </Provider>,
   stage,
 )

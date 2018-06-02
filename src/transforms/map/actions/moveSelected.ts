@@ -1,5 +1,11 @@
 import { Battle, Hexes } from '../types'
-import { getCurrentCreatures, pointToId, setCurrentCreatures, canMove } from '../map'
+import {
+  getCurrentCreatures,
+  pointToId,
+  setCurrentCreatures,
+  canMove,
+  getSelectedCreature,
+} from '../map'
 import { getPath, clearPaths } from '..'
 import { Point } from 'utils/pixi'
 
@@ -24,34 +30,43 @@ export const moveSelectedStart = (battle: Battle, position: Point) => {
 }
 
 export const moveSelectedEnd = (battle: Battle) => {
+  const {
+    selected: { path },
+    hexes,
+  } = battle
+
   if (!canMove(battle)) {
     console.warn(`Can't move: `, battle)
     return battle
   }
-  if (!(battle.selected.id && battle.selected.path)) {
+  const selectedCreature = getSelectedCreature(battle)
+  if (!selectedCreature || !(battle.selected.id && path)) {
     console.warn(`Required values not found on: ${JSON.stringify(battle.selected)}`)
     return battle
   }
   const creatures = getCurrentCreatures(battle)
-  const selected = creatures[battle.selected.id]
-  const position = battle.selected.path[battle.selected.path.length - 1]
-  const currentHexId = pointToId(selected.position)
-  const destinationHexId = pointToId(position)
-  if (!battle.hexes[destinationHexId].occupant) {
-    const hexes: Hexes = { ...battle.hexes }
-    const newHex = { ...hexes[currentHexId] }
+  const destinationPosition = path[path.length - 1]
+  const currentHexId = pointToId(selectedCreature.position)
+  const destinationHexId = pointToId(destinationPosition)
+  if (!hexes[destinationHexId].occupant) {
+    const newHexes: Hexes = { ...hexes }
+    const newHex = { ...newHexes[currentHexId] }
     delete newHex.occupant
-    hexes[currentHexId] = newHex
-    hexes[destinationHexId] = {
-      ...hexes[destinationHexId],
+    newHexes[currentHexId] = newHex
+    newHexes[destinationHexId] = {
+      ...newHexes[destinationHexId],
       occupant: battle.selected.id,
     }
     const newCreatures = { ...creatures }
-    newCreatures[battle.selected.id] = { ...selected, position }
+    newCreatures[battle.selected.id] = {
+      ...selectedCreature,
+      position: destinationPosition,
+      hasMoved: true,
+    }
     return setCurrentCreatures(
       {
         ...battle,
-        hexes,
+        hexes: newHexes,
       },
       newCreatures,
     )
