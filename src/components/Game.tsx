@@ -14,6 +14,7 @@ import { BitmapText } from 'utils/components'
 import { Rectangle } from 'components/Rectangle'
 import RandomGenerator from 'utils/RandomGenerator'
 import { createHexHandleClick } from './createHexHandleClick'
+import { models } from 'transforms/creature/models'
 
 const random = new RandomGenerator()
 
@@ -35,6 +36,9 @@ export const clickOnHex = ({ dev, ...rest }: Props, position: Point) => {
   createHexHandleClick({ ...rest, ...state }, getHex(state.battle.hexes, position))()
 }
 
+const makeCreature = (x: number, y: number, speed: number = 10) =>
+  new Creature(new Point(x, y), speed, { ...models.pixie, speed: speed })
+
 class Game extends Component<Props> {
   componentWillMount() {
     const {
@@ -52,12 +56,12 @@ class Game extends Component<Props> {
     } = this.props
     if (dev) {
       createMap({ width: 4, height: 2 })
-      addAttackers([0].map(y => new Creature(new Point(0, y))))
-      addDefenders([1].map(y => new Creature(new Point(3, y))))
+      addAttackers([new Creature(new Point(0, 0))])
+      addDefenders([new Creature(new Point(3, 1))])
     } else {
       createMap({ width: 10, height: 5 })
-      addAttackers((dev ? [1] : [1, 4]).map(y => new Creature(new Point(0, y))))
-      addDefenders((dev ? [1] : [1, 4]).map(y => new Creature(new Point(9, y))))
+      addAttackers([makeCreature(0, 1, 7), makeCreature(0, 4, 10)])
+      addDefenders([makeCreature(9, 1, 7), makeCreature(9, 4, 7)])
       const obstacles = []
       for (let i = 0; i < (dev ? 2 : random.integer(3, 6)); i++) {
         const obstaclePosition = new Point(random.integer(1, 8), random.integer(0, 4))
@@ -103,7 +107,4 @@ class Game extends Component<Props> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Game)
+export default connect(mapStateToProps, mapDispatchToProps)(Game)

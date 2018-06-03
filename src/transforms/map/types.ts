@@ -58,6 +58,7 @@ export type Battle = {
     current: PlayerType
     hasMoved: Boolean
   }
+  lastMovedCreatureId?: Id
   selected: {
     id?: Id
     path?: Point[]

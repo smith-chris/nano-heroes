@@ -67,6 +67,7 @@ export const moveSelectedEnd = (battle: Battle) => {
       {
         ...battle,
         hexes: newHexes,
+        lastMovedCreatureId: battle.selected.id,
       },
       newCreatures,
     )

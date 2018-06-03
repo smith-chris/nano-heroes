@@ -3,21 +3,10 @@ import { StackHealth, getCount, damage, init } from './Health'
 import { Id, PlayerType } from 'transforms/map'
 import { Point } from 'utils/pixi'
 import { idGenerator } from 'utils/math'
-
+import { models } from './models'
 const randomGenerator = new RandomGenerator()
 
-const pixieModel = {
-  attack: 2,
-  defence: 2,
-  damage: {
-    min: 1,
-    max: 2,
-  },
-  health: 3,
-  speed: 7,
-}
-
-type Model = typeof pixieModel
+type Model = typeof models.pixie
 
 const getId = idGenerator('creature')
 export class Creature {
@@ -27,7 +16,7 @@ export class Creature {
   hasMoved?: boolean
   health: StackHealth
   owner: PlayerType
-  constructor(position: Point, amount: number = 10, model: Model = pixieModel) {
+  constructor(position: Point, amount: number = 10, model: Model = models.pixie) {
     if (!(model && model.health)) {
       console.warn(`Model.health is not definded: ${JSON.stringify(model)}`)
       return
