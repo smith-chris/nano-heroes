@@ -260,6 +260,7 @@ export const createMap = (width: number, height: number) => {
       bottom: height - 1,
     },
     selected: {},
+    creatures: {},
     attacker: new Player(),
     defender: new Player(),
     round: 0,

@@ -54,6 +54,7 @@ export type Battle = {
   attacker: Player
   defender: Player
   round: number
+  creatures: Creatures
   player: {
     current: PlayerType
     hasMoved: Boolean

@@ -1,4 +1,4 @@
-import { Player, Hexes, Creatures, PlayerType } from '../types'
+import { Player, Hexes, Creatures, PlayerType, ObjectOf, Battle } from '../types'
 import { Creature } from '../../creature'
 import { pointToId } from '../map'
 
@@ -23,11 +23,16 @@ export const addCreatures = (
   return [newHexes, newCreatures]
 }
 
-export const addDefenders = (
-  defender: Player,
-  hexes: Hexes,
-  creaturesToPut: Creature[],
-) => {
+const toObject = <T extends { id: string }>(elements: T[]) => {
+  const result: ObjectOf<T> = {}
+  for (const element of elements) {
+    result[element.id] = element
+  }
+  return result
+}
+
+export const addDefenders = (battle: Battle, creaturesToPut: Creature[]) => {
+  const { defender, hexes } = battle
   const owner: PlayerType = 'Defender'
   const [newHexes, creatures] = addCreatures(
     defender.creatures,
@@ -37,14 +42,15 @@ export const addDefenders = (
       owner,
     })),
   )
-  return { hexes: newHexes, defender: { ...defender, creatures } }
+  return {
+    hexes: newHexes,
+    defender: { ...defender, creatures },
+    creatures: { ...battle.creatures, ...toObject(creaturesToPut) },
+  }
 }
 
-export const addAttackers = (
-  attacker: Player,
-  hexes: Hexes,
-  creaturesToPut: Creature[],
-) => {
+export const addAttackers = (battle: Battle, creaturesToPut: Creature[]) => {
+  const { attacker, hexes } = battle
   const owner: PlayerType = 'Attacker'
   const [newHexes, creatures] = addCreatures(
     attacker.creatures,
@@ -54,5 +60,9 @@ export const addAttackers = (
       owner,
     })),
   )
-  return { hexes: newHexes, attacker: { ...attacker, creatures } }
+  return {
+    hexes: newHexes,
+    attacker: { ...attacker, creatures },
+    creatures: { ...battle.creatures, ...toObject(creaturesToPut) },
+  }
 }
