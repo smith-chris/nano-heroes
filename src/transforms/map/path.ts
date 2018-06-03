@@ -1,11 +1,5 @@
 import { Hexes, Battle, Hex, Bounds } from './types'
-import {
-  getHex,
-  pointToId,
-  isEnemyCreature,
-  isAlive,
-  getSelectedCreature,
-} from './map'
+import { getHex, pointToId, isEnemyCreature, isAlive, getSelectedCreature } from './map'
 import { Point } from 'utils/pixi'
 import { pointsEqual } from './point'
 
@@ -31,10 +25,7 @@ export const findNeighbours = (center: Point, bounds = new Bounds()) => {
     for (let y = center.y - 1; y <= center.y + 1; y++) {
       const isCenter = x === center.x && y === center.y
       const isInBounds =
-        x >= bounds.left &&
-        x <= bounds.right &&
-        y >= bounds.top &&
-        y <= bounds.bottom
+        x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom
       if (isInBounds) {
         const isLeftOrRight = x !== center.x
         if (isLeftOrRight) {
@@ -142,8 +133,8 @@ export const canHexBeAttacked = (hexes: Hexes, hex: Hex) => {
   return false
 }
 
-export const higlightHexes = (battle: Battle, start: Point) => {
-  const nodes = possiblePaths(battle, start)
+export const higlightHexes = (battle: Battle, start: Point, distance: number) => {
+  const nodes = possiblePaths(battle, start, distance)
   const hexes: Hexes = {}
   for (const key in battle.hexes) {
     const hex = battle.hexes[key]

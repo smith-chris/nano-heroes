@@ -14,7 +14,11 @@ import { getCount } from '../../creature'
 const selectCreature = (battle: Battle, id: Id) => {
   const targetCreature = getAllCreatures(battle)[id]
   if (targetCreature) {
-    const hexes = higlightHexes(battle, targetCreature.position)
+    const hexes = higlightHexes(
+      battle,
+      targetCreature.position,
+      targetCreature.model.speed,
+    )
 
     return {
       hexes,
