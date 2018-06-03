@@ -165,7 +165,4 @@ class Creatures extends Component<Props> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Creatures)
+export default connect(mapStateToProps, mapDispatchToProps)(Creatures)

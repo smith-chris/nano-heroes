@@ -95,6 +95,7 @@ export class AnimatedSprite extends Component<Props, State> {
     this.ticker.destroy()
   }
   render() {
-    return <Sprite {...this.props} texture={this.texture || this.props.texture} />
+    const { onFinish, ...spriteProps } = this.props
+    return <Sprite {...spriteProps} texture={this.texture || this.props.texture} />
   }
 }
