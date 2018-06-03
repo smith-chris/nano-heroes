@@ -55,7 +55,6 @@ export type Battle = {
   creatures: Creatures
   player: {
     current: PlayerType
-    hasMoved: Boolean
   }
   lastMovedCreatureId?: Id
   selected: {

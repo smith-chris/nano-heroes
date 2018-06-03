@@ -50,8 +50,6 @@ export const isAlive = (battle: Battle, creatureId: Id) => {
   return getCount(creature.health) > 0
 }
 
-export const canMove = (battle: Battle) => !battle.player.hasMoved
-
 export const canAttack = (battle: Battle, id: Id) => {
   const selectedCreature = getSelectedCreature(battle)
   const targetCreature = getTargetCreature(battle)
@@ -128,7 +126,6 @@ export const createBattle = (width: number, height: number) => {
     round: 0,
     player: {
       current: 'Attacker',
-      hasMoved: false,
     },
     target: {},
   }

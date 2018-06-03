@@ -1,13 +1,9 @@
 import { Battle, Hexes } from '../types'
-import { pointToId, canMove, getSelectedCreature } from '../map'
+import { pointToId, getSelectedCreature } from '../map'
 import { getPath, clearPaths } from '..'
 import { Point } from 'utils/pixi'
 
 export const moveSelectedStart = (battle: Battle, position: Point) => {
-  if (!canMove(battle)) {
-    console.warn(`You can't move at this state:`, battle)
-    return battle
-  }
   const path = getPath(battle.hexes, position)
   if (path.length <= 1) {
     console.warn('Selected unaccessible hex to move to: ', position)
@@ -30,10 +26,6 @@ export const moveSelectedEnd = (battle: Battle) => {
     creatures,
   } = battle
 
-  if (!canMove(battle)) {
-    console.warn(`Can't move: `, battle)
-    return battle
-  }
   const selectedCreature = getSelectedCreature(battle)
   if (!selectedCreature || !(battle.selected.id && path)) {
     console.warn(`Required values not found on: ${JSON.stringify(battle.selected)}`)

@@ -5,7 +5,6 @@ import {
   Id,
   addAttackers,
   addDefenders,
-  canMove,
   selectNextCreature,
   Obstacle,
   addObstacles,
@@ -79,9 +78,6 @@ export const battleReducer = (
       }
     case 'SelectInitialCreature':
     case 'SelectNextCreature':
-      if (!canMove(state)) {
-        return state
-      }
       return {
         ...state,
         ...selectNextCreature(
