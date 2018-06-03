@@ -3,7 +3,7 @@ import { store } from './store'
 import { bindActionCreators } from 'redux'
 import { Creature, getCount } from 'transforms/creature'
 import { Point } from 'utils/pixi'
-import { getHex, getAllCreatures } from 'transforms/map'
+import { getHex } from 'transforms/map'
 import { uiActions } from './ui'
 import { createHexHandleClick } from 'components/createHexHandleClick'
 import {
@@ -63,7 +63,7 @@ describe('battle store', () => {
       createHexHandleClick(props(), attackFromHex)()
       handleMoveAnimationFinish(props())
       handleAttackAnimationFinish(props())
-      defender = getAllCreatures(battle())[defender.id]
+      defender = battle().creatures[defender.id]
 
       // lets check if defender is dead
       expect(getCount(defender.health)).toBe(0)

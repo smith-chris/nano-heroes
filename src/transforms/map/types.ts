@@ -51,8 +51,6 @@ export type PlayerType = 'Attacker' | 'Defender'
 export type Battle = {
   hexes: Hexes
   bounds: Bounds
-  attacker: Player
-  defender: Player
   round: number
   creatures: Creatures
   player: {

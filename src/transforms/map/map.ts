@@ -35,154 +35,18 @@ export const addObstacles = (hexes: Hexes, obstacles: Obstacle[]) => {
   return result
 }
 
-export const getPreviousCreatures = (battle: Battle) => {
-  switch (battle.player.current) {
-    case 'Attacker':
-      return battle.defender.creatures
-    case 'Defender':
-      return battle.attacker.creatures
-    default:
-      const exhaustiveCheck: never = battle.player.current
-      return {}
-  }
-}
-
-export const getCurrentCreatures = (battle: Battle) => {
-  switch (battle.player.current) {
-    case 'Attacker':
-      return battle.attacker.creatures
-    case 'Defender':
-      return battle.defender.creatures
-    default:
-      const exhaustiveCheck: never = battle.player.current
-      return {}
-  }
-}
-
-export const getAllCreatures = (battle: Battle): Creatures => ({
-  ...battle.attacker.creatures,
-  ...battle.defender.creatures,
-})
-
 export const getSelectedCreature = (battle: Battle) =>
-  battle.selected.id ? getCurrentCreatures(battle)[battle.selected.id] : undefined
+  battle.selected.id ? battle.creatures[battle.selected.id] : undefined
 
 export const getTargetCreature = (battle: Battle) =>
-  battle.target.id ? getPreviousCreatures(battle)[battle.target.id] : undefined
+  battle.target.id ? battle.creatures[battle.target.id] : undefined
 
-export const setPreviousCreature = (battle: Battle, creature: Creature) => {
-  const creatures = getPreviousCreatures(battle)
-  if (creatures[creature.id]) {
-    const newCreatures = { ...creatures }
-    newCreatures[creature.id] = creature
-    return setPreviousCreatures(battle, newCreatures)
-  } else {
-    return battle
-  }
-}
-
-const setCreatureHelper = (creatures: Creatures, creature: Creature) => {
-  if (creatures[creature.id]) {
-    const newCreatures = { ...creatures }
-    newCreatures[creature.id] = creature
-    return newCreatures
-  } else {
-    console.warn('Creature is not in creatures: ', creatures, creature)
-    return creatures
-  }
-}
-
-export const setCreature = (battle: Battle, creature: Creature) => {
-  if (battle.defender.creatures[creature.id]) {
-    return setDefenderCreatures(
-      battle,
-      setCreatureHelper(battle.defender.creatures, creature),
-    )
-  } else {
-    return setAttackerCreatures(
-      battle,
-      setCreatureHelper(battle.attacker.creatures, creature),
-    )
-  }
-}
-
-export const setAttackerCreatures = (battle: Battle, creatures: Creatures) => {
-  return { ...battle, attacker: { ...battle.attacker, creatures } }
-}
-
-export const setDefenderCreatures = (battle: Battle, creatures: Creatures) => {
-  return { ...battle, defender: { ...battle.defender, creatures } }
-}
-
-export const setPreviousCreatures = (battle: Battle, creatures: Creatures) => {
-  switch (battle.player.current) {
-    case 'Attacker':
-      return setDefenderCreatures(battle, creatures)
-    case 'Defender':
-      return setAttackerCreatures(battle, creatures)
-    default:
-      console.warn('Incorrect state at setPreviousCreatures', battle)
-      return assertNever(battle.player.current)
-  }
-}
-
-export const setCurrentCreatures = (battle: Battle, creatures: Creatures) => {
-  switch (battle.player.current) {
-    case 'Attacker':
-      return { ...battle, attacker: { ...battle.attacker, creatures } }
-    case 'Defender':
-      return { ...battle, defender: { ...battle.defender, creatures } }
-    default:
-      return assertNever(battle.player.current)
-  }
-}
-
-export const getPlayer = (battle: Battle, playerType: PlayerType) => {
-  switch (playerType) {
-    case 'Attacker':
-      return battle.attacker
-    case 'Defender':
-      return battle.defender
-    default:
-      return assertNever(playerType)
-  }
-}
-
-export const getPreviousPlayer = (battle: Battle) => {
-  switch (battle.player.current) {
-    case 'Attacker':
-      return battle.defender
-    case 'Defender':
-      return battle.attacker
-    default:
-      return assertNever(battle.player.current)
-  }
-}
-
-export const setPlayer = (battle: Battle, playerType: PlayerType, player: Player) => {
-  switch (playerType) {
-    case 'Attacker':
-      return { attacker: player }
-    case 'Defender':
-      return { defender: player }
-    default:
-      return assertNever(playerType)
-  }
-}
-
-export const isEnemyCreature = (battle: Battle, creature: Id) => {
-  switch (battle.player.current) {
-    case 'Attacker':
-      return Boolean(battle.defender.creatures[creature])
-    case 'Defender':
-      return Boolean(battle.attacker.creatures[creature])
-    default:
-      return assertNever(battle.player.current)
-  }
-}
+export const isEnemyCreature = (battle: Battle, creatureId: Id) =>
+  battle.creatures[creatureId] &&
+  battle.creatures[creatureId].owner !== battle.player.current
 
 export const isAlive = (battle: Battle, creatureId: Id) => {
-  const creature = getAllCreatures(battle)[creatureId]
+  const creature = battle.creatures[creatureId]
   return getCount(creature.health) > 0
 }
 
@@ -201,7 +65,7 @@ export const canCreatureMove = (creature: Creature) =>
   !creature.hasMoved && getCount(creature.health) > 0
 
 export const availableCreaturesCount = (battle: Battle) =>
-  Object.values(getAllCreatures(battle)).filter(canCreatureMove).length
+  Object.values(battle.creatures).filter(canCreatureMove).length
 
 export const each = <T, R>(
   input: ObjectOf<T> | ObjectOf<T>[],
@@ -250,7 +114,7 @@ const fillMap = (map: Battle) => {
   return { ...map, hexes }
 }
 
-export const createMap = (width: number, height: number) => {
+export const createBattle = (width: number, height: number) => {
   const map: Battle = {
     hexes: {},
     bounds: {
@@ -261,8 +125,6 @@ export const createMap = (width: number, height: number) => {
     },
     selected: {},
     creatures: {},
-    attacker: new Player(),
-    defender: new Player(),
     round: 0,
     player: {
       current: 'Attacker',

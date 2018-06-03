@@ -1,10 +1,10 @@
-import { getAllCreatures, getSelectedCreature, setCreature } from '../map'
+import { getSelectedCreature } from '../map'
 import { Battle, Id } from '../types'
 import { hit, getCount } from '../../creature'
 import { removeElement } from './utils'
 
 export const attackTargetStart = (battle: Battle, id: Id) => {
-  const target = getAllCreatures(battle)[id]
+  const target = battle.creatures[id]
   const selected = getSelectedCreature(battle)
   if (!target || !selected) {
     console.warn(
@@ -27,7 +27,7 @@ export const attackTargetStart = (battle: Battle, id: Id) => {
 }
 
 export const attackTargetEnd = (battle: Battle) => {
-  const { target } = battle
+  const { target, creatures } = battle
   if (!target.incomingHealth) {
     console.warn('No incomingHealth!', battle)
     return battle
@@ -37,13 +37,15 @@ export const attackTargetEnd = (battle: Battle) => {
     return battle
   }
 
-  const newTargetCreature = {
-    ...getAllCreatures(battle)[target.id],
+  const newCreatures = { ...creatures }
+
+  newCreatures[target.id] = {
+    ...newCreatures[target.id],
     health: target.incomingHealth,
   }
 
   return {
-    ...setCreature(battle, newTargetCreature),
+    creatures: newCreatures,
     target: {},
   }
 }

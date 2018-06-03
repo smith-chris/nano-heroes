@@ -1,5 +1,5 @@
 import {
-  createMap,
+  createBattle,
   Battle,
   moveSelectedEnd,
   Id,
@@ -26,7 +26,7 @@ export type Size = {
 
 export type BattleState = Battle
 
-const initialState: BattleState = createMap(0, 0)
+const initialState: BattleState = createBattle(0, 0)
 
 export const battleActions = {
   createMap: ActionCreator('CreateMap', data as Size),
@@ -53,7 +53,7 @@ export const battleReducer = (
 ): BattleState => {
   switch (action.type) {
     case 'CreateMap':
-      return createMap(action.data.width, action.data.height)
+      return createBattle(action.data.width, action.data.height)
     case 'AddObstacles':
       return { ...state, hexes: addObstacles(state.hexes, action.data) }
     case 'AddAttackers':
@@ -99,7 +99,7 @@ export const battleReducer = (
         ...attackTargetStart(state, action.data),
       }
     case 'AttackTargetEnd':
-      return attackTargetEnd(state)
+      return { ...state, ...attackTargetEnd(state) }
     default: {
       const exhaustiveCheck: never = action
       return state

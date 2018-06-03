@@ -1,6 +1,6 @@
 import {
   findNeighbours,
-  createMap,
+  createBattle,
   possiblePaths,
   simplifyNodes,
   xyToId,
@@ -43,7 +43,7 @@ describe('Map', () => {
   })
   describe('possiblePaths()', () => {
     it('should find possible paths', () => {
-      const map = createMap(10, 10)
+      const map = createBattle(10, 10)
       const start = new Point(0, 0)
       const distance = 1
       const output = {
@@ -54,7 +54,7 @@ describe('Map', () => {
     })
 
     it('should find possible paths', () => {
-      const map = createMap(10, 10)
+      const map = createBattle(10, 10)
       const start = new Point(1, 1)
       const distance = 2
       const output = {
@@ -77,7 +77,7 @@ describe('Map', () => {
     })
 
     it('should find possible paths avoiding obstacles', () => {
-      const map = createMap(10, 10)
+      const map = createBattle(10, 10)
       map.hexes = addObstacles(map.hexes, [
         new Obstacle(new Point(2, 1)),
         new Obstacle(new Point(2, 2)),

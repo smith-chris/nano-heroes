@@ -1,18 +1,12 @@
 import { chooseOther, chooseRandom } from 'utils/battle'
-import {
-  getPlayer,
-  setPlayer,
-  getAllCreatures,
-  getCurrentCreatures,
-  canCreatureMove,
-} from '../map'
+import { canCreatureMove } from '../map'
 import { PlayerType, Battle, Id } from '../types'
 import { removeElement } from './utils'
 import { higlightHexes } from '..'
 import { getCount } from '../../creature'
 
 const selectCreature = (battle: Battle, id: Id) => {
-  const targetCreature = getAllCreatures(battle)[id]
+  const targetCreature = battle.creatures[id]
   if (targetCreature) {
     const hexes = higlightHexes(
       battle,
@@ -34,7 +28,7 @@ const selectCreature = (battle: Battle, id: Id) => {
 
 // This is following this formula: http://heroes.thelazy.net/wiki/Combat
 export const selectNextCreature = (battle: Battle, playerType?: PlayerType): Battle => {
-  const allCreatures = getAllCreatures(battle)
+  const allCreatures = battle.creatures
   // Get creatures that can move this round, sorted by lowest Y pos and highest speed
   let availableCreatures = Object.values(allCreatures)
     .filter(canCreatureMove)

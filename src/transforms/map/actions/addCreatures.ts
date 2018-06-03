@@ -2,11 +2,8 @@ import { Player, Hexes, Creatures, PlayerType, ObjectOf, Battle } from '../types
 import { Creature } from '../../creature'
 import { pointToId } from '../map'
 
-export const addCreatures = (
-  creatures: Creatures,
-  hexes: Hexes,
-  creaturesToPut: Creature[],
-): [Hexes, Creatures] => {
+export const addCreatures = (battle: Battle, creaturesToPut: Creature[]) => {
+  const { hexes, creatures } = battle
   const newHexes = { ...hexes }
   const newCreatures = { ...creatures }
   for (const creature of creaturesToPut) {
@@ -20,7 +17,7 @@ export const addCreatures = (
       throw new Error('No hex at id: ' + pointToId(creature.position))
     }
   }
-  return [newHexes, newCreatures]
+  return { hexes: newHexes, creatures: newCreatures }
 }
 
 const toObject = <T extends { id: string }>(elements: T[]) => {
@@ -31,38 +28,20 @@ const toObject = <T extends { id: string }>(elements: T[]) => {
   return result
 }
 
-export const addDefenders = (battle: Battle, creaturesToPut: Creature[]) => {
-  const { defender, hexes } = battle
+export const addDefenders = (battle: Battle, _creaturesToPut: Creature[]) => {
   const owner: PlayerType = 'Defender'
-  const [newHexes, creatures] = addCreatures(
-    defender.creatures,
-    hexes,
-    creaturesToPut.map(creature => ({
-      ...creature,
-      owner,
-    })),
-  )
-  return {
-    hexes: newHexes,
-    defender: { ...defender, creatures },
-    creatures: { ...battle.creatures, ...toObject(creaturesToPut) },
-  }
+  const creaturesToPut = _creaturesToPut.map(creature => ({
+    ...creature,
+    owner,
+  }))
+  return addCreatures(battle, creaturesToPut)
 }
 
-export const addAttackers = (battle: Battle, creaturesToPut: Creature[]) => {
-  const { attacker, hexes } = battle
+export const addAttackers = (battle: Battle, _creaturesToPut: Creature[]) => {
   const owner: PlayerType = 'Attacker'
-  const [newHexes, creatures] = addCreatures(
-    attacker.creatures,
-    hexes,
-    creaturesToPut.map(creature => ({
-      ...creature,
-      owner,
-    })),
-  )
-  return {
-    hexes: newHexes,
-    attacker: { ...attacker, creatures },
-    creatures: { ...battle.creatures, ...toObject(creaturesToPut) },
-  }
+  const creaturesToPut = _creaturesToPut.map(creature => ({
+    ...creature,
+    owner,
+  }))
+  return addCreatures(battle, creaturesToPut)
 }

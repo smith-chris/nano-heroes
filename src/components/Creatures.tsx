@@ -44,7 +44,7 @@ class Creatures extends Component<Props> {
       battle,
       ui: { attackTargetId },
     } = this.props
-    const { selected, attacker, defender, target } = battle
+    const { selected, creatures, target } = battle
 
     const animateSelected = selected.path && selected.path.length > 0
     const isTargetDying = target.incomingHealth
@@ -53,10 +53,10 @@ class Creatures extends Component<Props> {
 
     return (
       <OrderedContainer>
-        {each([attacker.creatures, defender.creatures], (creature, key, index) => {
+        {each(creatures, (creature, key) => {
           const count = getCount(creature.health)
 
-          const defenderCreatures = index === 1
+          const defenderCreatures = creature.owner === 'Defender'
 
           const isAttacking = target.id && creature.id === selected.id
           const isDefending = target.id && creature.id === target.id

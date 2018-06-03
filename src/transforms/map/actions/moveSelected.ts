@@ -1,11 +1,5 @@
 import { Battle, Hexes } from '../types'
-import {
-  getCurrentCreatures,
-  pointToId,
-  setCurrentCreatures,
-  canMove,
-  getSelectedCreature,
-} from '../map'
+import { pointToId, canMove, getSelectedCreature } from '../map'
 import { getPath, clearPaths } from '..'
 import { Point } from 'utils/pixi'
 
@@ -33,6 +27,7 @@ export const moveSelectedEnd = (battle: Battle) => {
   const {
     selected: { path },
     hexes,
+    creatures,
   } = battle
 
   if (!canMove(battle)) {
@@ -44,7 +39,6 @@ export const moveSelectedEnd = (battle: Battle) => {
     console.warn(`Required values not found on: ${JSON.stringify(battle.selected)}`)
     return battle
   }
-  const creatures = getCurrentCreatures(battle)
   const destinationPosition = path[path.length - 1]
   const currentHexId = pointToId(selectedCreature.position)
   const destinationHexId = pointToId(destinationPosition)
@@ -63,14 +57,12 @@ export const moveSelectedEnd = (battle: Battle) => {
       position: destinationPosition,
       hasMoved: true,
     }
-    return setCurrentCreatures(
-      {
-        ...battle,
-        hexes: newHexes,
-        lastMovedCreatureId: battle.selected.id,
-      },
-      newCreatures,
-    )
+    return {
+      ...battle,
+      hexes: newHexes,
+      creatures: newCreatures,
+      lastMovedCreatureId: battle.selected.id,
+    }
   } else {
     return battle
   }
