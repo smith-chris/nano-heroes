@@ -82,6 +82,7 @@
     "node-sass": "^4.9.0",
     "postcss-input-style": "^1.0.0",
     "postcss-loader": "^2.1.5",
+    "raw-loader": "^0.5.1",
     "redux-devtools-extension": "^2.13.2",
     "sass-loader": "^6.0.7",
     "sass-variable-loader": "^0.1.2",

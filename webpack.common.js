@@ -69,6 +69,15 @@ module.exports = {
         ],
       },
       {
+        test: /\.(xml)$/,
+        use: [
+          {
+            loader: 'raw-loader',
+            options: {},
+          },
+        ],
+      },
+      {
         test: /\.(eot|ttf|woff|woff2|svg)$/,
         include: path.resolve('./src/assets'),
         use: [

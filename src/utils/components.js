@@ -1,12 +1,14 @@
 import React from 'react'
-import { Text } from 'react-pixi-fiber'
+import { Text, BitmapText as PixiBitmapText } from 'react-pixi-fiber'
 
 export const BitmapText = ({ color, ...rest }) => {
-  const style = {
-    fontFamily: 'Pico',
-    fontSize: 4,
-    fill: color || 0x000000,
-    lineHeight: 6,
+  if (!rest.text) {
+    console.warn('No text provided:', rest)
+    return null
   }
-  return <Text style={style} {...rest} />
+  rest.text = rest.text.toString()
+  const style = {
+    font: '4px pico-bitmap-font',
+  }
+  return <PixiBitmapText style={style} {...rest} />
 }
