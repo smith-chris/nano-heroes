@@ -86,9 +86,9 @@ export const battleReducer = (
         ),
       }
     case 'MoveSelectedStart':
-      return moveSelectedStart(state, action.data)
+      return { ...state, ...moveSelectedStart(state, action.data) }
     case 'MoveSelectedEnd':
-      return moveSelectedEnd(state)
+      return { ...state, ...moveSelectedEnd(state) }
     case 'AttackTargetStart':
       return {
         ...state,

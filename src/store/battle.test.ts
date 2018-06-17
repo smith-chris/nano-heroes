@@ -3,7 +3,7 @@ import { store } from './store'
 import { bindActionCreators } from 'redux'
 import { Creature, getCount } from 'transforms/creature'
 import { Point } from 'utils/pixi'
-import { getHex } from 'transforms/map'
+import { getHex, xyToId } from 'transforms/map'
 import { uiActions } from './ui'
 import { createHexHandleClick } from 'components/createHexHandleClick'
 import {
@@ -43,7 +43,7 @@ describe('battle store', () => {
     it('should work', () => {
       loadSmallMap()
       initialRound()
-      expect(battle().hexes['3_1'].canBeAttacked).toEqual(true)
+      expect(battle().hexes[xyToId(3, 1)].canBeAttacked).toEqual(true)
     })
   })
 
@@ -57,7 +57,7 @@ describe('battle store', () => {
       const defenderHex = getHex(battle().hexes, defender.position)
       createHexHandleClick(props(), defenderHex)()
 
-      expect(ui().attackPositions).toEqual(['2_1', '3_0'])
+      expect(ui().attackPositions).toEqual([xyToId(2, 1), xyToId(3, 0)])
 
       const attackFromHex = getHex(battle().hexes, new Point(2, 1))
       createHexHandleClick(props(), attackFromHex)()

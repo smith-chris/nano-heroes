@@ -1,17 +1,16 @@
 import { Battle, Hexes } from '../types'
 import { pointToId, getSelectedCreature } from '../map'
-import { getPath, clearPaths } from '..'
+import { getPath, deletePaths } from '..'
 import { Point } from 'utils/pixi'
 
 export const moveSelectedStart = (battle: Battle, position: Point) => {
   const path = getPath(battle.hexes, position)
   if (path.length <= 1) {
     console.warn('Selected unaccessible hex to move to: ', position)
-    return battle
+    return {}
   }
   return {
-    ...battle,
-    hexes: clearPaths(battle.hexes),
+    hexes: deletePaths(battle.hexes),
     selected: {
       ...battle.selected,
       path,
@@ -50,12 +49,11 @@ export const moveSelectedEnd = (battle: Battle) => {
       hasMoved: true,
     }
     return {
-      ...battle,
       hexes: newHexes,
       creatures: newCreatures,
       lastMovedCreatureId: battle.selected.id,
     }
   } else {
-    return battle
+    return {}
   }
 }

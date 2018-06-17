@@ -3,7 +3,7 @@ import { getHex, pointToId, isEnemyCreature, isAlive, getSelectedCreature } from
 import { Point } from 'utils/pixi'
 import { pointsEqual } from './point'
 
-export const clearPaths = (hexes: Hexes) => {
+export const deletePaths = (hexes: Hexes) => {
   const result: Hexes = {}
   for (const key in hexes) {
     result[key] = { ...hexes[key] }
