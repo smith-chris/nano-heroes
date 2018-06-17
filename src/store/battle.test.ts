@@ -11,31 +11,34 @@ import {
   handleAttackAnimationFinish,
 } from 'components/attackController'
 
-const battle = () => store.getState().battle
-const ui = () => store.getState().ui
-const state = () => store.getState()
+const getBattle = () => store.getState().battle
+const getUi = () => store.getState().ui
+const getState = () => store.getState()
 
 const boundActions = bindActionCreators(
   { ...battleActions, ...uiActions },
   store.dispatch,
 )
 
-const props = () => ({ ...boundActions, ...state() })
+const getProps = () => ({ ...boundActions, ...getState() })
 
 const { createMap, addAttackers, addDefenders, initialRound } = boundActions
 
-const loadSmallMap = () => {
+const loadSmallMap = ({ defenderAmount = 10 } = {}) => {
+  const attacker = new Creature(new Point(0, 0))
+  const defender = new Creature(new Point(3, 1), defenderAmount)
   createMap({ width: 4, height: 2 })
-  addAttackers([new Creature(new Point(0, 0))])
-  addDefenders([new Creature(new Point(3, 1))])
+  addAttackers([attacker])
+  addDefenders([defender])
+  return { getDefender: () => getBattle().creatures[defender.id] }
 }
 
 describe('battle store', () => {
   describe('loadMap()', () => {
     it('should work', () => {
       loadSmallMap()
-      expect(battle().bounds.right).toEqual(3)
-      expect(battle().bounds.bottom).toEqual(1)
+      expect(getBattle().bounds.right).toEqual(3)
+      expect(getBattle().bounds.bottom).toEqual(1)
     })
   })
 
@@ -43,33 +46,29 @@ describe('battle store', () => {
     it('should work', () => {
       loadSmallMap()
       initialRound()
-      expect(battle().hexes[xyToId(3, 1)].canBeAttacked).toEqual(true)
+      expect(getBattle().hexes[xyToId(3, 1)].canBeAttacked).toEqual(true)
     })
   })
 
   describe('selectNextCreature()', () => {
     it('should not pick creature that is dead', () => {
-      let defender = new Creature(new Point(3, 1), 2)
-      createMap({ width: 4, height: 2 })
-      addAttackers([new Creature(new Point(0, 0))])
-      addDefenders([defender])
+      const { getDefender } = loadSmallMap({ defenderAmount: 2 })
       initialRound()
-      const defenderHex = getHex(battle().hexes, defender.position)
-      createHexHandleClick(props(), defenderHex)()
+      const defenderHex = getHex(getBattle().hexes, getDefender().position)
+      createHexHandleClick(getProps(), defenderHex)()
 
-      expect(ui().attackPositions).toEqual([xyToId(2, 1), xyToId(3, 0)])
+      expect(getUi().attackPositions).toEqual([xyToId(2, 1), xyToId(3, 0)])
 
-      const attackFromHex = getHex(battle().hexes, new Point(2, 1))
-      createHexHandleClick(props(), attackFromHex)()
-      handleMoveAnimationFinish(props())
-      handleAttackAnimationFinish(props())
-      defender = battle().creatures[defender.id]
+      const attackFromHex = getHex(getBattle().hexes, new Point(2, 1))
+      createHexHandleClick(getProps(), attackFromHex)()
+      handleMoveAnimationFinish(getProps())
+      handleAttackAnimationFinish(getProps())
 
       // lets check if defender is dead
-      expect(getCount(defender.health)).toBe(0)
+      expect(getCount(getDefender().health)).toBe(0)
 
       // and if its NOT selected
-      expect(battle().selected.id).not.toBe(defender.id)
+      expect(getBattle().selected.id).not.toBe(getDefender().id)
     })
   })
 })
