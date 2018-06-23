@@ -9,6 +9,7 @@ export const BitmapText = ({ color, ...rest }) => {
   rest.text = rest.text.toString()
   const style = {
     font: '4px pico-bitmap-font',
+    tint: color || 0x000000,
   }
   return <PixiBitmapText style={style} {...rest} />
 }
